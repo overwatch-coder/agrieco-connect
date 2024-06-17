@@ -13,7 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/utils";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 type SignUpType = Auth;
 

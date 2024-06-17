@@ -13,7 +13,7 @@ import { axiosInstance } from "@/lib/utils";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
 import { useAuth } from "@/hooks/useAuth";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 type LoginType = Pick<Auth, "email" | "password" | "rememberMe">;
 
