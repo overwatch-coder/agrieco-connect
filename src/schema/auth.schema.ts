@@ -31,3 +31,14 @@ export const SignupSchema = AuthSchema.superRefine((data, context) => {
   }
   return true;
 });
+
+export const ForgotPasswordSchema = AuthSchema.pick({
+  email: true,
+});
+
+export const ResetPasswrodSchema = AuthSchema.pick({
+  password: true,
+  confirmPassword: true,
+}).extend({
+  token: z.string().min(1, "Token is required"),
+});
