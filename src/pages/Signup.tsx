@@ -1,5 +1,5 @@
-import AuthBackgroundImage from "@/components/ui/shared/AuthBackgroundImage";
-import { Helmet } from "react-helmet";
+import AuthBackgroundImage from "@/components/shared/AuthBackgroundImage";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema } from "@/schema/auth.schema";
@@ -13,7 +13,6 @@ import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/utils";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
-import bcrypt from "bcryptjs";
 
 type SignUpType = Auth;
 
@@ -46,10 +45,7 @@ const SignUp = () => {
 
       const { confirmPassword, ...signUpData } = data;
 
-      const res = await axiosInstance.post("/users", {
-        ...signUpData,
-        password: await bcrypt.hash(signUpData.password, 10),
-      });
+      const res = await axiosInstance.post("/users", signUpData);
 
       const user: Omit<SignUpType, "confirmPassword"> = res.data;
 
@@ -79,10 +75,10 @@ const SignUp = () => {
 
       {/* Sign Up Form */}
       <section className="md:col-span-2 bg-primary-brown scrollbar-hide w-full col-span-1 overflow-y-scroll">
-        <div className="flex flex-col items-center justify-center h-screen pt-32">
+        <div className="md:pt-32 flex flex-col items-center justify-center h-screen">
           <div className="flex flex-col gap-2 text-white">
             {/* Title */}
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-2 text-center">
               <h2 className="text-xl font-semibold">Create Account</h2>
               <p className="text-sm font-normal">
                 Create an account today to stay connected and explore!

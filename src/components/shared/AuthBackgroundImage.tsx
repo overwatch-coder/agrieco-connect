@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const AuthBackgroundImage = () => {
   return (
-    <section className="bg-login-bg flex flex-col w-full h-full min-h-screen col-span-1 p-5 bg-center bg-no-repeat bg-cover">
+    <section className="bg-login-bg flex flex-col w-full min-h-screen col-span-1 p-5 bg-center bg-no-repeat bg-cover">
       <Link to="/" className="flex items-center gap-2">
         <img
           src="/icons/logo-white.svg"

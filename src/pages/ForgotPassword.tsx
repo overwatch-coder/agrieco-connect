@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ForgotPasswordSchema } from "@/schema/auth.schema";
@@ -59,11 +59,11 @@ const ForgotPassword = () => {
         <div className="flex flex-col items-center justify-center h-screen">
           <div className="bg-primary-brown/10 flex flex-col gap-6 p-10 text-white rounded-lg shadow">
             {/* Title */}
-            <div className=" text-primary-brown flex flex-col items-center gap-4">
+            <div className="text-primary-brown flex flex-col items-center gap-4 text-center">
               <h2 className="md:text-4xl text-3xl font-semibold">
                 Forgot Password?
               </h2>
-              <p className="font-medium">
+              <p className="md:text-base text-sm font-medium">
                 Enter the email address associated with the account.
               </p>
             </div>

@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ResetPasswordSchema } from "@/schema/auth.schema";
@@ -76,7 +76,7 @@ const ResetPassword = () => {
         <div className="flex flex-col items-center justify-center h-screen">
           <div className="rounded-xl md:px-20 flex flex-col gap-6 px-10 py-10 bg-white shadow">
             {/* Title */}
-            <div className=" text-primary-brown flex flex-col items-center gap-4 text-center">
+            <div className="text-primary-brown flex flex-col items-center gap-4 text-center">
               <h2 className="md:text-4xl text-3xl font-semibold">
                 Reset Password
               </h2>

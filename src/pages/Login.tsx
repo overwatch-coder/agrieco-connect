@@ -1,5 +1,5 @@
-import AuthBackgroundImage from "@/components/ui/shared/AuthBackgroundImage";
-import { Helmet } from "react-helmet";
+import AuthBackgroundImage from "@/components/shared/AuthBackgroundImage";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schema/auth.schema";
@@ -13,7 +13,6 @@ import { axiosInstance } from "@/lib/utils";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
 import { useAuth } from "@/hooks/useAuth";
-import bcrypt from "bcryptjs";
 
 type LoginType = Pick<Auth, "email" | "password" | "rememberMe">;
 
@@ -46,10 +45,7 @@ const Login = () => {
       }
 
       // check if password is correct
-      const isCorrectPassword = await bcrypt.compare(
-        data.password,
-        user.password
-      );
+      const isCorrectPassword = user.password === data.password;
       if (!isCorrectPassword) {
         throw new Error("Invalid credentials");
       }
@@ -84,7 +80,7 @@ const Login = () => {
       {/* Login Form */}
       <section className="md:col-span-2 bg-primary-brown oveflow-y-scroll scrollbar-hide w-full col-span-1">
         <div className="flex flex-col items-center justify-center h-screen">
-          <div className="flex flex-col gap-2 text-white">
+          <div className="flex flex-col gap-2 text-center text-white">
             {/* Title */}
             <div className="flex flex-col items-center gap-2">
               <h2 className="text-xl font-semibold">Stay Connected</h2>
