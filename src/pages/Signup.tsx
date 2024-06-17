@@ -93,7 +93,7 @@ const SignUp = () => {
               {/* Error */}
               {isError && (
                 <div className="flex flex-col items-center gap-2 p-4 bg-red-300 rounded">
-                  <p className="text-sm font-normal text-red-500">
+                  <p className="text-start text-sm font-normal text-red-500">
                     {error.message}
                   </p>
                 </div>
@@ -192,7 +192,7 @@ const SignUp = () => {
                   {...register("password")}
                 />
                 {errors.password && (
-                  <p className="text-xs italic text-red-500">
+                  <p className="text-start text-xs italic text-red-500">
                     {errors.password.message}
                   </p>
                 )}
@@ -228,7 +228,7 @@ const SignUp = () => {
                   {...register("confirmPassword")}
                 />
                 {errors.confirmPassword && (
-                  <p className="text-xs italic text-red-500">
+                  <p className="text-start text-xs italic text-red-500">
                     {errors.confirmPassword.message}
                   </p>
                 )}

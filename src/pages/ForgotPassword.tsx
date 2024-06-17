@@ -116,7 +116,7 @@ const ForgotPassword = () => {
                       {...register("email")}
                     />
                     {errors.email && (
-                      <p className="text-xs text-red-600">
+                      <p className="text-start text-xs text-red-600">
                         {errors.email.message}
                       </p>
                     )}

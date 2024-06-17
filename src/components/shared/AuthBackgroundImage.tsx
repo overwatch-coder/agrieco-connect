@@ -24,7 +24,7 @@ const AuthBackgroundImage = () => {
         </p>
 
         <Link to={"/"}>
-          <Button className="hover:bg-transparent border-primary-green md:w-fit hover:scale-105 flex items-center justify-center w-full gap-2 px-6 py-6 transition bg-transparent border rounded-none">
+          <Button className="hover:bg-transparent border-primary-green md:w-fit hover:scale-105 flex items-center justify-center w-full gap-2 px-6 py-6 transition bg-transparent border-2 rounded-none">
             <span className="font-bold text-white">Discover More</span>
             <ArrowRight size={20} className="text-white" />
           </Button>
