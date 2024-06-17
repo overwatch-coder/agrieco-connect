@@ -8,7 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # data
-data
+src/data
 
 node_modules
 dist
