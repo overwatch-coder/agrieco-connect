@@ -36,9 +36,20 @@ export const ForgotPasswordSchema = AuthSchema.pick({
   email: true,
 });
 
-export const ResetPasswrodSchema = AuthSchema.pick({
+export const ResetPasswordSchema = AuthSchema.pick({
   password: true,
   confirmPassword: true,
-}).extend({
-  token: z.string().min(1, "Token is required"),
-});
+})
+  .extend({
+    token: z.string().min(1, "Token is required"),
+  })
+  .superRefine((data, context) => {
+    if (data.password !== data.confirmPassword) {
+      context.addIssue({
+        code: "custom",
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+      });
+    }
+    return true;
+  });

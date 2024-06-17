@@ -2,10 +2,9 @@ import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ForgotPasswordSchema } from "@/schema/auth.schema";
-import { Auth } from "@/types";
 import { ArrowLeft, User } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/utils";
@@ -16,9 +15,7 @@ type ForgotPasswordType = z.infer<typeof ForgotPasswordSchema>;
 
 const ForgotPassword = () => {
   //  usestate
-  const [showPassword, setShowPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const navigate = useNavigate();
 
   // react-hook-form
   const {
