@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {
+        "login-bg": "url('/images/login-bg.png')",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -28,6 +31,7 @@ module.exports = {
           foreground: "hsl(var(--primary-foreground))",
           green: "#4CAF50",
           brown: "#795548",
+          gray: "#333333",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

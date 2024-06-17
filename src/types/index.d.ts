@@ -1,4 +1,4 @@
 import { z } from "zod";
-import { UserSchema } from "@/schema/user.schema";
+import { AuthSchema } from "@/schema/auth.schema";
 
-export type User = z.infer<typeof UserSchema>;
+export type Auth = z.infer<typeof AuthSchema>;
