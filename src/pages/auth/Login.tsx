@@ -45,7 +45,7 @@ const Login = () => {
       }
 
       // check if password is correct
-      const isCorrectPassword = user.password === data.password;
+      const isCorrectPassword = user.email === data.email;
       if (!isCorrectPassword) {
         throw new Error("Invalid credentials");
       }

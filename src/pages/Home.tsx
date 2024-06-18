@@ -8,17 +8,9 @@ const Home = () => {
         <Button>
           <Link to="/login">Login</Link>
         </Button>
+
         <Button>
-          <Link to="/signup">Signup</Link>
-        </Button>
-        <Button>
-          <Link to="/forgot-password">Forgot Password</Link>
-        </Button>
-        <Button>
-          <Link to="/reset-password">Reset Password</Link>
-        </Button>
-        <Button>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/admin/dashboard">Dashboard</Link>
         </Button>
       </div>
     </div>
