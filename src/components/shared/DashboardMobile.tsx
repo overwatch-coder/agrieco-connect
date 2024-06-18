@@ -10,6 +10,7 @@ import { Menu, Settings, Bell } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom";
+import Notifications from "@/components/Notifications";
 
 const DashboardMobile = () => {
   const pathname = useLocation().pathname;
@@ -86,31 +87,7 @@ const DashboardMobile = () => {
                 </span>
               </Link>
 
-              <Link
-                to={"/dashboard/notifications"}
-                className="hover:scale-105 bg-white/30 relative flex items-center gap-3 p-4 transition rounded"
-              >
-                <Bell
-                  size={20}
-                  className={`${
-                    pathname === "/dashboard/notifications"
-                      ? "text-primary-green"
-                      : "text-white"
-                  }`}
-                />
-                <span
-                  className={`${
-                    pathname === "/dashboard/notifications"
-                      ? "text-primary-green"
-                      : "text-white"
-                  } text-base`}
-                >
-                  Notifications
-                </span>
-                <span className="top-5 right-2 absolute flex flex-col items-center w-5 h-5 text-sm text-center text-white bg-red-500 rounded-full">
-                  4
-                </span>
-              </Link>
+              <Notifications />
 
               <Link
                 to={"/dashboard/settings"}

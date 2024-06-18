@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Logout = () => {
   const [auth, setAuth] = useAuth();
+  const isUser = auth?.email === "Sincere@april.biz";
 
   // handle logout
   const handleLogout = async () => {
@@ -28,8 +29,19 @@ const Logout = () => {
     <AlertDialog>
       <AlertDialogTrigger className="hover:no-underline hover:scale-105 flex flex-col items-start mt-16 transition">
         <p className="flex items-center gap-4 font-bold">
-          <RiLogoutCircleLine size={20} color="white" />
-          <span className="lg:block hidden text-lg text-white">Logout</span>
+          <RiLogoutCircleLine
+            size={20}
+            className={isUser ? "text-primary-brown" : "text-white"}
+          />
+          <span
+            className={
+              isUser
+                ? "lg:block hidden text-lg text-primary-brown"
+                : "text-white"
+            }
+          >
+            Logout
+          </span>
         </p>
       </AlertDialogTrigger>
 

@@ -69,7 +69,7 @@ export default function ConfigureRoutes() {
         <Route path="user-management" element={<Home />} />
       </Route>
 
-      <Route path="*" element={<Home />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Route>
   );
 

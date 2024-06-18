@@ -1,5 +1,6 @@
 import { recentActivities, reports } from "@/constants";
 import { Calendar, Trash2 } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 import { GoPeople } from "react-icons/go";
 import { GrPowerCycle } from "react-icons/gr";
 import { IoCheckboxOutline } from "react-icons/io5";
@@ -7,6 +8,12 @@ import { IoCheckboxOutline } from "react-icons/io5";
 const Dashboard = () => {
   return (
     <div className="flex flex-col gap-5 py-6">
+      {/* Title */}
+      <Helmet>
+        <title>Admin Dashboard - Agrieco-Connect </title>
+        <meta name="description" content="Admin Dashboard" />
+      </Helmet>
+
       {/* Header */}
       <section className="md:flex-row md:items-center md:justify-between flex flex-col items-start gap-5">
         <h1 className="text-primary-brown text-lg font-normal">

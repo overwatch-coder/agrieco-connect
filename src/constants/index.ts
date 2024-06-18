@@ -218,3 +218,94 @@ export const reports = [
     description: "Report on community outreach programs and their impact.",
   },
 ];
+
+// notifications
+export const notifications = [
+  {
+    name: "Adebombo Bombo",
+    description: "The maize yield in Kano has increased by 20% this season.",
+    image: "https://randomuser.me/api/portraits/men/11.jpg",
+    time: "10:00am",
+    moment: "2 hours ago",
+    topic: "Sustaining Farming",
+  },
+  {
+    name: "Zainab Alake",
+    description: "A new irrigation system has been introduced in Benue State.",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+    time: "12:30pm",
+    moment: "yesterday",
+    topic: "Agricultural Innovation",
+  },
+  {
+    name: "Chinedu Okeke",
+    description:
+      "Fertilizer subsidies are now available for small-scale farmers in Ogun State.",
+    image: "https://randomuser.me/api/portraits/men/13.jpg",
+    time: "3:45pm",
+    moment: "5 days ago",
+    topic: "Government Policy",
+  },
+  {
+    name: "Fatima Musa",
+    description: "Rice production in Ebonyi has hit a record high this year.",
+    image: "https://randomuser.me/api/portraits/women/14.jpg",
+    time: "1:20pm",
+    moment: "3 days ago",
+    topic: "Harvest Report",
+  },
+  {
+    name: "Emeka Nwosu",
+    description:
+      "The government has launched a new initiative to support cassava farmers in Ekiti.",
+    image: "https://randomuser.me/api/portraits/men/15.jpg",
+    time: "9:00am",
+    moment: "1 hour ago",
+    topic: "Farming Initiative",
+  },
+  {
+    name: "Ngozi Chukwu",
+    description:
+      "Soybean farmers in Kaduna are adopting new pest control methods.",
+    image: "https://randomuser.me/api/portraits/women/16.jpg",
+    time: "4:15pm",
+    moment: "last week",
+    topic: "Pest Control",
+  },
+  {
+    name: "Tunde Olatunji",
+    description:
+      "The cocoa production in Cross River State has significantly improved.",
+    image: "https://randomuser.me/api/portraits/men/17.jpg",
+    time: "11:50am",
+    moment: "2 days ago",
+    topic: "Crop Production",
+  },
+  {
+    name: "Aisha Bello",
+    description:
+      "New farming equipment grants are available for women farmers in Plateau State.",
+    image: "https://randomuser.me/api/portraits/women/18.jpg",
+    time: "6:30pm",
+    moment: "last month",
+    topic: "Farming Grants",
+  },
+  {
+    name: "Bola Johnson",
+    description:
+      "Livestock farmers in Bauchi are benefiting from a new veterinary service program.",
+    image: "https://randomuser.me/api/portraits/men/19.jpg",
+    time: "8:00am",
+    moment: "3 hours ago",
+    topic: "Livestock Management",
+  },
+  {
+    name: "Yemi Adeyemi",
+    description:
+      "The fish farming industry in Lagos is seeing a rise in production due to new techniques.",
+    image: "https://randomuser.me/api/portraits/men/20.jpg",
+    time: "2:10pm",
+    moment: "yesterday",
+    topic: "Aquaculture",
+  },
+];
