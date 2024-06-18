@@ -46,6 +46,10 @@ const ResetPassword = () => {
 
       return res.data;
     },
+    onError: (error) => {
+      console.log(error);
+      reset({ password: "", confirmPassword: "" });
+    },
     onSuccess: () => {
       toast.success("Password changed successfully");
 

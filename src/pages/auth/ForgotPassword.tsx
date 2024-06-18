@@ -35,6 +35,10 @@ const ForgotPassword = () => {
 
       return res.data;
     },
+    onError: (error) => {
+      console.log(error);
+      reset({ email: "" });
+    },
     onSuccess: (data, variable) => {
       setSuccessMessage(
         `An email has been sent to ${variable.email}. If an account with that address exists, instructions will be sent to it.`

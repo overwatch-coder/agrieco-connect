@@ -26,6 +26,7 @@ const SignUp = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<SignUpType>({
     resolver: zodResolver(SignupSchema),
@@ -52,6 +53,10 @@ const SignUp = () => {
       const { password, ...rest } = user;
 
       return rest;
+    },
+    onError: (error) => {
+      console.log(error);
+      reset({ password: "", confirmPassword: "" });
     },
     onSuccess: () => {
       toast.success("Signup Successful");

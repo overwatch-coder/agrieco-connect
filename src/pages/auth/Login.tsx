@@ -26,6 +26,7 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<LoginType>({
     resolver: zodResolver(LoginSchema),
@@ -53,6 +54,10 @@ const Login = () => {
       const { password, ...rest } = user;
 
       return rest;
+    },
+    onError: (error) => {
+      console.log(error);
+      reset({ password: "" });
     },
     onSuccess: (data: Omit<Auth, "password" | "confirmPassword">) => {
       setAuth(data);
