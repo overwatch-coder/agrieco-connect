@@ -17,6 +17,7 @@ import UserDashboardLayout from "@/layout/UserDashboardLayout";
 import Feed from "@/pages/user/Feed";
 import Dashboard from "@/pages/admin/Dashboard";
 import Settings from "@/components/shared/Settings";
+import Topics from "@/pages/user/Topics";
 
 export default function ConfigureRoutes() {
   const [auth] = useAuth();
@@ -51,7 +52,7 @@ export default function ConfigureRoutes() {
       >
         <Route path="settings" element={<Settings />} />
         <Route path="feed" element={<Feed />} />
-        <Route path="topics" element={<Home />} />
+        <Route path="topics" element={<Topics />} />
       </Route>
 
       {/* Admin Routes */}
