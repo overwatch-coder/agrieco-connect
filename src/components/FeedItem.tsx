@@ -73,34 +73,34 @@ const FeedItem = ({
         </div>
       </div>
 
-      <div className="border-b-secondary-gray text-start border-bg-primary flex flex-wrap items-center justify-between w-full gap-4 pb-5">
+      <div className="border-b-secondary-gray text-start border-b flex flex-wrap items-center md:justify-between w-full gap-1 md:gap-4 pb-5">
         <Button
           variant={"link"}
-          className="hover:no-underline flex items-center gap-2"
+          className="hover:no-underline flex items-center gap-1 md:gap-2"
         >
           <MessageCircle size={20} className="text-primary-brown" />
-          <span className="text-primary-brown text-sm font-normal">
-            {numberOfComments} comments
+          <span className="text-primary-brown text-sm font-normal flex items-center gap-1">
+            {numberOfComments} <span className="hidden md:block">comments</span>
           </span>
         </Button>
 
         <Button
           variant={"link"}
-          className="hover:no-underline flex items-center gap-2"
+          className="hover:no-underline flex items-center gap-1 md:gap-2"
         >
           <ThumbsUp size={20} className="text-primary-brown" />
-          <span className="text-primary-brown text-sm font-normal">
-            {numberOfLikes} likes
+          <span className="text-primary-brown text-sm font-normal flex items-center gap-1">
+            {numberOfLikes} <span className="hidden md:block">likes</span>
           </span>
         </Button>
 
         <Button
           variant={"link"}
-          className="hover:no-underline flex items-center gap-2"
+          className="hover:no-underline flex items-center gap-1 md:gap-2"
         >
           <Share2 size={20} className="text-primary-brown" />
-          <span className="text-primary-brown text-sm font-normal">
-            {numberOfShares} shares
+          <span className="text-primary-brown text-sm font-normal flex items-center gap-1">
+            {numberOfShares} <span className="hidden md:block">shares</span>
           </span>
         </Button>
       </div>

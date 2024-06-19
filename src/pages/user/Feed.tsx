@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Edit, MessageCircle, Share2, ThumbsUp } from "lucide-react";
+import { Edit } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
 import { userFeeds } from "@/constants";
