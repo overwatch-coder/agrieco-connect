@@ -14,6 +14,7 @@ import Notifications from "@/components/Notifications";
 
 const DashboardMobile = () => {
   const pathname = useLocation().pathname;
+  const firstPath = pathname.split("/")[1] === "user" ? "user" : "admin";
 
   return (
     <Sheet>
@@ -42,20 +43,20 @@ const DashboardMobile = () => {
             {/* Dashboard Menu Items */}
             <div className="flex flex-col gap-6 mb-auto">
               <Link
-                to={"/dashboard/search"}
+                to={`/${firstPath}/search`}
                 className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
               >
                 <AiOutlineSearch
                   size={20}
                   className={`${
-                    pathname === "/dashboard/search"
+                    pathname === `/${firstPath}/search`
                       ? "text-primary-green"
                       : "text-white"
                   }`}
                 />
                 <span
                   className={`${
-                    pathname === "/dashboard/search"
+                    pathname === `/${firstPath}/search`
                       ? "text-primary-green"
                       : "text-white"
                   } text-base`}
@@ -65,20 +66,20 @@ const DashboardMobile = () => {
               </Link>
 
               <Link
-                to={"/dashboard/add-new"}
+                to={`/${firstPath}/add-new`}
                 className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
               >
                 <AiOutlineUserAdd
                   size={20}
                   className={`${
-                    pathname === "/dashboard/add-new"
+                    pathname === `/${firstPath}/add-new`
                       ? "text-primary-green"
                       : "text-white"
                   }`}
                 />
                 <span
                   className={`${
-                    pathname === "/dashboard/add-new"
+                    pathname === `/${firstPath}/add-new`
                       ? "text-primary-green"
                       : "text-white"
                   } text-base`}
@@ -90,20 +91,20 @@ const DashboardMobile = () => {
               <Notifications />
 
               <Link
-                to={"/dashboard/settings"}
+                to={`/${firstPath}/settings`}
                 className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
               >
                 <Settings
                   size={20}
                   className={`${
-                    pathname === "/dashboard/settings"
+                    pathname === `/${firstPath}/settings`
                       ? "text-primary-green"
                       : "text-white"
-                  }}`}
+                  }`}
                 />
                 <span
                   className={`${
-                    pathname === "/dashboard/settings"
+                    pathname === `/${firstPath}/settings`
                       ? "text-primary-green"
                       : "text-white"
                   } text-base`}
@@ -126,7 +127,7 @@ const DashboardMobile = () => {
               {"Josepine Ekhator"}
             </span>
             <span className="text-white/70 text-base font-normal">
-              {"Admin"}
+              {firstPath === "user" ? "User" : "Admin"}
             </span>
           </p>
         </div>

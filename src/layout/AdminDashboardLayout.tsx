@@ -18,7 +18,7 @@ const AdminDashboardLayout = () => {
         </main>
 
         {/* Footer */}
-        <footer className="text-primary-green px-4 pb-5 text-sm font-medium">
+        <footer className="text-primary-green px-4 pt-5 pb-5 text-sm font-medium">
           &copy; {new Date().getFullYear()} campusguardian. All rights reserved.
         </footer>
       </section>

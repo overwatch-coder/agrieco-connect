@@ -9,6 +9,7 @@ const DashboardHeader = () => {
   const [auth] = useAuth();
   const isUser = auth?.email !== "Sincere@april.biz";
   const pathname = useLocation().pathname;
+  const firstPath = pathname.split("/")[1] === "user" ? "user" : "admin";
 
   return (
     <header
@@ -43,13 +44,13 @@ const DashboardHeader = () => {
 
         <ul className="md:flex items-center hidden gap-5">
           <Link
-            to={"/dashboard/help"}
+            to={`/${firstPath}/help`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <AiOutlineSearch
               size={20}
               className={
-                pathname === "/dashboard/help"
+                pathname === `/${firstPath}/help`
                   ? "text-primary-green"
                   : "text-primary-brown"
               }
@@ -57,13 +58,13 @@ const DashboardHeader = () => {
           </Link>
 
           <Link
-            to={"/dashboard/help"}
+            to={`/${firstPath}/help`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <AiOutlineUserAdd
               size={20}
               className={
-                pathname === "/dashboard/help"
+                pathname === `/${firstPath}/help`
                   ? "text-primary-green"
                   : "text-primary-brown"
               }
@@ -73,13 +74,13 @@ const DashboardHeader = () => {
           <Notifications />
 
           <Link
-            to={"/dashboard/settings"}
+            to={`/${firstPath}/settings`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <Settings
               size={20}
               className={
-                pathname === "/dashboard/settings"
+                pathname === `/${firstPath}/settings`
                   ? "text-primary-green"
                   : "text-primary-brown"
               }

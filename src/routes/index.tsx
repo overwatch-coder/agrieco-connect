@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 import UserDashboardLayout from "@/layout/UserDashboardLayout";
 import Feed from "@/pages/user/Feed";
 import Dashboard from "@/pages/admin/Dashboard";
+import Settings from "@/components/shared/Settings";
 
 export default function ConfigureRoutes() {
   const [auth] = useAuth();
@@ -28,7 +29,7 @@ export default function ConfigureRoutes() {
       />
 
       {/* Auth Routes */}
-      <Route element={auth ? <Navigate to="/dashboard" /> : <AuthLayout />}>
+      <Route element={auth ? <Navigate to="/user/feed" /> : <AuthLayout />}>
         <Route index path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
@@ -44,10 +45,11 @@ export default function ConfigureRoutes() {
           ) : auth.email !== "Sincere@april.biz" ? (
             <UserDashboardLayout />
           ) : (
-            <Navigate to="/admin/dashboard" />
+            <AdminDashboardLayout />
           )
         }
       >
+        <Route path="settings" element={<Settings />} />
         <Route path="feed" element={<Feed />} />
         <Route path="topics" element={<Home />} />
       </Route>
@@ -61,10 +63,11 @@ export default function ConfigureRoutes() {
           ) : auth.email === "Sincere@april.biz" ? (
             <AdminDashboardLayout />
           ) : (
-            <Navigate to="/user/feed" />
+            <UserDashboardLayout />
           )
         }
       >
+        <Route path="settings" element={<Settings />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="user-management" element={<Home />} />
       </Route>
