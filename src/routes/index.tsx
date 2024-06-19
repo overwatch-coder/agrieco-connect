@@ -45,7 +45,7 @@ export default function ConfigureRoutes() {
           ) : auth.email !== "Sincere@april.biz" ? (
             <UserDashboardLayout />
           ) : (
-            <AdminDashboardLayout />
+            <Navigate to="/user/feed" />
           )
         }
       >
@@ -63,7 +63,7 @@ export default function ConfigureRoutes() {
           ) : auth.email === "Sincere@april.biz" ? (
             <AdminDashboardLayout />
           ) : (
-            <UserDashboardLayout />
+            <Navigate to="/admin/dashboard" />
           )
         }
       >

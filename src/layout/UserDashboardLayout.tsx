@@ -13,8 +13,8 @@ const UserDashboardLayout = () => {
         <UserDashboardSidebar />
 
         {/* Main Content */}
-        <section className="lg:ml-60 flex flex-col flex-grow min-h-screen mt-24 ml-16">
-          <main className="ps-1 md:ps-4 w-full h-full mb-auto">
+        <section className="lg:ml-60 relative flex flex-col flex-grow min-h-screen mt-24 ml-16">
+          <main className="ps-1 md:ps-4 relative w-full h-full mb-auto">
             <Outlet />
           </main>
         </section>

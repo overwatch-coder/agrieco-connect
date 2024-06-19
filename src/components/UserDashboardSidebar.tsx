@@ -9,11 +9,11 @@ const UserDashboardSidebar = () => {
     <div className="scrollbar-hide pb-7 lg:w-60 lg:items-start pt-28 fixed top-0 left-0 flex flex-col items-center w-16 h-full gap-3 px-5 overflow-y-scroll bg-white">
       {/* Dashboard Menu Items */}
       <ul className="flex flex-col gap-6 mb-auto text-sm">
-        {userDashboardLinks.map((link) => {
+        {userDashboardLinks.map((link, index) => {
           const activePath = pathname.startsWith(link.path);
           return (
             <Link
-              key={link.path}
+              key={index}
               to={link.path}
               className={`${
                 activePath

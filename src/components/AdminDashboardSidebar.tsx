@@ -23,11 +23,11 @@ const AdminDashboardSidebar = () => {
 
       {/* Dashboard Menu Items */}
       <ul className="flex flex-col gap-6 mb-auto text-sm">
-        {adminDashboardLinks.map((link) => {
+        {adminDashboardLinks.map((link, index) => {
           const activePath = pathname.startsWith(link.path);
           return (
             <Link
-              key={link.path}
+              key={index}
               to={link.path}
               className={`${
                 activePath

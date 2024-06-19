@@ -309,3 +309,167 @@ export const notifications = [
     topic: "Aquaculture",
   },
 ];
+
+// user feed
+export const userFeeds = [
+  {
+    id: 1,
+    authorImage: "https://randomuser.me/api/portraits/men/1.jpg",
+    authorName: "Adebola Ogunleye",
+    datePosted: "10th June, 2024; 10:00am",
+    description:
+      "Discover the latest sustainable farming practices to boost your crop yield and protect the environment.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 24,
+    numberOfLikes: 150,
+    numberOfShares: 30,
+  },
+  {
+    id: 2,
+    authorImage: "https://randomuser.me/api/portraits/women/2.jpg",
+    authorName: "Chinelo Okeke",
+    datePosted: "9th June, 2024; 11:30am",
+    description:
+      "Using organic fertilizers can significantly improve soil health and crop productivity.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 15,
+    numberOfLikes: 120,
+    numberOfShares: 22,
+  },
+  {
+    id: 3,
+    authorImage: "https://randomuser.me/api/portraits/men/3.jpg",
+    authorName: "Bamidele Alabi",
+    datePosted: "8th June, 2024; 09:45am",
+    description:
+      "Innovative irrigation techniques are crucial for improving water use efficiency in Nigerian agriculture.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 32,
+    numberOfLikes: 180,
+    numberOfShares: 40,
+  },
+  {
+    id: 4,
+    authorImage: "https://randomuser.me/api/portraits/women/4.jpg",
+    authorName: "Aisha Suleiman",
+    datePosted: "7th June, 2024; 08:20am",
+    description:
+      "Crop rotation and cover cropping are effective methods to enhance soil fertility and prevent erosion.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 18,
+    numberOfLikes: 140,
+    numberOfShares: 25,
+  },
+  {
+    id: 5,
+    authorImage: "https://randomuser.me/api/portraits/men/5.jpg",
+    authorName: "Kunle Adebayo",
+    datePosted: "6th June, 2024; 12:50pm",
+    description:
+      "Precision agriculture and the use of drones can revolutionize farming practices in Nigeria.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 28,
+    numberOfLikes: 160,
+    numberOfShares: 35,
+  },
+  {
+    id: 6,
+    authorImage: "https://randomuser.me/api/portraits/women/6.jpg",
+    authorName: "Ngozi Nwosu",
+    datePosted: "5th June, 2024; 02:15pm",
+    description:
+      "Implementing integrated pest management can reduce pesticide use and increase crop resilience.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 21,
+    numberOfLikes: 135,
+    numberOfShares: 28,
+  },
+  {
+    id: 7,
+    authorImage: "https://randomuser.me/api/portraits/men/7.jpg",
+    authorName: "Olawale Akinyemi",
+    datePosted: "4th June, 2024; 03:40pm",
+    description:
+      "Exploring new crop varieties can help farmers adapt to changing climate conditions.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 17,
+    numberOfLikes: 145,
+    numberOfShares: 26,
+  },
+  {
+    id: 8,
+    authorImage: "https://randomuser.me/api/portraits/women/8.jpg",
+    authorName: "Funke Adeyemi",
+    datePosted: "3rd June, 2024; 01:55pm",
+    description:
+      "Urban farming is gaining popularity in Nigeria, providing fresh produce to city dwellers.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 19,
+    numberOfLikes: 125,
+    numberOfShares: 20,
+  },
+  {
+    id: 9,
+    authorImage: "https://randomuser.me/api/portraits/men/9.jpg",
+    authorName: "Ibrahim Danjuma",
+    datePosted: "2nd June, 2024; 04:10pm",
+    description:
+      "Agroforestry practices can enhance biodiversity and provide additional income streams for farmers.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 23,
+    numberOfLikes: 155,
+    numberOfShares: 32,
+  },
+  {
+    id: 10,
+    authorImage: "https://randomuser.me/api/portraits/women/10.jpg",
+    authorName: "Amara Eze",
+    datePosted: "1st June, 2024; 05:25pm",
+    description:
+      "Small-scale farmers can benefit from cooperative farming and shared resources.",
+    images: [
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+      `/images/feed${Math.floor(Math.random() * 8) + 1}.jpg`,
+    ],
+    numberOfComments: 20,
+    numberOfLikes: 130,
+    numberOfShares: 24,
+  },
+];
