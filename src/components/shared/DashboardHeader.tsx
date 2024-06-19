@@ -7,7 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const DashboardHeader = () => {
   const [auth] = useAuth();
-  const isUser = auth?.email === "Sincere@april.biz";
+  const isUser = auth?.email !== "Sincere@april.biz";
   const pathname = useLocation().pathname;
 
   return (
