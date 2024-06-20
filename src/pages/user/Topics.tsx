@@ -37,8 +37,8 @@ const Topics = () => {
         <meta name="description" content="Topics" />
       </Helmet>
 
-      <div className="flex flex-col gap-10 md:gap-6 p-5 w-full">
-        <section className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between w-full md:gap-5">
+      <div className="md:gap-6 xl:max-w-4xl flex flex-col w-full gap-10 p-5 mx-auto">
+        <section className="md:flex-row md:items-center md:justify-between md:gap-5 flex flex-col w-full gap-3">
           <CustomDropdown
             initialSelectedItem="Activity"
             items={topicDropdownItems}
@@ -70,7 +70,7 @@ const Topics = () => {
           />
         </section>
 
-        <section className="flex flex-wrap flex-row items-center w-full gap-3 md:gap-5">
+        <section className="md:gap-5 flex flex-row flex-wrap items-center w-full gap-3">
           {subscribedTopics.map((topic) => (
             <button
               key={topic}

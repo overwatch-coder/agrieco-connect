@@ -33,7 +33,7 @@ const Notifications = () => {
         </p>
       </DialogTrigger>
 
-      <DialogContent className="flex flex-col gap-4 w-full max-w-[95vw] md:max-w-[70vw] max-h-[90vh] h-full px-0 rounded-xl">
+      <DialogContent className="flex flex-col gap-4 w-full max-w-[95vw] md:max-w-[50vw] max-h-[90vh] h-full px-0 rounded-xl">
         <DialogHeader className="scrollbar-hide overflow-y-scroll">
           <DialogTitle className="border-b-primary-brown flex items-center justify-between pb-4 border-b">
             <span className="md:text-3xl ps-5 text-primary-brown text-xl font-bold">

@@ -69,7 +69,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="place-items-center md:grid-cols-3 grid min-h-screen grid-cols-1">
+    <div className="place-items-center md:grid-cols-2 grid min-h-screen grid-cols-1">
       <Helmet>
         <title>Create New Account | Agrieco-Connect</title>
         <meta name="description" content="Create New Account" />
@@ -79,7 +79,7 @@ const SignUp = () => {
       <AuthBackgroundImage />
 
       {/* Sign Up Form */}
-      <section className="md:col-span-2 bg-primary-brown scrollbar-hide w-full col-span-1 overflow-y-scroll">
+      <section className="bg-primary-brown scrollbar-hide w-full col-span-1 overflow-y-scroll">
         <div className="md:pt-32 flex flex-col items-center justify-center h-screen">
           <div className="flex flex-col gap-2 text-white">
             {/* Title */}
@@ -239,7 +239,7 @@ const SignUp = () => {
                 )}
               </div>
 
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
@@ -261,7 +261,7 @@ const SignUp = () => {
                 >
                   Forgot Password ?
                 </Link>
-              </div>
+              </div> */}
 
               <Button className="bg-primary-green hover:bg-primary-green hover:scale-105 flex items-center justify-center w-full py-6 font-medium text-white transition rounded-none">
                 {isPending ? (

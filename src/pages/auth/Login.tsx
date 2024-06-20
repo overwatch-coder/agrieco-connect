@@ -80,7 +80,7 @@ const Login = () => {
   };
 
   return (
-    <div className="place-items-center md:grid-cols-3 grid min-h-screen grid-cols-1">
+    <div className="place-items-center md:grid-cols-2 grid min-h-screen grid-cols-1">
       <Helmet>
         <title>Login | Agrieco-Connect</title>
         <meta name="description" content="Login to Agrieco-Connect" />
@@ -90,7 +90,7 @@ const Login = () => {
       <AuthBackgroundImage />
 
       {/* Login Form */}
-      <section className="md:col-span-2 bg-primary-brown oveflow-y-scroll scrollbar-hide w-full col-span-1">
+      <section className="bg-primary-brown oveflow-y-scroll scrollbar-hide w-full col-span-1">
         <div className="flex flex-col items-center justify-center h-screen">
           <div className="flex flex-col gap-2 text-center text-white">
             {/* Title */}
