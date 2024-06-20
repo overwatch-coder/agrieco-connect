@@ -1,13 +1,13 @@
 import Notifications from "@/components/Notifications";
 import DashboardMobile from "@/components/shared/DashboardMobile";
 import { useAuth } from "@/hooks/useAuth";
-import { Settings, Bell } from "lucide-react";
+import { Settings } from "lucide-react";
 import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom";
 
 const DashboardHeader = () => {
   const [auth] = useAuth();
-  const isUser = auth?.email !== "Sincere@april.biz";
+  const isUser = !auth?.email.toLowerCase().startsWith("admin");
   const pathname = useLocation().pathname;
   const firstPath = pathname.split("/")[1] === "user" ? "user" : "admin";
 

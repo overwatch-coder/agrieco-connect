@@ -17,7 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Logout = () => {
   const [auth, setAuth] = useAuth();
-  const isUser = auth?.email !== "Sincere@april.biz";
+  const isUser = !auth?.email.toLowerCase().startsWith("admin");
 
   // handle logout
   const handleLogout = async () => {

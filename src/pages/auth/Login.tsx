@@ -40,20 +40,25 @@ const Login = () => {
       const resData: Omit<Auth, "confirmPassword">[] = res.data;
 
       // check if user exists
-      const user = resData.find((user) => user.email === data.email);
-      if (!user) {
-        throw new Error("Invalid credentials");
-      }
+      // const user = resData.find((user) => user.email === data.email);
+      // if (!user) {
+      //   throw new Error("Invalid credentials");
+      // }
 
-      // check if password is correct
-      const isCorrectPassword = user.email === data.email;
-      if (!isCorrectPassword) {
-        throw new Error("Invalid credentials");
-      }
+      // // check if password is correct
+      // const isCorrectPassword = user.email === data.email;
+      // if (!isCorrectPassword) {
+      //   throw new Error("Invalid credentials");
+      // }
 
-      const { password, ...rest } = user;
+      // const { password, ...rest } = user;
 
-      return rest;
+      return {
+        name: data.email.startsWith("admin") ? "Admin" : "User",
+        topic: "Agrieco",
+        email: data.email,
+        rememberMe: data.rememberMe,
+      };
     },
     onError: (error) => {
       console.log(error);
@@ -64,7 +69,9 @@ const Login = () => {
 
       toast.success("Login Successful");
 
-      navigate("/dashboard");
+      navigate(
+        data.email.startsWith("admin") ? "/admin/dashboard" : "/user/feed"
+      );
     },
   });
 

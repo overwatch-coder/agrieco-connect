@@ -46,7 +46,7 @@ export default function ConfigureRoutes() {
         element={
           !auth ? (
             <Navigate to="/login" />
-          ) : auth.email !== "Sincere@april.biz" ? (
+          ) : !auth.email.toLowerCase().startsWith("admin") ? (
             <UserDashboardLayout />
           ) : (
             <Navigate to="/user/feed" />
@@ -67,7 +67,7 @@ export default function ConfigureRoutes() {
         element={
           !auth ? (
             <Navigate to="/login" />
-          ) : auth.email === "Sincere@april.biz" ? (
+          ) : auth.email.toLowerCase().startsWith("admin") ? (
             <AdminDashboardLayout />
           ) : (
             <Navigate to="/admin/dashboard" />
