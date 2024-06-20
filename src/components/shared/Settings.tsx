@@ -93,6 +93,11 @@ const Settings = () => {
           onSubmit={handleSubmit(handleSettingsSubmit)}
           className="flex flex-col gap-10"
         >
+          {isError && (
+            <div className="flex items-center justify-center text-center p-4 bg-red-200 rounded-md">
+              <p className="text-xs text-red-500">{error.message}</p>
+            </div>
+          )}
           {/* Personal and Contact Information */}
           <div className="border-secondary-gray gap-7 flex flex-col pb-4 border-b">
             <h3 className="text-primary-brown font-medium">

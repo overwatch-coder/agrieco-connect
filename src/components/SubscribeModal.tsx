@@ -58,10 +58,10 @@ const SubscribeModal = ({
         {/* Header */}
         <div className="flex items-start justify-between">
           <DialogTitle className="flex flex-col gap-3">
-            <span className="text-primary-brown text-xl font-bold">
+            <span className="text-primary-brown text-xl md:text-3xl font-bold">
               All Topics
             </span>
-            <span className="text-sm text-secondary-gray font-medium">
+            <span className="text-sm text-secondary-gray font-normal">
               Subscribe or Unscubscribe to topics
             </span>
           </DialogTitle>

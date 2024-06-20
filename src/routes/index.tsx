@@ -18,6 +18,9 @@ import Feed from "@/pages/user/Feed";
 import Dashboard from "@/pages/admin/Dashboard";
 import Settings from "@/components/shared/Settings";
 import Topics from "@/pages/user/Topics";
+import MarketPlace from "@/pages/user/MarketPlace";
+import Events from "@/pages/user/Events";
+import MyItemsMarketPlace from "@/pages/user/MyItemsMarketPlace";
 
 export default function ConfigureRoutes() {
   const [auth] = useAuth();
@@ -53,6 +56,9 @@ export default function ConfigureRoutes() {
         <Route path="settings" element={<Settings />} />
         <Route path="feed" element={<Feed />} />
         <Route path="topics" element={<Topics />} />
+        <Route path="marketplace" element={<MarketPlace />} />
+        <Route path="marketplace/my-items" element={<MyItemsMarketPlace />} />
+        <Route path="events" element={<Events />} />
       </Route>
 
       {/* Admin Routes */}

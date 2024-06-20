@@ -1,10 +1,13 @@
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
-import { marketplaceProducts as events } from "@/constants";
+import { marketplaceProducts } from "@/constants";
 import MarketPlaceAddItem from "@/components/MarketPlaceAddItem";
 import CustomDropdown from "@/components/CustomDropdown";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import SellerInformation from "@/components/SellerInformation";
 
-type EventsItemType = (typeof events)[number];
+type MarketPlaceItemType = (typeof marketplaceProducts)[number];
 
 const dropdownItemsOne = ["Popular", "New", "Sale", "All"];
 
@@ -16,19 +19,19 @@ const dropdownItemsTwo = [
   "Most Shared",
 ];
 
-const Events = () => {
+const MarketPlace = () => {
   return (
     <div className="w-full">
       {/* Title */}
       <Helmet>
-        <title> Events - Agrieco-Connect </title>
-        <meta name="description" content="Events" />
+        <title> Market Place - Agrieco-Connect </title>
+        <meta name="description" content="Market Place" />
       </Helmet>
 
       <div className="flex flex-col gap-10 md:gap-6 p-5 w-full">
         <section className="flex items-center justify-between w-full gap-5">
           <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown">
-            All Events
+            Market Place
           </h2>
 
           <MarketPlaceAddItem />
@@ -36,7 +39,7 @@ const Events = () => {
 
         <section className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between w-full md:gap-5">
           <h2 className="font-semibold text-secondary-gray text-lg">
-            All Available Events
+            Available Items For Sale
           </h2>
 
           <div className="flex md:items-center gap-5 flex-wrap md:justify-center">
@@ -48,15 +51,18 @@ const Events = () => {
               initialSelectedItem="New"
               items={dropdownItemsTwo}
             />
-            <div className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border">
-              <span className="text-secondary-gray text-sm">My Events</span>
-            </div>
+            <Link
+              to="/user/marketplace/my-items"
+              className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border"
+            >
+              <span className="text-secondary-gray text-sm">My Items</span>
+            </Link>
           </div>
         </section>
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
-          {events.map((item) => (
-            <EventsItem key={item.id} item={item} />
+          {marketplaceProducts.map((item) => (
+            <MarketPlaceItem key={item.id} item={item} />
           ))}
         </section>
       </div>
@@ -64,9 +70,11 @@ const Events = () => {
   );
 };
 
-export default Events;
+export default MarketPlace;
 
-const EventsItem = ({ item }: { item: EventsItemType }) => {
+const MarketPlaceItem = ({ item }: { item: MarketPlaceItemType }) => {
+  const [openModal, setOpenModal] = useState(false);
+
   return (
     <div className="bg-white col-span-1 w-full rounded-xl shadow p-4 flex flex-col gap-5 relative">
       <div className="flex items-center gap-5">
@@ -91,15 +99,24 @@ const EventsItem = ({ item }: { item: EventsItemType }) => {
       </p>
 
       <div className="flex flex-col gap-3 w-full mt-auto">
-        <p className="text-sm flex items-center gap-1">
+        <button
+          className="text-sm flex items-center gap-1"
+          onClick={() => setOpenModal(true)}
+        >
           <span className="font-normal text-primary-brown">Seller:</span>
           <span className="text-secondary-gray">{item.seller}</span>
-        </p>
+        </button>
 
         <Button className="bg-primary-green text-white text-center py-2 px-5 rounded-none hover:bg-primary-green w-full md:w-1/2 hover:scale-105 transition">
           Purchase
         </Button>
       </div>
+
+      <SellerInformation
+        item={item}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
     </div>
   );
 };

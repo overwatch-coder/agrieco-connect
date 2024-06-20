@@ -473,3 +473,157 @@ export const userFeeds = [
     numberOfShares: 24,
   },
 ];
+
+// marketplace products
+export const marketplaceProducts = [
+  {
+    id: 1,
+    price: "₦3,000 per pack",
+    name: "Organic Pepper Seeds",
+    description:
+      "High-yield organic pepper seeds suitable for various climates. Certified organic and non-GMO. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra orci a elit faucibus suscipit vel vulputate libero.",
+    location: "Lagos, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Agro Nigeria",
+  },
+  {
+    id: 2,
+    price: "₦4,500 per pack",
+    name: "Premium Yam Tubers",
+    description:
+      "Fresh and premium quality yam tubers from the fertile lands of Northern Nigeria. Non-GMO and organically grown. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Kaduna, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Farm Fresh",
+  },
+  {
+    id: 3,
+    price: "₦1,800 per pack",
+    name: "Organic Maize Seeds",
+    description:
+      "Top-quality organic maize seeds. Ideal for all seasons and resistant to pests. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra orci a elit faucibus suscipit vel vulputate libero.",
+    location: "Kano, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Kano Agro",
+  },
+  {
+    id: 4,
+    price: "₦2,200 per pack",
+    name: "Cassava Stems",
+    description:
+      "High-quality cassava stems for planting. Guaranteed to produce a high yield. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra orci a elit faucibus suscipit vel vulputate libero.",
+    location: "Ibadan, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Cassava Farms",
+  },
+  {
+    id: 5,
+    price: "₦5,000 per pack",
+    name: "Organic Rice Grains",
+    description:
+      "Premium organic rice grains, perfect for all types of meals. Non-GMO and organically grown. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra orci a elit faucibus suscipit vel vulputate libero.",
+    location: "Abakaliki, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Ebonyi Rice",
+  },
+  {
+    id: 6,
+    price: "₦2,800 per pack",
+    name: "High-Quality Cocoa Beans",
+    description:
+      "Top-grade cocoa beans from the best farms in Nigeria. Perfect for chocolate production. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Ondo, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Ondo Cocoa",
+  },
+  {
+    id: 7,
+    price: "₦3,200 per pack",
+    name: "Organic Pineapple",
+    description:
+      "Sweet and juicy organic pineapples. Grown without chemicals. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra orci a elit faucibus suscipit vel vulputate libero.",
+    location: "Benin City, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Edo Fresh Produce",
+  },
+  {
+    id: 8,
+    price: "₦1,500 per pack",
+    name: "Groundnut Seeds",
+    description:
+      "High-yield groundnut seeds. Certified organic and non-GMO. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Minna, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Niger Farms",
+  },
+  {
+    id: 9,
+    price: "₦3,600 per pack",
+    name: "Organic Carrot Seeds",
+    description:
+      "Top-quality organic carrot seeds. Ideal for all climates. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras pharetra orci a elit faucibus suscipit vel vulputate libero.",
+    location: "Jos, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Jos Vegetables",
+  },
+  {
+    id: 10,
+    price: "₦2,400 per pack",
+    name: "Plantain Suckers",
+    description:
+      "High-yield plantain suckers. Perfect for planting in all climates. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Abeokuta, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Ogun Agro",
+  },
+  {
+    id: 11,
+    price: "₦3,700 per pack",
+    name: "Organic Watermelon",
+    description:
+      "Fresh and juicy organic watermelons. Grown without chemicals. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Ilorin, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Kwara Produce",
+  },
+  {
+    id: 12,
+    price: "₦1,200 per pack",
+    name: "Okra Seeds",
+    description:
+      "High-yield organic okra seeds. Suitable for all seasons. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Uyo, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Akwa Ibom Agro",
+  },
+  {
+    id: 13,
+    price: "₦4,000 per pack",
+    name: "Organic Sweet Potatoes",
+    description:
+      "Delicious and nutritious organic sweet potatoes. Grown without chemicals. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Makurdi, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Benue Agro",
+  },
+  {
+    id: 14,
+    price: "₦2,600 per pack",
+    name: "Organic Spinach Seeds",
+    description:
+      "Top-quality organic spinach seeds. Ideal for all climates. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Enugu, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Enugu Greens",
+  },
+  {
+    id: 15,
+    price: "₦1,900 per pack",
+    name: "High-Yield Soybeans",
+    description:
+      "Premium quality soybeans. Perfect for all types of meals. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Zaria, Nigeria",
+    image: "/icons/plant.svg",
+    seller: "Zaria Agro",
+  },
+];
