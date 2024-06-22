@@ -1,20 +1,21 @@
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
 import { Separator } from "@/components/ui/separator";
 import { notifications } from "@/constants";
 import { Bell, X } from "lucide-react";
 
 const Notifications = () => {
   return (
-    <Dialog>
-      <DialogTrigger>
+    <Sheet>
+      <SheetTrigger>
         {/* Mobile Menu */}
         <p className="hover:scale-105 bg-white/30 md:hidden relative flex items-center gap-3 p-4 transition rounded">
           <Bell size={20} className={"text-white"} />
@@ -31,23 +32,27 @@ const Notifications = () => {
             4
           </span>
         </p>
-      </DialogTrigger>
+      </SheetTrigger>
 
-      <DialogContent className="flex flex-col gap-4 w-full max-w-[95vw] md:max-w-[50vw] max-h-[90vh] h-full px-0 rounded-xl">
-        <DialogHeader className="scrollbar-hide overflow-y-scroll">
-          <DialogTitle className="border-b-primary-brown flex items-center justify-between pb-4 border-b">
+      <SheetContent
+        side={"top"}
+        id="hide"
+        className="flex flex-col gap-4 w-full max-w-[95vw] ms-auto md:max-w-[45vw] max-h-[95vh] h-full px-0 rounded-xl"
+      >
+        <SheetHeader className="scrollbar-hide overflow-y-scroll">
+          <SheetTitle className="border-b-primary-brown flex items-center justify-between pb-4 border-b">
             <span className="md:text-3xl ps-5 text-primary-brown text-xl font-bold">
               Notifications
             </span>
-            <DialogClose>
+            <SheetClose>
               <X
                 className="me-5 text-red-500 border border-red-500 rounded-full"
                 size={25}
               />
-            </DialogClose>
-          </DialogTitle>
+            </SheetClose>
+          </SheetTitle>
 
-          <DialogDescription>
+          <SheetDescription>
             {notifications.map((notification) => (
               <section
                 key={notification.name}
@@ -102,10 +107,10 @@ const Notifications = () => {
                 </div>
               </section>
             ))}
-          </DialogDescription>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+          </SheetDescription>
+        </SheetHeader>
+      </SheetContent>
+    </Sheet>
   );
 };
 
