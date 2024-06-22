@@ -106,17 +106,7 @@ export const userDashboardLinks = [
     name: "Agriculture Trends",
     path: "/user/agriculture-trends",
     icon: CircleHelp,
-  },
-  {
-    name: "Chatbot",
-    path: "/user/chatbot",
-    icon: TbMessageChatbot,
-  },
-  {
-    name: "Help & Support",
-    path: "/user/help-support",
-    icon: CircleHelp,
-  },
+  }
 ];
 
 // recent activities
