@@ -88,16 +88,6 @@ export const userDashboardLinks = [
     icon: RiCalendarTodoFill,
   },
   {
-    name: "Messages",
-    path: "/user/messages",
-    icon: TbMessage2,
-  },
-  {
-    name: "Appointments",
-    path: "/user/appointments",
-    icon: RiCalendarTodoFill,
-  },
-  {
     name: "Subcommunities",
     path: "/user/subcommunities",
     icon: IoIosPeople,
@@ -106,7 +96,7 @@ export const userDashboardLinks = [
     name: "Agriculture Trends",
     path: "/user/agriculture-trends",
     icon: CircleHelp,
-  }
+  },
 ];
 
 // recent activities

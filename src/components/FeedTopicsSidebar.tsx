@@ -6,10 +6,10 @@ const FeedTopicsSidebar = () => {
     <aside className="scrollbar-hide w-72 md:flex fixed top-0 right-0 flex-col hidden h-screen col-span-1 gap-5 px-5 mt-16 overflow-y-scroll bg-white">
       <div className="text-start flex flex-col w-full h-full min-h-full pt-10 pb-16">
         <div className="flex flex-col flex-grow gap-5 mb-auto">
-          {/* Topics */}
+          {/* Trends */}
           <section className="flex flex-col gap-5">
             <h2 className="text-primary-brown/50 text-lg font-medium">
-              Topics
+              Trends
             </h2>
             <div className="flex flex-col gap-3">
               <Link
