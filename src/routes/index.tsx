@@ -21,19 +21,43 @@ import Topics from "@/pages/user/Topics";
 import MarketPlace from "@/pages/user/MarketPlace";
 import Events from "@/pages/user/Events";
 import MyItemsMarketPlace from "@/pages/user/MyItemsMarketPlace";
+import NotFound from "@/pages/NotFound";
 
 export default function ConfigureRoutes() {
   const [auth] = useAuth();
+  const isAdmin = auth?.email.toLowerCase().startsWith("admin");
 
   const routes = createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route
         index
-        element={auth ? <Navigate to="/user/feed" /> : <Navigate to="/login" />}
+        element={
+          auth ? (
+            isAdmin ? (
+              <Navigate to="/admin/dashboard" />
+            ) : (
+              <Navigate to="/user/feed" />
+            )
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
       />
 
       {/* Auth Routes */}
-      <Route element={auth ? <Navigate to="/user/feed" /> : <AuthLayout />}>
+      <Route
+        element={
+          auth ? (
+            isAdmin ? (
+              <Navigate to="/admin/dashboard" />
+            ) : (
+              <Navigate to="/user/feed" />
+            )
+          ) : (
+            <AuthLayout />
+          )
+        }
+      >
         <Route index path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
@@ -46,10 +70,10 @@ export default function ConfigureRoutes() {
         element={
           !auth ? (
             <Navigate to="/login" />
-          ) : !auth.email.toLowerCase().startsWith("admin") ? (
-            <UserDashboardLayout />
+          ) : isAdmin ? (
+            <Navigate to="/admin/dashboard" />
           ) : (
-            <Navigate to="/user/feed" />
+            <UserDashboardLayout />
           )
         }
       >
@@ -67,10 +91,10 @@ export default function ConfigureRoutes() {
         element={
           !auth ? (
             <Navigate to="/login" />
-          ) : auth.email.toLowerCase().startsWith("admin") ? (
+          ) : isAdmin ? (
             <AdminDashboardLayout />
           ) : (
-            <Navigate to="/admin/dashboard" />
+            <Navigate to="/user/feed" />
           )
         }
       >
@@ -79,7 +103,7 @@ export default function ConfigureRoutes() {
         <Route path="user-management" element={<Home />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<NotFound />} />
     </Route>
   );
 
