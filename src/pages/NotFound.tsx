@@ -1,8 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import { useLocation, useNavigate } from "react-router-dom";
-
-const imageUrl =
-  "https://t4.ftcdn.net/jpg/03/88/63/83/360_F_388638369_wSBADhKfhiTx6Q5Pz1xfdpy6zotku1Sg.jpg";
+import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -22,7 +19,7 @@ const NotFound = () => {
       </h1>
 
       <img
-        src={imageUrl}
+        src={"/images/not-found.jpg"}
         alt="Page not found"
         className="w-full max-w-xl mb-8"
       />
