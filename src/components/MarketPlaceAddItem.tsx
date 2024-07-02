@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,25 +5,26 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { axiosInstance, cn } from "@/lib/utils";
+import { axiosInstance } from "@/lib/utils";
 import { MarketplaceProductsSchema } from "@/schema/marketplace.schema";
 import { MarketplaceProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Upload, X } from "lucide-react";
-import { useForm, UseFormRegister } from "react-hook-form";
+import { X } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { FileDrop } from "@instructure/ui-file-drop";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
+import CustomFormField from "@/components/shared/CustomFormField";
+import CustomFileUpload from "@/components/shared/CustomFileUpload";
 
 const MarketPlaceAddItem = () => {
-  const [attachements, setAttachements] =
-    useState<ArrayLike<File | DataTransferItem>>();
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<MarketplaceProducts>({
     resolver: zodResolver(MarketplaceProductsSchema),
@@ -45,28 +45,31 @@ const MarketPlaceAddItem = () => {
 
   const handleSubmitForm = async (data: MarketplaceProducts) => {
     console.log(data);
-    await mutateAsync({ ...data, attachments: attachements });
+    await mutateAsync({ ...data });
   };
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown text-center bg-transparent border rounded-none px-5 py-2">
+      <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
         {"Sell Item"}
       </DialogTrigger>
 
-      <DialogContent className="w-full max-w-2xl flex flex-col gap-5 h-screen overflow-y-scroll scrollbar-hide">
+      <DialogContent className="scrollbar-hide flex flex-col w-full h-screen max-w-2xl gap-5 overflow-y-scroll">
         {/* Header */}
         <div className="flex items-start justify-between">
           <DialogTitle className="flex flex-col gap-3">
-            <span className="text-primary-brown text-2xl md:text-3xl font-bold">
+            <span className="text-primary-brown md:text-3xl text-2xl font-bold">
               Sell an Item
             </span>
-            <span className="text-sm text-secondary-gray font-normal">
+            <span className="text-secondary-gray text-sm font-normal">
               Add and item you will like to sell
             </span>
           </DialogTitle>
 
-          <DialogClose className="h-6 w-6 flex items-center justify-center rounded-full border-red-500 border">
+          <DialogClose
+            onClick={() => reset()}
+            className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full"
+          >
             <X size={20} className="text-red-500" />
           </DialogClose>
         </div>
@@ -79,110 +82,76 @@ const MarketPlaceAddItem = () => {
           encType="multipart/form-data"
         >
           {isError && (
-            <div className="flex items-center justify-center text-center p-4 bg-red-200 rounded-md">
+            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
               <p className="text-xs text-red-500">{error.message}</p>
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full">
-            <InputForm
+          <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
+            <CustomFormField
               labelName="Item Name"
               inputName="name"
-              placeholder="Please enter your item name"
-              hasError={errors.name !== undefined}
-              errorMessage={errors.name?.message}
+              placeholderText="Please enter your item name"
+              errors={errors}
               register={register}
+              inputType="text"
             />
 
-            <InputForm
+            <CustomFormField
               labelName="Price"
               inputName="price"
-              placeholder="Please enter your price"
-              hasError={errors.price !== undefined}
-              errorMessage={errors.price?.message}
+              placeholderText="Please enter your price"
+              errors={errors}
               register={register}
+              inputType="text"
             />
 
-            <InputForm
+            <CustomFormField
               labelName="Location"
               inputName="location"
-              placeholder="Please enter your location"
-              hasError={errors.location !== undefined}
-              errorMessage={errors.location?.message}
+              placeholderText="Please enter your location"
+              errors={errors}
               register={register}
+              inputType="text"
             />
           </div>
 
-          <div className="flex flex-col gap-5 w-full">
-            <InputForm
+          <div className="flex flex-col w-full gap-5">
+            <CustomFormField
               labelName="Description"
               inputName="description"
-              placeholder="Please enter a description for your item"
-              hasError={errors.description !== undefined}
-              errorMessage={errors.description?.message}
+              placeholderText="Please enter a description for your item"
+              errors={errors}
               register={register}
+              inputType="textarea"
             />
 
-            <InputForm
+            <CustomFormField
               labelName="Seller Info"
               inputName="seller"
-              placeholder="Enter your seller info"
-              hasError={errors.seller !== undefined}
-              errorMessage={errors.seller?.message}
+              placeholderText="Enter your seller info"
+              errors={errors}
               register={register}
+              inputType="text"
             />
 
-            <label
-              htmlFor="attachment"
-              className="text-primary-green font-medium text-base"
-            >
-              Add Attachment
-            </label>
-            <div className="flex flex-col gap-4 p-5 w-full rounded-md border border-secondary-gray bg-secondary-gray/50">
-              <FileDrop
-                id="attachements"
-                name="attachements"
-                onDropAccepted={(file) => {
-                  setAttachements(file);
-                }}
-                shouldEnablePreview={true}
-                shouldAllowMultiple={true}
-                renderLabel={() => (
-                  <div className="flex flex-col gap-5 p-5 items-center justify-center">
-                    <Upload size={40} className="text-white" />
-                    <p className="text-sm flex flex-col text-center items-center gap-1 font-medium w-full">
-                      <span className="text-black">Drag and Drop here</span>
-                      <span className="text-secondary-gray/50">or</span>
-                      <span className="text-red-500 p-2 text-center rounded bg-white w-full">
-                        Browse Files
-                      </span>
-                    </p>
-                  </div>
-                )}
-              />
-
-              {attachements && attachements.length > 0 && (
-                <div className="flex items-center gap-3 flex-wrap overflow-x-scroll scrollbar-hide">
-                  {Array.from(attachements).map((image, idx: number) => (
-                    <ImagePreview
-                      image={URL.createObjectURL(image as File)}
-                      key={idx}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            <CustomFileUpload
+              title="Add Attachment"
+              itemName="attachments"
+              setValue={setValue}
+              watch={watch}
+              allowMultiple={true}
+            />
 
             {/* Submit Button */}
-            <div className="flex items-center w-full justify-end">
+            <div className="flex items-center justify-end w-full">
               <div className="flex items-center gap-4">
                 <DialogClose
                   onClick={() => {
-                    setAttachements(undefined);
                     reset();
                   }}
                   disabled={isPending}
-                  className="bg-transparent hover:bg-transparent text-secondary-gray px-7 py-2 rounded-none border border-secondary-gray"
+                  className="hover:bg-transparent text-secondary-gray px-7 border-secondary-gray w-full py-2 bg-transparent border rounded-none"
                   type="reset"
                 >
                   Cancel
@@ -190,7 +159,7 @@ const MarketPlaceAddItem = () => {
 
                 <Button
                   disabled={isPending}
-                  className="bg-primary-green hover:bg-primary-green px-7 py-2 text-white rounded-none"
+                  className="bg-primary-green hover:bg-primary-green w-full px-10 py-2 text-white rounded-none"
                 >
                   {isPending ? (
                     <ClipLoader size={28} loading={isPending} color="white" />
@@ -208,76 +177,3 @@ const MarketPlaceAddItem = () => {
 };
 
 export default MarketPlaceAddItem;
-
-type InputFormProps = {
-  labelName: string;
-  inputName: keyof MarketplaceProducts;
-  inputType?: string;
-  placeholder?: string;
-  hasError?: boolean;
-  errorMessage?: string;
-  isTextArea?: boolean;
-  register: UseFormRegister<MarketplaceProducts>;
-  defaultValue?: string;
-  containerClassName?: string;
-};
-const InputForm = ({
-  labelName,
-  inputName,
-  inputType,
-  placeholder,
-  hasError,
-  errorMessage,
-  isTextArea,
-  register,
-  defaultValue,
-  containerClassName,
-}: InputFormProps) => {
-  return (
-    <div className={cn("flex flex-col gap-2", containerClassName)}>
-      <label htmlFor={inputName} className="text-sm font-medium text-black">
-        {labelName}
-      </label>
-
-      {isTextArea ? (
-        <textarea
-          {...register(inputName)}
-          id={inputName}
-          className="bg-primary-lightBlue placeholder:text-secondary-gray text-primary-gray/70 focus:outline-none ring-0 w-full p-3 text-sm border-none rounded outline-none"
-          placeholder={placeholder}
-          rows={10}
-          defaultValue={defaultValue || ""}
-        />
-      ) : (
-        <input
-          type={inputType || "text"}
-          id={inputName}
-          {...register(inputName)}
-          className="bg-primary-lightBlue placeholder:text-secondary-gray text-primary-gray/70 focus:outline-none ring-0 w-full p-3 text-sm border-none rounded outline-none"
-          placeholder={placeholder || labelName}
-          defaultValue={defaultValue || ""}
-        />
-      )}
-      {hasError && (
-        <p className="text-start py-1 text-xs text-red-500">{errorMessage}</p>
-      )}
-    </div>
-  );
-};
-
-type ImagePreviewProps = {
-  image: string;
-};
-
-const ImagePreview = ({ image }: ImagePreviewProps) => {
-  return (
-    <img
-      src={image}
-      alt="Preview"
-      loading="lazy"
-      width={60}
-      height={60}
-      className="rounded object-contain w-16 h-16"
-    />
-  );
-};

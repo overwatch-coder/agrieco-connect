@@ -3,11 +3,6 @@ import { UserFeedsType } from "@/pages/user/Feed";
 import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
