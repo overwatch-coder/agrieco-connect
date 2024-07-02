@@ -24,6 +24,7 @@ const CustomFileUpload = <T extends FieldValues>({
   title,
   allowMultiple,
 }: CustomFileUploadProps<T>) => {
+  console.log(watch(itemName));
   return (
     <div className="flex flex-col w-full gap-5">
       <label
@@ -63,7 +64,11 @@ const CustomFileUpload = <T extends FieldValues>({
           <div className="scrollbar-hide flex flex-wrap items-center gap-3 overflow-x-scroll">
             {Array.from(watch(itemName)).map((image, idx: number) => (
               <ImagePreview
-                image={URL.createObjectURL(image as File)}
+                image={
+                  typeof image === "string"
+                    ? image
+                    : URL.createObjectURL(image as File)
+                }
                 key={idx}
               />
             ))}

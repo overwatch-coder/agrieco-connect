@@ -5,6 +5,8 @@ import TopicItem from "@/components/TopicItem";
 import { userFeeds as userTopics } from "@/constants";
 import SubscribeModal from "@/components/SubscribeModal";
 import CustomDropdown from "@/components/CustomDropdown";
+import InfiniteScroll from "react-infinite-scroller";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const topicDropdownItems = [
   "Activity",
@@ -14,7 +16,25 @@ const topicDropdownItems = [
   "Poultry",
 ];
 
+type Topic = (typeof userTopics)[number];
+
 const Topics = () => {
+  const [topics, setTopics] = useState<Topic[]>(userTopics.slice(0, 2));
+  const [hasMore, setHasMore] = useState(true);
+
+  // fetch more topics when user scrolls to the bottom
+  const fetchMoreTopics = (): void => {
+    if (topics.length >= userTopics.length) {
+      setHasMore(false);
+      return;
+    }
+
+    setTimeout(() => {
+      setTopics(
+        topics.concat(userTopics.slice(topics.length, topics.length + 2))
+      );
+    }, 500);
+  };
   const [searchTopic, setSearchTopic] = useState("");
   const [subscribedTopics, setSubscribedTopics] = useState<string[]>([
     "Poultry",
@@ -81,10 +101,22 @@ const Topics = () => {
           ))}
         </section>
 
-        <section className="flex flex-col w-full gap-5">
-          {userTopics.map((topic) => (
-            <TopicItem key={topic.id} {...topic} />
-          ))}
+        <section id="topics" className="flex flex-col w-full gap-5">
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={fetchMoreTopics}
+            hasMore={hasMore}
+            loader={
+              <div className="flex items-center justify-center">
+                <ClipLoader key={0} size={30} color="black" loading={true} />
+              </div>
+            }
+            className="flex flex-col w-full gap-5"
+          >
+            {topics.map((topic) => (
+              <TopicItem key={topic.id} {...topic} />
+            ))}
+          </InfiniteScroll>
         </section>
       </div>
     </div>

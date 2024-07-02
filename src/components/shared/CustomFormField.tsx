@@ -11,10 +11,10 @@ type CustomFormFieldProps<T extends FieldValues> = {
   inputName: Path<T>;
   errors: FieldErrors<T>;
   register: UseFormRegister<T>;
+  inputType: "text" | "date" | "select" | "textarea" | "time";
   value?: string;
   placeholderText?: string;
   className?: string;
-  inputType?: "text" | "date" | "select" | "textarea" | "time";
   selectOptions?: { value: string; label: string }[];
   isInputPassword?: boolean;
 };

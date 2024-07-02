@@ -29,7 +29,7 @@ const MyItemsMarketPlace = () => {
         <meta name="description" content="My Items - Market Place" />
       </Helmet>
 
-      <div className="flex flex-col gap-10 md:gap-6 p-5 w-full">
+      <div className="md:gap-6 flex flex-col w-full gap-10 p-5">
         <section className="flex items-center justify-between w-full gap-5">
           <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown">
             My Items
@@ -38,7 +38,7 @@ const MyItemsMarketPlace = () => {
           <MarketPlaceAddItem />
         </section>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+        <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
           {marketplaceProducts.map((item) => (
             <MarketPlaceItem key={item.id} item={item} />
           ))}
@@ -55,7 +55,7 @@ const MarketPlaceItem = ({ item }: { item: MarketPlaceItemType }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   return (
-    <div className="bg-white col-span-1 w-full rounded-xl shadow p-4 flex flex-col gap-5 relative">
+    <div className="rounded-xl relative flex flex-col w-full col-span-1 gap-5 p-4 bg-white shadow">
       <div className="flex items-center gap-5">
         <img
           src={item.image}
@@ -63,23 +63,23 @@ const MarketPlaceItem = ({ item }: { item: MarketPlaceItemType }) => {
           className="w-14 h-14 object-cover rounded-full"
         />
         <p className="flex items-center gap-1 text-base">
-          <span className="font-normal text-primary-brown">Price:</span>
+          <span className="text-primary-brown font-normal">Price:</span>
           <span className="text-secondary-gray">{item.price}</span>
         </p>
       </div>
 
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-normal text-primary-green">{item.name}</h2>
-        <p className="text-sm text-secondary-gray">{item.location}</p>
+        <h2 className="text-primary-green text-lg font-normal">{item.name}</h2>
+        <p className="text-secondary-gray text-sm">{item.location}</p>
       </div>
 
-      <p className="text-secondary-gray/50 text-sm text-start leading-normal">
+      <p className="text-secondary-gray/50 text-start text-sm leading-normal">
         {item.description}
       </p>
 
-      <div className="flex flex-col gap-3 w-full mt-auto">
-        <p className="text-sm flex items-center gap-1">
-          <span className="font-normal text-primary-brown">Seller:</span>
+      <div className="flex flex-col w-full gap-3 mt-auto">
+        <p className="flex items-center gap-1 text-sm">
+          <span className="text-primary-brown font-normal">Seller:</span>
           <span className="text-secondary-gray">{item.seller}</span>
         </p>
 
