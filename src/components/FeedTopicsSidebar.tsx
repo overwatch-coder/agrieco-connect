@@ -1,11 +1,10 @@
-import { TbMessageChatbot } from "react-icons/tb";
 import { Link } from "react-router-dom";
 
 const FeedTopicsSidebar = () => {
   return (
     <aside className="scrollbar-hide w-72 md:flex fixed top-0 right-0 flex-col hidden h-screen col-span-1 gap-5 px-5 mt-16 overflow-y-scroll bg-white">
       <div className="text-start flex flex-col w-full h-full min-h-full pt-10 pb-16">
-        <div className="flex flex-col flex-grow gap-5 mb-auto">
+        <div className="md:pb-28 flex flex-col flex-grow gap-5 mb-auto">
           {/* Trends */}
           <section className="flex flex-col gap-5">
             <h2 className="text-primary-brown/50 text-lg font-medium">
@@ -90,16 +89,6 @@ const FeedTopicsSidebar = () => {
               ))}
             </div>
           </section>
-        </div>
-
-        <div className="flex flex-col items-end w-full h-full py-10">
-          <button className="pb-10">
-            <TbMessageChatbot
-              size={45}
-              strokeWidth={1}
-              className="text-primary-green"
-            />
-          </button>
         </div>
       </div>
     </aside>

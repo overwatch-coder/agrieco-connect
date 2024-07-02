@@ -2,6 +2,17 @@ import { Button } from "@/components/ui/button";
 import { UserFeedsType } from "@/pages/user/Feed";
 import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import { useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const FeedItem = ({
   authorImage,
@@ -24,10 +35,21 @@ const FeedItem = ({
     <section className="rounded-2xl text-start flex flex-col w-full gap-5 p-4 bg-white">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <img
-            src={authorImage}
-            alt={authorName}
-            className="w-10 h-10 rounded-full"
+          <UserBio
+            authorImage={authorImage}
+            authorName={authorName}
+            connections={numberOfLikes}
+            profession={
+              [
+                "Agriculture",
+                "Livestock",
+                "Crop Production",
+                "Farming",
+                "Selling",
+                "Marketing",
+              ][Math.floor(Math.random() * 6)]
+            }
+            bio={description}
           />
           <div className="flex flex-col gap-1">
             <p className="text-sm font-normal">{authorName}</p>
@@ -73,34 +95,34 @@ const FeedItem = ({
         </div>
       </div>
 
-      <div className="border-b-secondary-gray text-start border-b flex flex-wrap items-center md:justify-between w-full gap-1 md:gap-4 pb-5">
+      <div className="border-b-secondary-gray text-start md:justify-between md:gap-4 flex flex-wrap items-center w-full gap-1 pb-5 border-b">
         <Button
           variant={"link"}
-          className="hover:no-underline flex items-center gap-1 md:gap-2"
+          className="hover:no-underline md:gap-2 flex items-center gap-1"
         >
           <MessageCircle size={20} className="text-primary-brown" />
-          <span className="text-primary-brown text-sm font-normal flex items-center gap-1">
-            {numberOfComments} <span className="hidden md:block">comments</span>
+          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+            {numberOfComments} <span className="md:block hidden">comments</span>
           </span>
         </Button>
 
         <Button
           variant={"link"}
-          className="hover:no-underline flex items-center gap-1 md:gap-2"
+          className="hover:no-underline md:gap-2 flex items-center gap-1"
         >
           <ThumbsUp size={20} className="text-primary-brown" />
-          <span className="text-primary-brown text-sm font-normal flex items-center gap-1">
-            {numberOfLikes} <span className="hidden md:block">likes</span>
+          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+            {numberOfLikes} <span className="md:block hidden">likes</span>
           </span>
         </Button>
 
         <Button
           variant={"link"}
-          className="hover:no-underline flex items-center gap-1 md:gap-2"
+          className="hover:no-underline md:gap-2 flex items-center gap-1"
         >
           <Share2 size={20} className="text-primary-brown" />
-          <span className="text-primary-brown text-sm font-normal flex items-center gap-1">
-            {numberOfShares} <span className="hidden md:block">shares</span>
+          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+            {numberOfShares} <span className="md:block hidden">shares</span>
           </span>
         </Button>
       </div>
@@ -128,3 +150,47 @@ const FeedItem = ({
 };
 
 export default FeedItem;
+
+type UserBioProps = {
+  authorImage: string;
+  authorName: string;
+  connections: number;
+  profession: string;
+  bio: string;
+};
+
+const UserBio = ({ ...userInfo }: UserBioProps) => {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <img
+            src={userInfo.authorImage}
+            alt={userInfo.authorName}
+            className="w-10 h-10 rounded-full cursor-pointer"
+          />
+        </TooltipTrigger>
+
+        <TooltipContent
+          align="start"
+          className="md:w-2/3 w-full p-3 bg-white rounded"
+        >
+          <div className="flex flex-col gap-4">
+            <h2 className="text-primary-brown text-xl font-normal">Bio</h2>
+            <p className="text-sm font-normal text-black">{userInfo.bio}</p>
+
+            <div className="flex items-center gap-5 pt-2">
+              <p className="text-primary-brown text-sm font-normal">
+                {userInfo.connections} connections
+              </p>
+              <span className="w-[1.5px] h-5 bg-primary-brown" />
+              <p className="text-primary-brown text-sm font-normal">
+                Professor in {userInfo.profession}
+              </p>
+            </div>
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
