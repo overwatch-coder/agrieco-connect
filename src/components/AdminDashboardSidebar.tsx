@@ -6,7 +6,7 @@ const AdminDashboardSidebar = () => {
   const pathname = useLocation().pathname;
 
   return (
-    <div className="bg-primary-brown scrollbar-hide pb-7 lg:w-60 lg:items-start fixed top-0 left-0 flex flex-col items-center w-16 h-full gap-3 px-5 overflow-y-scroll">
+    <div className="bg-primary-brown scrollbar-hide pb-7 lg:w-60 lg:items-start md:flex fixed top-0 left-0 flex-col items-center hidden w-16 h-full gap-3 px-5 overflow-y-scroll">
       <div className="flex flex-col gap-3 pt-10 pb-5">
         <Link to={"/"} className="flex items-end gap-1 pb-2">
           <img

@@ -1,5 +1,7 @@
 import Notifications from "@/components/Notifications";
+import AdminSidebarMobile from "@/components/shared/AdminSidebarMobile";
 import DashboardMobile from "@/components/shared/DashboardMobile";
+import UserSidebarMobile from "@/components/shared/UserSidebarMobile";
 import { useAuth } from "@/hooks/useAuth";
 import { Settings } from "lucide-react";
 import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
@@ -20,6 +22,19 @@ const DashboardHeader = () => {
       }  z-50 w-full px-4 py-3 bg-white border-b-2`}
     >
       <div className="relative flex items-center justify-between">
+        {/* MobileNav */}
+        {isUser && (
+          <div className="md:hidden">
+            <UserSidebarMobile />
+          </div>
+        )}
+
+        {!isUser && (
+          <div className="md:hidden">
+            <AdminSidebarMobile />
+          </div>
+        )}
+
         <h2 className="md:text-2xl text-primary-brown text-xl font-bold capitalize">
           {isUser ? (
             <Link to="/" className="flex items-center gap-1">

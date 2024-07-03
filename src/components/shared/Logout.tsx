@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
-const Logout = () => {
+const Logout = ({ showLogoutName }: { showLogoutName?: boolean }) => {
   const [auth, setAuth] = useAuth();
   const isUser = !auth?.email.toLowerCase().startsWith("admin");
 
@@ -27,21 +27,29 @@ const Logout = () => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="hover:no-underline hover:scale-105 flex flex-col items-start mt-16 transition">
+      <AlertDialogTrigger className="hover:no-underline hover:scale-105 ps-3 flex flex-col items-start mt-16 transition">
         <p className="flex items-center gap-4 font-bold">
           <RiLogoutCircleLine
             size={20}
             className={isUser ? "text-primary-brown" : "text-white"}
           />
-          <span
-            className={
-              isUser
-                ? "lg:block hidden text-lg text-primary-brown"
-                : "text-white"
-            }
-          >
-            Logout
-          </span>
+          {showLogoutName ? (
+            <span
+              className={`${isUser ? "text-primary-brown" : "text-white"} text-lg`}
+            >
+              Logout
+            </span>
+          ) : (
+            <span
+              className={
+                isUser
+                  ? "lg:block hidden text-lg text-primary-brown"
+                  : "text-white"
+              }
+            >
+              Logout
+            </span>
+          )}
         </p>
       </AlertDialogTrigger>
 

@@ -8,7 +8,7 @@ const AdminDashboardLayout = () => {
       {/* Sidebar */}
       <AdminDashboardSidebar />
 
-      <section className="lg:ml-60 flex flex-col flex-grow min-h-screen ml-16">
+      <section className="lg:ml-60 flex flex-col flex-grow min-h-screen">
         {/* Dashboard Header */}
         <DashboardHeader />
 
