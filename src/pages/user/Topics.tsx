@@ -103,6 +103,7 @@ const Topics = () => {
 
         <section id="topics" className="flex flex-col w-full gap-5">
           <InfiniteScroll
+            key={crypto.randomUUID()}
             pageStart={0}
             loadMore={fetchMoreTopics}
             hasMore={hasMore}

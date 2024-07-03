@@ -8,3 +8,14 @@ export const MarketplaceProductsSchema = z.object({
   seller: z.string().trim().min(1, "Seller is required"),
   attachments: z.any().optional(),
 });
+
+export const MarketplaceEventsSchema = z.object({
+  title: z.string().trim().min(1, "Title is required"),
+  venue: z.string().trim().min(1, "Venue is required"),
+  date: z.string().trim().min(1, "Date is required"),
+  price: z.string().trim().min(1, "Price is required"),
+  startTime: z.string().trim().min(1, "Start time is required"),
+  endTime: z.string().trim().min(1, "End time is required"),
+  description: z.string().trim().min(1, "Description is required"),
+  attachments: z.any().optional(),
+});

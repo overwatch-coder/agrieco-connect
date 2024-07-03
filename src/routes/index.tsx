@@ -22,6 +22,8 @@ import MarketPlace from "@/pages/user/MarketPlace";
 import Events from "@/pages/user/Events";
 import MyItemsMarketPlace from "@/pages/user/MyItemsMarketPlace";
 import NotFound from "@/pages/NotFound";
+import EventDetails from "@/pages/user/EventDetails";
+import MyEvents from "@/pages/user/MyEvents";
 
 export default function ConfigureRoutes() {
   const [auth] = useAuth();
@@ -83,6 +85,8 @@ export default function ConfigureRoutes() {
         <Route path="marketplace" element={<MarketPlace />} />
         <Route path="marketplace/my-items" element={<MyItemsMarketPlace />} />
         <Route path="events" element={<Events />} />
+        <Route path="events/my-events" element={<MyEvents />} />
+        <Route path="events/:slug" element={<EventDetails />} />
       </Route>
 
       {/* Admin Routes */}

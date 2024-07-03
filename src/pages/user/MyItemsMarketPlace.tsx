@@ -1,24 +1,13 @@
 import { Helmet } from "react-helmet-async";
-import { Button } from "@/components/ui/button";
 import { marketplaceProducts } from "@/constants";
 import MarketPlaceAddItem from "@/components/MarketPlaceAddItem";
-import CustomDropdown from "@/components/CustomDropdown";
 import { useState } from "react";
-import { Edit, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import MarketPlaceEditItem from "@/components/MarketPlaceEditItem";
 import DeleteItemModal from "@/components/DeleteItemModal";
+import { Link } from "react-router-dom";
 
 export type MarketPlaceItemType = (typeof marketplaceProducts)[number];
-
-const dropdownItemsOne = ["Popular", "New", "Sale", "All"];
-
-const dropdownItemsTwo = [
-  "Recently Added",
-  "Most Liked",
-  "Most Viewed",
-  "Most Commented",
-  "Most Shared",
-];
 
 const MyItemsMarketPlace = () => {
   return (
@@ -30,6 +19,14 @@ const MyItemsMarketPlace = () => {
       </Helmet>
 
       <div className="md:gap-6 flex flex-col w-full gap-10 p-5">
+        <Link
+          to="/user/marketplace"
+          className="text-primary-brown flex items-center gap-2"
+        >
+          <ArrowLeft size={20} className="text-primary-brown" />
+          <span>Go Back</span>
+        </Link>
+
         <section className="flex items-center justify-between w-full gap-5">
           <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown">
             My Items
