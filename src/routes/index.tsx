@@ -1,29 +1,15 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
-  Navigate,
   Route,
+  Navigate,
 } from "react-router-dom";
-import Home from "@/pages/Home";
-import AuthLayout from "@/layout/AuthLayout";
-import Login from "@/pages/auth/Login";
-import SignUp from "@/pages/auth/SignUp";
-import ForgotPassword from "@/pages/auth/ForgotPassword";
-import ResetPassword from "@/pages/auth/ResetPassword";
-import AdminDashboardLayout from "@/layout/AdminDashboardLayout";
 import RootLayout from "@/layout/RootLayout";
-import { useAuth } from "@/hooks/useAuth";
-import UserDashboardLayout from "@/layout/UserDashboardLayout";
-import Feed from "@/pages/user/Feed";
-import Dashboard from "@/pages/admin/Dashboard";
-import Settings from "@/components/shared/Settings";
-import Topics from "@/pages/user/Topics";
-import MarketPlace from "@/pages/user/MarketPlace";
-import Events from "@/pages/user/Events";
-import MyItemsMarketPlace from "@/pages/user/MyItemsMarketPlace";
 import NotFound from "@/pages/NotFound";
-import EventDetails from "@/pages/user/EventDetails";
-import MyEvents from "@/pages/user/MyEvents";
+import { useAuth } from "@/hooks/useAuth";
+import AuthRoutes from "@/routes/auth.route";
+import UserRoutes from "@/routes/user.route";
+import AdminRoutes from "@/routes/admin.route";
 
 export default function ConfigureRoutes() {
   const [auth] = useAuth();
@@ -46,67 +32,18 @@ export default function ConfigureRoutes() {
         }
       />
 
-      {/* Auth Routes */}
-      <Route
-        element={
-          auth ? (
-            isAdmin ? (
-              <Navigate to="/admin/dashboard" />
-            ) : (
-              <Navigate to="/user/feed" />
-            )
-          ) : (
-            <AuthLayout />
-          )
-        }
-      >
-        <Route index path="login" element={<Login />} />
-        <Route path="signup" element={<SignUp />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password" element={<ResetPassword />} />
-      </Route>
+      <>
+        {/* Auth Routes */}
+        {AuthRoutes()}
 
-      {/* User Routes */}
-      <Route
-        path="user"
-        element={
-          !auth ? (
-            <Navigate to="/login" />
-          ) : isAdmin ? (
-            <Navigate to="/admin/dashboard" />
-          ) : (
-            <UserDashboardLayout />
-          )
-        }
-      >
-        <Route path="settings" element={<Settings />} />
-        <Route path="feed" element={<Feed />} />
-        <Route path="topics" element={<Topics />} />
-        <Route path="marketplace" element={<MarketPlace />} />
-        <Route path="marketplace/my-items" element={<MyItemsMarketPlace />} />
-        <Route path="events" element={<Events />} />
-        <Route path="events/my-events" element={<MyEvents />} />
-        <Route path="events/:slug" element={<EventDetails />} />
-      </Route>
+        {/* User Routes */}
+        {UserRoutes()}
 
-      {/* Admin Routes */}
-      <Route
-        path="admin"
-        element={
-          !auth ? (
-            <Navigate to="/login" />
-          ) : isAdmin ? (
-            <AdminDashboardLayout />
-          ) : (
-            <Navigate to="/user/feed" />
-          )
-        }
-      >
-        <Route path="settings" element={<Settings />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="user-management" element={<Home />} />
-      </Route>
+        {/* Admin Routes */}
+        {AdminRoutes()}
+      </>
 
+      {/* Catch all route - Not Found */}
       <Route path="*" element={<NotFound />} />
     </Route>
   );

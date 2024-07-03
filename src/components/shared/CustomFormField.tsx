@@ -11,7 +11,13 @@ type CustomFormFieldProps<T extends FieldValues> = {
   inputName: Path<T>;
   errors: FieldErrors<T>;
   register: UseFormRegister<T>;
-  inputType: "text" | "date" | "select" | "textarea" | "time";
+  inputType:
+    | "text"
+    | "date"
+    | "select"
+    | "textarea"
+    | "time"
+    | "datetime-local";
   value?: string;
   placeholderText?: string;
   className?: string;
@@ -44,7 +50,16 @@ const CustomFormField = <T extends FieldValues>({
           {...register(inputName)}
           placeholder={placeholderText}
           defaultValue={value}
-          max={new Date().toISOString().split("T")[0]}
+        />
+      )}
+
+      {inputType === "datetime-local" && (
+        <input
+          type="datetime-local"
+          className="bg-primary-lightBlue placeholder:text-secondary-gray text-primary-gray/70 focus:outline-none ring-0 placeholder:text-xs w-full p-3 text-sm border-none rounded outline-none"
+          {...register(inputName)}
+          placeholder={placeholderText}
+          defaultValue={value}
         />
       )}
 
