@@ -1,5 +1,11 @@
 import { appointments } from "@/constants";
-import { ArrowRight, CircleHelp, MessageSquareText, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CircleHelp,
+  MessageSquareText,
+  X,
+} from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -48,6 +54,14 @@ const BookAppointment = () => {
       </Helmet>
 
       <div className="md:gap-6 flex flex-col w-full gap-10 p-5">
+        <Link
+          to="/user/appointments"
+          className="text-primary-brown flex items-center gap-2"
+        >
+          <ArrowLeft size={20} className="text-primary-brown" />
+          <span>Go Back</span>
+        </Link>
+
         <section className="flex items-center justify-between w-full gap-5">
           <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown">
             Book Appointment with {appointment.fullname}
