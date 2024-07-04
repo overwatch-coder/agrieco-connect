@@ -12,6 +12,7 @@ import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom";
 import Notifications from "@/components/Notifications";
 import { UserProfile } from "@/components/shared/DashboardHeader";
+import SearchUser from "@/components/shared/SearchUser";
 
 const DashboardMobile = () => {
   const pathname = useLocation().pathname;
@@ -43,28 +44,7 @@ const DashboardMobile = () => {
           <SheetDescription>
             {/* Dashboard Menu Items */}
             <div className="flex flex-col gap-6 mb-auto">
-              <Link
-                to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}
-                className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
-              >
-                <AiOutlineSearch
-                  size={20}
-                  className={`${
-                    pathname === `/${firstPath}/search`
-                      ? "text-primary-green"
-                      : "text-white"
-                  }`}
-                />
-                <span
-                  className={`${
-                    pathname === `/${firstPath}/search`
-                      ? "text-primary-green"
-                      : "text-white"
-                  } text-base`}
-                >
-                  Search
-                </span>
-              </Link>
+              <SearchUser />
 
               <Link
                 to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}

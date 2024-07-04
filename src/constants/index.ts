@@ -3,9 +3,8 @@ import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { LiaCalendarCheck } from "react-icons/lia";
 import { TbMessage2, TbMessageChatbot } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
-import { CircleHelp, TrendingUp } from "lucide-react";
+import { CalendarRange, CircleHelp, TrendingUp } from "lucide-react";
 import { RiCalendarTodoFill } from "react-icons/ri";
-import { hash } from "crypto";
 
 // Admin dashboard links
 export const adminDashboardLinks = [
@@ -37,7 +36,7 @@ export const adminDashboardLinks = [
   {
     name: "Event Management",
     path: "/admin/event-management",
-    icon: IoIosPeople,
+    icon: CalendarRange,
   },
   {
     name: "Advertising & Promotions",

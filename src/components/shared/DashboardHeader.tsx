@@ -2,6 +2,7 @@ import Notifications from "@/components/Notifications";
 import AdminSidebarMobile from "@/components/shared/AdminSidebarMobile";
 import DashboardMobile from "@/components/shared/DashboardMobile";
 import Logout from "@/components/shared/Logout";
+import SearchUser from "@/components/shared/SearchUser";
 import UserSidebarMobile from "@/components/shared/UserSidebarMobile";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,19 +69,7 @@ const DashboardHeader = () => {
         </div>
 
         <ul className="md:flex items-center hidden gap-5">
-          <Link
-            to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}
-            className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
-          >
-            <AiOutlineSearch
-              size={20}
-              className={
-                pathname === `/${firstPath}/search`
-                  ? "text-primary-green"
-                  : "text-primary-brown"
-              }
-            />
-          </Link>
+          <SearchUser />
 
           <Link
             to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}

@@ -55,7 +55,7 @@ const FeedItem = ({
           variant={"link"}
           className="text-primary-green hover:no-underline"
         >
-          Follow
+          Following
         </Button>
       </div>
 
