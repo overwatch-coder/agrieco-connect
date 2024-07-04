@@ -14,6 +14,7 @@ import MyAppointments from "@/pages/user/MyAppointments";
 import BookAppointment from "@/pages/user/BookAppointment";
 import Subcommunities from "@/pages/user/Subcommunities";
 import ViewSubcommunity from "@/pages/user/ViewSubcommunity";
+import AgriculturalTrends from "@/pages/user/AgriculturalTrends";
 
 const UserRoutes = () => {
   const [auth] = useAuth();
@@ -52,6 +53,7 @@ const UserRoutes = () => {
         />
         <Route path="subcommunities" element={<Subcommunities />} />
         <Route path="subcommunities/:slug" element={<ViewSubcommunity />} />
+        <Route path="agriculture-trends" element={<AgriculturalTrends />} />
       </Route>
     </>
   );

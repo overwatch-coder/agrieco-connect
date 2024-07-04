@@ -3,8 +3,9 @@ import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { LiaCalendarCheck } from "react-icons/lia";
 import { TbMessage2, TbMessageChatbot } from "react-icons/tb";
 import { IoIosPeople } from "react-icons/io";
-import { CircleHelp } from "lucide-react";
+import { CircleHelp, TrendingUp } from "lucide-react";
 import { RiCalendarTodoFill } from "react-icons/ri";
+import { hash } from "crypto";
 
 // Admin dashboard links
 export const adminDashboardLinks = [
@@ -95,7 +96,7 @@ export const userDashboardLinks = [
   {
     name: "Agriculture Trends",
     path: "/user/agriculture-trends",
-    icon: CircleHelp,
+    icon: TrendingUp,
   },
 ];
 
@@ -1171,5 +1172,119 @@ export const subcommunities = [
       0,
       Math.floor(Math.random() * subcommunityMembers.length)
     ),
+  },
+];
+
+// agricultural trends
+export const agriculturalTrends = [
+  {
+    id: 1,
+    title: "Advancements in Hydroponic Systems",
+    description:
+      "Hydroponic farming is gaining popularity due to its efficient use of water and space. This trend focuses on the latest advancements in hydroponic systems, including new nutrient solutions, improved lighting systems, and cost-effective setups that make hydroponics more accessible to small-scale farmers.",
+    datePosted: "July 1, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Hydroponics",
+    postedBy: "Agro Nigeria",
+    hashtags: ["Hydroponics", "NutrientSolutions", "LightingSystems"],
+  },
+  {
+    id: 2,
+    title: "Organic Farming Techniques",
+    description:
+      "Organic farming continues to be a significant trend as consumers demand healthier, chemical-free produce. This trend covers various organic farming techniques such as crop rotation, natural pest control, and the use of organic fertilizers to improve soil health and productivity.",
+    datePosted: "June 25, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Organic Farming",
+    postedBy: "Dr. Johnson Adeoye",
+    hashtags: ["OrganicFarming", "CropRotation", "NaturalPestControl"],
+  },
+  {
+    id: 3,
+    title: "Sustainable Livestock Farming",
+    description:
+      "Sustainable livestock farming practices are becoming essential to reduce environmental impact and improve animal welfare. This trend highlights innovative approaches in feed, waste management, and breeding techniques that contribute to sustainable livestock farming.",
+    datePosted: "June 20, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Livestock Farming",
+    postedBy: "Dr. Emmanuel Akin",
+    hashtags: ["SustainableLivestockFarming", "Feed", "WasteManagement"],
+  },
+  {
+    id: 4,
+    title: "Climate-Resilient Crops",
+    description:
+      "With the increasing impacts of climate change, developing climate-resilient crops is a top priority. This trend focuses on the latest research and developments in breeding crops that can withstand extreme weather conditions, pests, and diseases.",
+    datePosted: "June 15, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Crop Farming",
+    postedBy: "Dr. Ibrahim Bello",
+    hashtags: ["ClimateResilientCrops", "BreedingCrops", "ExtremeWeather"],
+  },
+  {
+    id: 5,
+    title: "Smart Farming Technologies",
+    description:
+      "Smart farming technologies, including IoT devices, drones, and AI-driven analytics, are revolutionizing agriculture. This trend explores how these technologies are being used to monitor crop health, optimize irrigation, and enhance overall farm management.",
+    datePosted: "June 10, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Crop Farming",
+    postedBy: "Dr. Samuel Johnson",
+    hashtags: ["SmartFarming", "IoT", "AI", "Drones"],
+  },
+  {
+    id: 6,
+    title: "Regenerative Agriculture",
+    description:
+      "Regenerative agriculture aims to restore soil health and biodiversity. This trend covers practices such as cover cropping, no-till farming, and holistic grazing that help rebuild soil organic matter, sequester carbon, and promote a diverse ecosystem.",
+    datePosted: "June 5, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Crop Farming",
+    postedBy: "Dr. Emmanuel Akin",
+    hashtags: ["RegenerativeAgriculture", "Biodiversity"],
+  },
+  {
+    id: 7,
+    title: "Agroforestry Integration",
+    description:
+      "Agroforestry combines agriculture and forestry to create more sustainable and productive landscapes. This trend highlights the benefits of integrating trees and shrubs into farming systems, including improved soil health, increased biodiversity, and additional income sources.",
+    datePosted: "May 30, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Agroforestry",
+    postedBy: "Dr Eben Oke",
+    hashtags: ["Agroforestry", "Forestry"],
+  },
+  {
+    id: 8,
+    title: "Precision Agriculture",
+    description:
+      "Precision agriculture involves using advanced technologies to optimize field-level management regarding crop farming. This trend delves into the use of GPS, remote sensing, and data analytics to increase efficiency and productivity while minimizing environmental impact.",
+    datePosted: "May 25, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Crop Farming",
+    postedBy: "Dr. Samuel Johnson",
+    hashtags: ["PrecisionAgriculture", "DataAnalytics"],
+  },
+  {
+    id: 9,
+    title: "Aquaponics and Aquaculture",
+    description:
+      "Aquaponics and aquaculture are gaining traction as sustainable food production systems. This trend examines the benefits and challenges of combining fish farming with hydroponics to create a closed-loop system that maximizes resource use and productivity.",
+    datePosted: "May 20, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Aquaculture",
+    postedBy: "Dr. Ibrahim Bello",
+    hashtags: ["Aquaponics", "Aquaculture"],
+  },
+  {
+    id: 10,
+    title: "Urban Agriculture Innovations",
+    description:
+      "Urban agriculture is becoming essential to ensure food security in cities. This trend focuses on innovative approaches to urban farming, including vertical farming, rooftop gardens, and community-supported agriculture, which help bring fresh produce closer to urban dwellers.",
+    datePosted: "May 15, 2024",
+    image: `/images/feed${Math.floor(Math.random() * 9) + 1}.jpg`,
+    category: "Urban Farming",
+    postedBy: "Dr. Emmanuel Akin",
+    hashtags: ["UrbanFarming", "CommunityFarming"],
   },
 ];

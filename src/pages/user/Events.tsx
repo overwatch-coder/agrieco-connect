@@ -75,7 +75,7 @@ const EventsItem = ({ item }: { item: EventsItemType }) => {
   return (
     <div className="rounded-xl relative flex flex-col w-full h-full col-span-1 gap-3 p-4 bg-white shadow">
       {item.isFree && (
-        <p className="top-5 left-5 text-primary-green absolute z-50 px-3 py-1 text-sm uppercase bg-white rounded-md">
+        <p className="top-5 left-5 text-primary-green absolute z-30 px-3 py-1 text-sm uppercase bg-white rounded-md">
           Free
         </p>
       )}
