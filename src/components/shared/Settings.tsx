@@ -49,7 +49,7 @@ const Settings = () => {
       <section className="border-b-secondary-gray flex flex-col w-full gap-4 px-5 pt-5 pb-3 border-b">
         <Link
           to="/user/feed"
-          className="text-primary-green group w-fit flex items-center gap-2 text-sm"
+          className="text-primary-green group w-fit flex items-center gap-2 mt-5 text-sm"
         >
           <ArrowLeft size={20} className="text-primary-green" />
           <span className="group-hover:underline">Back to Dashboard</span>
@@ -94,7 +94,7 @@ const Settings = () => {
           className="flex flex-col gap-10"
         >
           {isError && (
-            <div className="flex items-center justify-center text-center p-4 bg-red-200 rounded-md">
+            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
               <p className="text-xs text-red-500">{error.message}</p>
             </div>
           )}

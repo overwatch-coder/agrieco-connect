@@ -16,7 +16,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { Settings } from "lucide-react";
 import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const DashboardHeader = () => {
   const [auth] = useAuth();
@@ -70,7 +69,7 @@ const DashboardHeader = () => {
 
         <ul className="md:flex items-center hidden gap-5">
           <Link
-            to={`/${firstPath}/feed`}
+            to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <AiOutlineSearch
@@ -84,7 +83,7 @@ const DashboardHeader = () => {
           </Link>
 
           <Link
-            to={`/${firstPath}/feed`}
+            to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <AiOutlineUserAdd
@@ -141,6 +140,8 @@ export default DashboardHeader;
 
 export const UserProfile = () => {
   const navigate = useNavigate();
+  const pathname = useLocation().pathname;
+  const firstPath = pathname.split("/")[1] === "user" ? "user" : "admin";
 
   return (
     <DropdownMenu>
@@ -161,7 +162,7 @@ export const UserProfile = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => navigate("/user/settings")}
+          onClick={() => navigate(`/${firstPath}/settings`)}
           className="cursor-pointer"
         >
           Settings

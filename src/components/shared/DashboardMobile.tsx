@@ -44,7 +44,7 @@ const DashboardMobile = () => {
             {/* Dashboard Menu Items */}
             <div className="flex flex-col gap-6 mb-auto">
               <Link
-                to={`/${firstPath}/feed`}
+                to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}
                 className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
               >
                 <AiOutlineSearch
@@ -67,7 +67,7 @@ const DashboardMobile = () => {
               </Link>
 
               <Link
-                to={`/${firstPath}/feed`}
+                to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}
                 className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
               >
                 <AiOutlineUserAdd
