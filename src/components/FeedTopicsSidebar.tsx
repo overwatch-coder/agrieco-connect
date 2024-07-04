@@ -1,3 +1,5 @@
+import { subcommunities } from "@/constants";
+import { slugifyData } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 const FeedTopicsSidebar = () => {
@@ -45,35 +47,17 @@ const FeedTopicsSidebar = () => {
             </h2>
 
             <div className="flex flex-col gap-5">
-              <Link
-                className="text-black/80 flex items-center gap-2 text-sm"
-                to="/user/subcommunities?community=sustainable farming"
-              >
-                <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white rounded-full">
-                  SF
-                </span>
-                <span>Sustainable Farming</span>
-              </Link>
-
-              <Link
-                className="text-black/80 flex items-center gap-2 text-sm"
-                to="/user/subcommunities?community=urban agriculture"
-              >
-                <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white rounded-full">
-                  UA
-                </span>
-                <span>Urban Agriculture</span>
-              </Link>
-
-              <Link
-                className="text-black/80 flex items-center gap-2 text-sm"
-                to="/user/subcommunities?community=organic farming"
-              >
-                <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white rounded-full">
-                  OF
-                </span>
-                <span>Organic Farming</span>
-              </Link>
+              {subcommunities.slice(0, 4).map((sub) => (
+                <Link
+                  className="text-black/80 flex items-center gap-2 text-sm"
+                  to={`/user/subcommunities/${slugifyData(sub.title)}`}
+                >
+                  <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white rounded-full">
+                    {sub.title.split(" ")[0][0] + sub.title.split(" ")[1][0]}
+                  </span>
+                  <span>{sub.title}</span>
+                </Link>
+              ))}
             </div>
           </section>
 

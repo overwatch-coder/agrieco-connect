@@ -945,3 +945,231 @@ export const appointments = [
     availabilitySlotTime: "09:00AM - 01:00PM",
   },
 ];
+
+// subcommunity members
+export const subcommunityMembers = [
+  {
+    id: 1,
+    name: "Adebambo Ofunyenmi",
+    profession: "Agriculturalist",
+    image: "https://randomuser.me/api/portraits/men/1.jpg",
+  },
+  {
+    id: 2,
+    name: "Bolanle Ogunleye",
+    profession: "Poultry Farmer",
+    image: "https://randomuser.me/api/portraits/women/2.jpg",
+  },
+  {
+    id: 3,
+    name: "Chukwuma Okonkwo",
+    profession: "Fish Farmer",
+    image: "https://randomuser.me/api/portraits/men/3.jpg",
+  },
+  {
+    id: 4,
+    name: "Adetola Ajayi",
+    profession: "Organic Farmer",
+    image: "https://randomuser.me/api/portraits/women/4.jpg",
+  },
+  {
+    id: 5,
+    name: "Ibrahim Musa",
+    profession: "Crop Scientist",
+    image: "https://randomuser.me/api/portraits/men/5.jpg",
+  },
+  {
+    id: 6,
+    name: "Ngozi Eze",
+    profession: "Veterinarian",
+    image: "https://randomuser.me/api/portraits/women/6.jpg",
+  },
+  {
+    id: 7,
+    name: "Tunde Akande",
+    profession: "Soil Scientist",
+    image: "https://randomuser.me/api/portraits/men/7.jpg",
+  },
+  {
+    id: 8,
+    name: "Folasade Adetayo",
+    profession: "Environmental Engineer",
+    image: "https://randomuser.me/api/portraits/women/8.jpg",
+  },
+  {
+    id: 9,
+    name: "Emeka Nwosu",
+    profession: "Bee Farmer",
+    image: "https://randomuser.me/api/portraits/men/9.jpg",
+  },
+  {
+    id: 10,
+    name: "Amara Chukwu",
+    profession: "Forestry Expert",
+    image: "https://randomuser.me/api/portraits/women/10.jpg",
+  },
+  {
+    id: 11,
+    name: "Olumide Babatunde",
+    profession: "Agroforestry Specialist",
+    image: "https://randomuser.me/api/portraits/men/11.jpg",
+  },
+  {
+    id: 12,
+    name: "Blessing Adebayo",
+    profession: "Hydroponics Technician",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+  {
+    id: 13,
+    name: "Chinedu Obasi",
+    profession: "Horticulturist",
+    image: "https://randomuser.me/api/portraits/men/13.jpg",
+  },
+  {
+    id: 14,
+    name: "Yewande Oke",
+    profession: "Agricultural Economist",
+    image: "https://randomuser.me/api/portraits/women/14.jpg",
+  },
+  {
+    id: 15,
+    name: "Samuel Adeoye",
+    profession: "Livestock Farmer",
+    image: "https://randomuser.me/api/portraits/men/15.jpg",
+  },
+];
+
+// subcommunities
+export const subcommunities = [
+  {
+    id: 1,
+    title: "Sustainable Farming",
+    description:
+      "A community focused on sustainable agricultural practices in Nigeria. This group brings together farmers, agricultural experts, and enthusiasts who are dedicated to promoting sustainable farming techniques. Discussions and resources cover topics such as soil health, water conservation, crop rotation, and organic farming. The community aims to support farmers in increasing their productivity while preserving the environment. Members share their experiences, challenges, and success stories, fostering a supportive network that encourages sustainable practices and innovations in farming.",
+    category: "Organic Farming",
+    lastActive: "2 hours ago",
+    joined: false,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 2,
+    title: "Rice Farmers Network",
+    description:
+      "A network of rice farmers sharing best practices and resources. This community is designed for rice farmers in Nigeria who are looking to improve their cultivation methods and yields. Members have access to expert advice, research findings, and discussions about pest control, soil management, and modern farming equipment. The goal is to help farmers increase their rice production efficiently and sustainably, ensuring food security and improving their livelihoods. Regular meetups and virtual seminars are also part of this vibrant network.",
+    category: "Crop Farming",
+    lastActive: "5 hours ago",
+    joined: true,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 3,
+    title: "Urban Gardening Lagos",
+    description:
+      "Promoting urban gardening and small-scale farming in Lagos. This group focuses on helping city dwellers turn small spaces into productive gardens. Whether it's a balcony, rooftop, or backyard, members share tips and techniques on how to grow vegetables, herbs, and fruits in urban environments. Topics include container gardening, soil preparation, composting, and dealing with pests in a city setting. The community also encourages the sharing of gardening experiences, successes, and challenges, fostering a collaborative environment for all urban gardeners.",
+    category: "Urban Farming",
+    lastActive: "1 day ago",
+    joined: true,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 4,
+    title: "Organic Vegetable Growers",
+    description:
+      "Community of organic vegetable growers in Nigeria. This group is dedicated to promoting organic farming methods for growing vegetables. Members discuss and share knowledge on organic pest control, soil enrichment, crop rotation, and sustainable farming practices. The aim is to produce healthy, chemical-free vegetables while maintaining soil fertility and protecting the environment. The community provides a platform for farmers to exchange ideas, seek advice, and collaborate on projects that enhance their organic farming practices.",
+    category: "Organic Farming",
+    lastActive: "3 hours ago",
+    joined: false,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 5,
+    title: "Cassava Cultivation Group",
+    description:
+      "Group dedicated to improving cassava cultivation techniques. Cassava is a major staple crop in Nigeria, and this community aims to support farmers in maximizing their cassava production. Members share insights on soil preparation, disease control, and harvesting techniques. The group also provides information on value-added processing methods to increase the profitability of cassava farming. By collaborating and sharing knowledge, members strive to enhance their farming practices and improve their livelihoods.",
+    category: "Root Crops",
+    lastActive: "4 days ago",
+    joined: false,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 6,
+    title: "Poultry Farming Professionals",
+    description:
+      "A group for professionals in the poultry farming industry. This community brings together poultry farmers, veterinarians, and industry experts to discuss best practices in poultry farming. Topics include disease management, feed optimization, breeding techniques, and market trends. Members share their experiences and challenges, providing support and advice to each other. The goal is to enhance the productivity and profitability of poultry farming in Nigeria, while ensuring the health and welfare of the birds.",
+    category: "Poultry Farming",
+    lastActive: "6 hours ago",
+    joined: true,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 7,
+    title: "Aquaculture Enthusiasts",
+    description:
+      "Community for sharing knowledge and techniques in aquaculture. This group is for fish farmers and aquaculture enthusiasts in Nigeria who are interested in improving their fish farming practices. Discussions cover topics such as pond construction, water quality management, fish nutrition, and disease control. Members share their experiences, successes, and challenges, providing a supportive network for all levels of fish farmers. The community also offers opportunities for collaboration and learning from industry experts.",
+    category: "Aquaculture",
+    lastActive: "2 days ago",
+    joined: false,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 8,
+    title: "Sustainable Agroforestry",
+    description:
+      "Promoting sustainable agroforestry practices in Nigeria. This community focuses on integrating trees and shrubs into agricultural landscapes to improve biodiversity and sustainability. Members discuss techniques for selecting and managing tree species, soil conservation, and water management. The goal is to create productive and sustainable farming systems that benefit both farmers and the environment. The community provides a platform for sharing knowledge, experiences, and innovations in agroforestry.",
+    category: "Agroforestry",
+    lastActive: "8 hours ago",
+    joined: false,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 9,
+    title: "Maize Farmers Cooperative",
+    description:
+      "Cooperative for maize farmers to share resources and knowledge. This group is dedicated to supporting maize farmers in Nigeria through collective efforts and resource sharing. Members discuss best practices in maize cultivation, pest control, soil management, and harvesting techniques. The cooperative aims to increase productivity and profitability for its members by providing access to research, expert advice, and market information. Regular meetings and workshops are organized to facilitate learning and collaboration.",
+    category: "Crop Farming",
+    lastActive: "12 hours ago",
+    joined: false,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+  {
+    id: 10,
+    title: "Beekeeping Network",
+    description:
+      "A network for beekeepers to share techniques and improve practices. This community is for beekeepers in Nigeria who are interested in enhancing their beekeeping skills and knowledge. Topics of discussion include hive management, honey production, disease control, and marketing of bee products. Members share their experiences, challenges, and success stories, providing a supportive environment for all beekeepers. The network also offers opportunities for collaboration and learning from industry experts.",
+    category: "Beekeeping",
+    lastActive: "3 days ago",
+    joined: true,
+    members: subcommunityMembers.slice(
+      0,
+      Math.floor(Math.random() * subcommunityMembers.length)
+    ),
+  },
+];
