@@ -58,6 +58,10 @@ for (let i = 1; i <= 8; i++) {
     start: start,
     end: end,
     title: `Appointment ${i}`,
+    resource: {
+      name: "John Doe",
+      email: "johndoe@gmail.com",
+    },
   });
 }
 
@@ -102,6 +106,16 @@ const BookAppointmentCalendar = () => {
         onSelectEvent={(event) => {
           setSelectedEvent(event);
           setSelectedEventModal(true);
+        }}
+        eventPropGetter={(event) => {
+          return {
+            className:
+              "bg-transparent text-center text-primary-green p-2 rounded",
+            style: {
+              border: "#4CAF50",
+              borderStyle: "solid",
+            },
+          };
         }}
       />
 
@@ -154,6 +168,10 @@ const AppointmentForm = ({
           start: slotInfo.start,
           end: slotInfo.end,
           title: variables.note,
+          resource: {
+            name: variables.name,
+            email: variables.email,
+          },
         },
       ]);
 
@@ -193,9 +211,7 @@ const AppointmentForm = ({
             className="flex flex-col w-full gap-4"
           >
             <div className="flex flex-col gap-2">
-              <h2 className="text-base font-medium text-black">
-                Selected Slot
-              </h2>
+              <p className="text-base font-medium text-black">Selected Slot</p>
               <p className="text-xs text-black">
                 Start: {slotInfo.start.toLocaleString()}
               </p>
@@ -293,6 +309,16 @@ const SelectedEvent = ({
 
         <DialogDescription>
           <div className="flex flex-col w-full gap-4">
+            <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
+              <p>Name:</p>
+              <p>{event.resource?.name}</p>
+            </div>
+
+            <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
+              <p>Emal:</p>
+              <p>{event?.resource?.email}</p>
+            </div>
+
             <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
               <p>Start:</p>
               <p>{event?.start?.toLocaleString()}</p>
