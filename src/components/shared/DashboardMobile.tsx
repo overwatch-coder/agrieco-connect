@@ -6,11 +6,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu, Settings, Bell } from "lucide-react";
+import { Menu, Settings } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom";
 import Notifications from "@/components/Notifications";
+import { UserProfile } from "@/components/shared/DashboardHeader";
 
 const DashboardMobile = () => {
   const pathname = useLocation().pathname;
@@ -43,7 +44,7 @@ const DashboardMobile = () => {
             {/* Dashboard Menu Items */}
             <div className="flex flex-col gap-6 mb-auto">
               <Link
-                to={`/${firstPath}/search`}
+                to={`/${firstPath}/feed`}
                 className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
               >
                 <AiOutlineSearch
@@ -66,7 +67,7 @@ const DashboardMobile = () => {
               </Link>
 
               <Link
-                to={`/${firstPath}/add-new`}
+                to={`/${firstPath}/feed`}
                 className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
               >
                 <AiOutlineUserAdd
@@ -117,11 +118,7 @@ const DashboardMobile = () => {
         </SheetHeader>
 
         <div className="bg-white/40 flex items-center gap-5 px-2 py-3 rounded-md">
-          <img
-            src={"/images/avatar.png"}
-            alt="avatar"
-            className="object-contain w-10 h-10 rounded-full"
-          />
+          <UserProfile />
           <p className="flex flex-col gap-1 text-white">
             <span className="text-lg font-medium capitalize">
               {"Josepine Ekhator"}

@@ -15,7 +15,13 @@ import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
-const Logout = ({ showLogoutName }: { showLogoutName?: boolean }) => {
+const Logout = ({
+  showLogoutName,
+  headerLogout,
+}: {
+  showLogoutName?: boolean;
+  headerLogout?: boolean;
+}) => {
   const [auth, setAuth] = useAuth();
   const isUser = !auth?.email.toLowerCase().startsWith("admin");
 
@@ -27,31 +33,37 @@ const Logout = ({ showLogoutName }: { showLogoutName?: boolean }) => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="hover:no-underline hover:scale-105 ps-3 flex flex-col items-start mt-16 transition">
-        <p className="flex items-center gap-4 font-bold">
-          <RiLogoutCircleLine
-            size={20}
-            className={isUser ? "text-primary-brown" : "text-white"}
-          />
-          {showLogoutName ? (
-            <span
-              className={`${isUser ? "text-primary-brown" : "text-white"} text-lg`}
-            >
-              Logout
-            </span>
-          ) : (
-            <span
-              className={
-                isUser
-                  ? "lg:block hidden text-lg text-primary-brown"
-                  : "text-white"
-              }
-            >
-              Logout
-            </span>
-          )}
-        </p>
-      </AlertDialogTrigger>
+      <>
+        {headerLogout ? (
+          <AlertDialogTrigger>Logout</AlertDialogTrigger>
+        ) : (
+          <AlertDialogTrigger className="hover:no-underline hover:scale-105 ps-3 flex flex-col items-start mt-16 transition">
+            <p className="flex items-center gap-4 font-bold">
+              <RiLogoutCircleLine
+                size={20}
+                className={isUser ? "text-primary-brown" : "text-white"}
+              />
+              {showLogoutName ? (
+                <span
+                  className={`${isUser ? "text-primary-brown" : "text-white"} text-lg`}
+                >
+                  Logout
+                </span>
+              ) : (
+                <span
+                  className={
+                    isUser
+                      ? "lg:block hidden text-lg text-primary-brown"
+                      : "text-white"
+                  }
+                >
+                  Logout
+                </span>
+              )}
+            </p>
+          </AlertDialogTrigger>
+        )}
+      </>
 
       <AlertDialogContent
         id="hide"

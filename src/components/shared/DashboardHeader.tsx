@@ -1,11 +1,22 @@
 import Notifications from "@/components/Notifications";
 import AdminSidebarMobile from "@/components/shared/AdminSidebarMobile";
 import DashboardMobile from "@/components/shared/DashboardMobile";
+import Logout from "@/components/shared/Logout";
 import UserSidebarMobile from "@/components/shared/UserSidebarMobile";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { Settings } from "lucide-react";
 import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const DashboardHeader = () => {
   const [auth] = useAuth();
@@ -59,13 +70,13 @@ const DashboardHeader = () => {
 
         <ul className="md:flex items-center hidden gap-5">
           <Link
-            to={`/${firstPath}/help`}
+            to={`/${firstPath}/feed`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <AiOutlineSearch
               size={20}
               className={
-                pathname === `/${firstPath}/help`
+                pathname === `/${firstPath}/search`
                   ? "text-primary-green"
                   : "text-primary-brown"
               }
@@ -73,13 +84,13 @@ const DashboardHeader = () => {
           </Link>
 
           <Link
-            to={`/${firstPath}/help`}
+            to={`/${firstPath}/feed`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <AiOutlineUserAdd
               size={20}
               className={
-                pathname === `/${firstPath}/help`
+                pathname === `/${firstPath}/add-new`
                   ? "text-primary-green"
                   : "text-primary-brown"
               }
@@ -107,11 +118,7 @@ const DashboardHeader = () => {
               isUser ? "bg-transparent" : "bg-secondary-gray/10"
             } flex items-center gap-3 px-3 py-1 rounded-md cursor-pointer`}
           >
-            <img
-              src={"/images/avatar.png"}
-              alt="avatar"
-              className="object-contain w-10 h-10 rounded-full"
-            />
+            <UserProfile />
 
             {!isUser && (
               <p className="text-primary-brown flex flex-col gap-1">
@@ -131,3 +138,40 @@ const DashboardHeader = () => {
 };
 
 export default DashboardHeader;
+
+export const UserProfile = () => {
+  const navigate = useNavigate();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          className="overflow-hidden rounded-full"
+        >
+          <img
+            src={"/images/avatar.png"}
+            alt="avatar"
+            className="object-contain w-10 h-10 overflow-hidden rounded-full"
+          />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => navigate("/user/settings")}
+          className="cursor-pointer"
+        >
+          Settings
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cusror-pointer">Support</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <p className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground">
+          <Logout headerLogout={true} />
+        </p>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
