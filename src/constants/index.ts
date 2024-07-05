@@ -465,6 +465,13 @@ export const marketplaceProducts = [
     location: "Lagos, Nigeria",
     image: "/icons/plant.svg",
     seller: "Agro Nigeria",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "agronigeria@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 2,
@@ -475,6 +482,13 @@ export const marketplaceProducts = [
     location: "Kaduna, Nigeria",
     image: "/icons/plant.svg",
     seller: "Farm Fresh",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "farmfresh@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: true,
   },
   {
     id: 3,
@@ -485,6 +499,13 @@ export const marketplaceProducts = [
     location: "Kano, Nigeria",
     image: "/icons/plant.svg",
     seller: "Kano Agro",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "kanoagro@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: true,
   },
   {
     id: 4,
@@ -495,6 +516,13 @@ export const marketplaceProducts = [
     location: "Ibadan, Nigeria",
     image: "/icons/plant.svg",
     seller: "Cassava Farms",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "cassavafarms@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 5,
@@ -505,6 +533,13 @@ export const marketplaceProducts = [
     location: "Abakaliki, Nigeria",
     image: "/icons/plant.svg",
     seller: "Ebonyi Rice",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "ebonyirice@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 6,
@@ -515,6 +550,13 @@ export const marketplaceProducts = [
     location: "Ondo, Nigeria",
     image: "/icons/plant.svg",
     seller: "Ondo Cocoa",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "ondococoa@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 7,
@@ -525,6 +567,13 @@ export const marketplaceProducts = [
     location: "Benin City, Nigeria",
     image: "/icons/plant.svg",
     seller: "Edo Fresh Produce",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "edofreshproduce@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 8,
@@ -535,6 +584,13 @@ export const marketplaceProducts = [
     location: "Minna, Nigeria",
     image: "/icons/plant.svg",
     seller: "Niger Farms",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "nigerfarms@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 9,
@@ -545,6 +601,13 @@ export const marketplaceProducts = [
     location: "Jos, Nigeria",
     image: "/icons/plant.svg",
     seller: "Jos Vegetables",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "josvegetables@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 10,
@@ -555,6 +618,13 @@ export const marketplaceProducts = [
     location: "Abeokuta, Nigeria",
     image: "/icons/plant.svg",
     seller: "Ogun Agro",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "ogunagro@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: true,
   },
   {
     id: 11,
@@ -565,6 +635,13 @@ export const marketplaceProducts = [
     location: "Ilorin, Nigeria",
     image: "/icons/plant.svg",
     seller: "Kwara Produce",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "kwaraproduce@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 12,
@@ -575,6 +652,13 @@ export const marketplaceProducts = [
     location: "Uyo, Nigeria",
     image: "/icons/plant.svg",
     seller: "Akwa Ibom Agro",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "akwaibomagro@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: true,
   },
   {
     id: 13,
@@ -585,6 +669,13 @@ export const marketplaceProducts = [
     location: "Makurdi, Nigeria",
     image: "/icons/plant.svg",
     seller: "Benue Agro",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "benueagro@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: true,
   },
   {
     id: 14,
@@ -595,6 +686,13 @@ export const marketplaceProducts = [
     location: "Enugu, Nigeria",
     image: "/icons/plant.svg",
     seller: "Enugu Greens",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "enugugreens@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
   {
     id: 15,
@@ -605,6 +703,13 @@ export const marketplaceProducts = [
     location: "Zaria, Nigeria",
     image: "/icons/plant.svg",
     seller: "Zaria Agro",
+    contact: ["+2348012345678", "+2348012345679"][
+      Math.floor(Math.random() * 2)
+    ],
+    other: ["https://example.com", "zariaagro@gmail.com"][
+      Math.floor(Math.random() * 2)
+    ],
+    isUser: false,
   },
 ];
 
@@ -619,6 +724,7 @@ export const marketplaceEvents = [
     location: "Lagos",
     isFree: true,
     organizer: "BestSeller Book BootCamp",
+    isUser: false,
   },
   {
     id: 2,
@@ -629,6 +735,7 @@ export const marketplaceEvents = [
     location: "Abuja",
     isFree: false,
     organizer: "Aging Photographer Workshop",
+    isUser: false,
   },
   {
     id: 3,
@@ -639,6 +746,7 @@ export const marketplaceEvents = [
     location: "attend anywhere",
     isFree: true,
     organizer: "West African Tech Conference",
+    isUser: false,
   },
   {
     id: 4,
@@ -649,6 +757,7 @@ export const marketplaceEvents = [
     location: "Abuja",
     isFree: false,
     organizer: "Afrifata Music Organisation",
+    isUser: false,
   },
   {
     id: 5,
@@ -659,6 +768,7 @@ export const marketplaceEvents = [
     location: "Lagos",
     isFree: true,
     organizer: "Lagos Art Gallery",
+    isUser: true,
   },
   {
     id: 6,
@@ -669,6 +779,7 @@ export const marketplaceEvents = [
     location: "attend anywhere",
     isFree: false,
     organizer: "West African Tech Conference",
+    isUser: false,
   },
   {
     id: 7,
@@ -679,6 +790,7 @@ export const marketplaceEvents = [
     location: "Ibadan",
     isFree: true,
     organizer: "Wolrd Health Organisation (WHO)",
+    isUser: true,
   },
   {
     id: 8,
@@ -689,6 +801,7 @@ export const marketplaceEvents = [
     location: "Kano",
     isFree: false,
     organizer: "Kano Cooking School",
+    isUser: true,
   },
   {
     id: 9,
@@ -699,6 +812,7 @@ export const marketplaceEvents = [
     location: "Enugu",
     isFree: true,
     organizer: "Film Screening Organisation",
+    isUser: true,
   },
   {
     id: 10,
@@ -709,6 +823,7 @@ export const marketplaceEvents = [
     location: "attend anywhere",
     isFree: false,
     organizer: "West African Tech Conference",
+    isUser: false,
   },
   {
     id: 11,
@@ -719,6 +834,7 @@ export const marketplaceEvents = [
     location: "Kaduna",
     isFree: true,
     organizer: "Sports Meet Organisation",
+    isUser: true,
   },
   {
     id: 12,
@@ -729,6 +845,7 @@ export const marketplaceEvents = [
     location: "Jos",
     isFree: false,
     organizer: "Fashion Show Organisation",
+    isUser: false,
   },
   {
     id: 13,
@@ -739,6 +856,7 @@ export const marketplaceEvents = [
     location: "Abeokuta",
     isFree: true,
     organizer: "Literary Festival Organisation",
+    isUser: true,
   },
   {
     id: 14,
@@ -749,6 +867,7 @@ export const marketplaceEvents = [
     location: "attend anywhere",
     isFree: false,
     organizer: "Dance Workshop Organisation",
+    isUser: false,
   },
   {
     id: 15,
@@ -759,6 +878,7 @@ export const marketplaceEvents = [
     location: "Calabar",
     isFree: true,
     organizer: "Start-up Pitch Event Organisation",
+    isUser: false,
   },
 ];
 
@@ -775,6 +895,7 @@ export const appointments = [
     experienceLevel: "4.5",
     availabilitySlotDate: "July 5, 2024",
     availabilitySlotTime: "05:00AM - 09:00AM",
+    isUser: false,
   },
   {
     id: 2,
@@ -787,6 +908,7 @@ export const appointments = [
     experienceLevel: "3.8",
     availabilitySlotDate: "July 6, 2024",
     availabilitySlotTime: "08:00AM - 12:00PM",
+    isUser: false,
   },
   {
     id: 3,
@@ -799,6 +921,7 @@ export const appointments = [
     experienceLevel: "2.7",
     availabilitySlotDate: "July 7, 2024",
     availabilitySlotTime: "10:00AM - 02:00PM",
+    isUser: true,
   },
   {
     id: 4,
@@ -811,6 +934,7 @@ export const appointments = [
     experienceLevel: "4.9",
     availabilitySlotDate: "July 8, 2024",
     availabilitySlotTime: "09:00AM - 01:00PM",
+    isUser: true,
   },
   {
     id: 5,
@@ -823,6 +947,7 @@ export const appointments = [
     experienceLevel: "5.0",
     availabilitySlotDate: "July 9, 2024",
     availabilitySlotTime: "07:00AM - 11:00AM",
+    isUser: false,
   },
   {
     id: 6,
@@ -835,6 +960,7 @@ export const appointments = [
     experienceLevel: "1.5",
     availabilitySlotDate: "July 10, 2024",
     availabilitySlotTime: "06:00AM - 10:00AM",
+    isUser: false,
   },
   {
     id: 7,
@@ -847,6 +973,7 @@ export const appointments = [
     experienceLevel: "4.8",
     availabilitySlotDate: "July 11, 2024",
     availabilitySlotTime: "05:00AM - 09:00AM",
+    isUser: false,
   },
   {
     id: 8,
@@ -859,6 +986,7 @@ export const appointments = [
     experienceLevel: "4.5",
     availabilitySlotDate: "July 12, 2024",
     availabilitySlotTime: "08:00AM - 12:00PM",
+    isUser: false,
   },
   {
     id: 9,
@@ -871,6 +999,7 @@ export const appointments = [
     experienceLevel: "4.6",
     availabilitySlotDate: "July 13, 2024",
     availabilitySlotTime: "09:00AM - 01:00PM",
+    isUser: true,
   },
   {
     id: 10,
@@ -883,6 +1012,7 @@ export const appointments = [
     experienceLevel: "3.7",
     availabilitySlotDate: "July 14, 2024",
     availabilitySlotTime: "07:00AM - 11:00AM",
+    isUser: false,
   },
   {
     id: 11,
@@ -895,6 +1025,7 @@ export const appointments = [
     experienceLevel: "3.8",
     availabilitySlotDate: "July 15, 2024",
     availabilitySlotTime: "06:00AM - 10:00AM",
+    isUser: false,
   },
   {
     id: 12,
@@ -907,6 +1038,7 @@ export const appointments = [
     experienceLevel: "2.7",
     availabilitySlotDate: "July 16, 2024",
     availabilitySlotTime: "05:00AM - 09:00AM",
+    isUser: true,
   },
   {
     id: 13,
@@ -919,6 +1051,7 @@ export const appointments = [
     experienceLevel: "4.8",
     availabilitySlotDate: "July 17, 2024",
     availabilitySlotTime: "08:00AM - 12:00PM",
+    isUser: true,
   },
   {
     id: 14,
@@ -931,6 +1064,7 @@ export const appointments = [
     experienceLevel: "3.9",
     availabilitySlotDate: "July 18, 2024",
     availabilitySlotTime: "10:00AM - 02:00PM",
+    isUser: false,
   },
   {
     id: 15,
@@ -943,6 +1077,7 @@ export const appointments = [
     experienceLevel: "4.7",
     availabilitySlotDate: "July 19, 2024",
     availabilitySlotTime: "09:00AM - 01:00PM",
+    isUser: false,
   },
 ];
 

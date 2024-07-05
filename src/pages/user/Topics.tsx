@@ -1,12 +1,13 @@
 import { Search } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import TopicItem from "@/components/TopicItem";
 import { userFeeds as userTopics } from "@/constants";
 import SubscribeModal from "@/components/SubscribeModal";
 import CustomDropdown from "@/components/CustomDropdown";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const topicDropdownItems = [
   "Activity",
@@ -19,6 +20,14 @@ const topicDropdownItems = [
 type Topic = (typeof userTopics)[number];
 
 const Topics = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
+  const [selectedItem, setSelectedItem] = useState("Activity");
+
   const [topics, setTopics] = useState<Topic[]>(userTopics.slice(0, 2));
   const [hasMore, setHasMore] = useState(true);
 
@@ -35,6 +44,7 @@ const Topics = () => {
       );
     }, 500);
   };
+
   const [searchTopic, setSearchTopic] = useState("");
   const [subscribedTopics, setSubscribedTopics] = useState<string[]>([
     "Poultry",
@@ -43,11 +53,27 @@ const Topics = () => {
     "Fisheries",
   ]);
 
-  const handleSearchTopic = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(searchTopic);
-    setSearchTopic("");
-  };
+  const filterTopics = useCallback(() => {
+    const search = searchParams.get("search");
+
+    if (search) {
+      setTopics(
+        userTopics.filter((topic) =>
+          topic.description.toLowerCase().includes(search)
+        )
+      );
+    } else {
+      setTopics(userTopics);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    filterTopics();
+
+    return () => {
+      setTopics(userTopics);
+    };
+  }, [filterTopics, searchTopic]);
 
   return (
     <div className="w-full">
@@ -60,23 +86,24 @@ const Topics = () => {
       <div className="md:gap-6 xl:max-w-4xl flex flex-col w-full gap-10 p-5 mx-auto">
         <section className="md:flex-row md:items-center md:justify-between md:gap-5 flex flex-col w-full gap-3">
           <CustomDropdown
-            initialSelectedItem="Activity"
             items={topicDropdownItems}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
           />
 
-          <form
-            onSubmit={handleSearchTopic}
-            className="flex items-center flex-grow w-full gap-3 px-4 bg-white rounded-lg"
-          >
+          <div className="flex items-center flex-grow w-full gap-3 px-4 bg-white rounded-lg">
             <Search size={25} className="text-secondary-gray" />
             <input
-              type="text"
+              type="search"
               value={searchTopic}
-              onChange={(e) => setSearchTopic(e.target.value)}
+              onChange={(e) => {
+                setSearchTopic(e.target.value);
+                navigate(`/user/topics?search=${e.target.value}`);
+              }}
               placeholder="Search"
               className="placeholder-secondary-gray/80 w-full px-1 py-3 text-sm bg-transparent outline-none"
             />
-          </form>
+          </div>
         </section>
 
         <section className="flex items-center justify-between w-full gap-5">
@@ -91,34 +118,54 @@ const Topics = () => {
         </section>
 
         <section className="md:gap-5 flex flex-row flex-wrap items-center w-full gap-3">
+          <Link
+            to={`/user/topics`}
+            className="border-primary-brown text-secondary-gray px-5 py-2 text-sm font-normal bg-white border"
+          >
+            {"All"}
+          </Link>
+
           {subscribedTopics.map((topic) => (
-            <button
+            <Link
+              to={`/user/topics?search=${topic.toLowerCase()}`}
               key={topic}
               className="border-primary-brown text-secondary-gray px-5 py-2 text-sm font-normal bg-white border"
             >
               {topic}
-            </button>
+            </Link>
           ))}
         </section>
 
-        <section id="topics" className="flex flex-col w-full gap-5">
-          <InfiniteScroll
-            key={crypto.randomUUID()}
-            pageStart={0}
-            loadMore={fetchMoreTopics}
-            hasMore={hasMore}
-            loader={
-              <div className="flex items-center justify-center">
-                <ClipLoader key={0} size={30} color="black" loading={true} />
-              </div>
-            }
-            className="flex flex-col w-full gap-5"
-          >
-            {topics.map((topic) => (
-              <TopicItem key={topic.id} {...topic} />
-            ))}
-          </InfiniteScroll>
-        </section>
+        {topics.length > 0 ? (
+          <section id="topics" className="flex flex-col w-full gap-5">
+            <InfiniteScroll
+              key={crypto.randomUUID()}
+              pageStart={0}
+              loadMore={fetchMoreTopics}
+              hasMore={hasMore}
+              loader={
+                <div className="flex items-center justify-center">
+                  <ClipLoader key={0} size={30} color="black" loading={true} />
+                </div>
+              }
+              className="flex flex-col w-full gap-5"
+            >
+              {topics.map((topic) => (
+                <TopicItem key={topic.id} {...topic} />
+              ))}
+            </InfiniteScroll>
+          </section>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-5 text-center">
+            <h2 className="text-primary-brown text-lg font-bold">
+              No Topics Found
+            </h2>
+
+            <p className="text-secondary-gray text-sm">
+              Try changing the search term or filter
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

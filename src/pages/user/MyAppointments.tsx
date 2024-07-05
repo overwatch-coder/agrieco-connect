@@ -1,9 +1,6 @@
 import AddAppointmentAvailability from "@/components/AddAppointmentAvailability";
-import AppointmentExpertInformation from "@/components/AppointmentExpertInformation";
-import CustomDropdown from "@/components/CustomDropdown";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import EditAppointmentAvailability from "@/components/EditAppointmentAvailability";
-import { Button } from "@/components/ui/button";
 import { appointments } from "@/constants";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -14,6 +11,17 @@ import { Link } from "react-router-dom";
 export type AppointmentsItemType = (typeof appointments)[number];
 
 const MyAppointments = () => {
+  const [filteredAppointments, setFilteredAppointments] = useState(
+    appointments.filter((item) => item.isUser === true)
+  );
+
+  const handleDeleteItem = (id: string) => {
+    const newAppointments = filteredAppointments.filter(
+      (item) => item.id.toString() !== id
+    );
+    setFilteredAppointments(newAppointments);
+  };
+
   return (
     <div className="w-full">
       {/* Title */}
@@ -46,8 +54,12 @@ const MyAppointments = () => {
         </section>
 
         <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {appointments.slice(0, 6).map((item) => (
-            <AppointmentItem key={item.id} item={item} />
+          {filteredAppointments.slice(0, 6).map((item) => (
+            <AppointmentItem
+              key={item.id}
+              item={item}
+              handleDeleteItem={handleDeleteItem}
+            />
           ))}
         </section>
       </div>
@@ -57,7 +69,12 @@ const MyAppointments = () => {
 
 export default MyAppointments;
 
-const AppointmentItem = ({ item }: { item: AppointmentsItemType }) => {
+type AppointmentItemProps = {
+  item: AppointmentsItemType;
+  handleDeleteItem: (id: string) => void;
+};
+
+const AppointmentItem = ({ item, handleDeleteItem }: AppointmentItemProps) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
@@ -131,6 +148,10 @@ const AppointmentItem = ({ item }: { item: AppointmentsItemType }) => {
       <DeleteItemModal
         openModal={openDeleteModal}
         setOpenModal={setOpenDeleteModal}
+        modalTitle="Delete Appointment"
+        modalDescription="Are you sure you want to delete this appointment?"
+        handleDelete={() => handleDeleteItem(item.id.toString())}
+        toastMessage="Appointment has been deleted successfully"
       />
     </>
   );

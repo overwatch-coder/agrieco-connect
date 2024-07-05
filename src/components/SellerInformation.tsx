@@ -20,44 +20,44 @@ const SellerInformation = ({
 }: SellerInformationProps) => {
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
-      <DialogContent className="w-full max-w-2xl h-[90vh] flex bg-white rounded-none flex-col gap-5">
+      <DialogContent className="flex flex-col w-full max-w-2xl gap-5 bg-white rounded-none">
         {/* Header */}
         <div className="flex items-start justify-between">
           <DialogTitle className="flex flex-col gap-3">
-            <span className="text-primary-brown text-xl md:text-3xl font-bold">
+            <span className="text-primary-brown md:text-3xl text-xl font-bold">
               Seller Information
             </span>
-            <span className="text-sm text-secondary-gray font-normal">
+            <span className="text-secondary-gray text-sm font-normal">
               Contact seller to purchase the item
             </span>
           </DialogTitle>
 
-          <DialogClose className="h-6 w-6 flex items-center justify-center rounded-full border-red-500 border">
+          <DialogClose className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full">
             <X size={20} className="text-red-500" />
           </DialogClose>
         </div>
 
         {/* Contact Seller */}
-        <div className="flex flex-col gap-4 w-full">
-          <div className="grid grid-cols-2 gap-5 place-content-start place-items-start text-secondary-gray text-base">
+        <div className="flex flex-col w-full gap-4">
+          <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Name</h3>
             <p>{item.seller}</p>
           </div>
-          <div className="grid grid-cols-2 gap-5 place-content-start place-items-start text-secondary-gray text-base">
+          <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Location</h3>
             <p>{item.location}</p>
           </div>
-          <div className="grid grid-cols-2 gap-5 place-content-start place-items-start text-secondary-gray text-base">
+          <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Contact Details</h3>
-            <p>xxxxxxxxxxxxxxx</p>
+            <p>{item.contact}</p>
           </div>
-          <div className="grid grid-cols-2 gap-5 place-content-start place-items-start text-secondary-gray text-base">
+          <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Company</h3>
             <p>{item.seller}</p>
           </div>
-          <div className="grid grid-cols-2 gap-5 place-content-start place-items-start text-secondary-gray text-base">
+          <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Others</h3>
-            <p>xxxxxxxxxxxxxx</p>
+            <p>{item.other}</p>
           </div>
         </div>
       </DialogContent>

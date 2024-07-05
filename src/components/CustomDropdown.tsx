@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 type CustomDropdownProps = {
-  initialSelectedItem: string;
   items: string[];
+  selectedItem: string;
+  setSelectedItem: React.Dispatch<React.SetStateAction<string>>;
 };
 const CustomDropdown = ({
-  initialSelectedItem,
   items,
+  selectedItem,
+  setSelectedItem,
 }: CustomDropdownProps) => {
-  const [selectedItem, setSelectedItem] = useState(initialSelectedItem);
-
   const handleSelectItem = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {

@@ -1,6 +1,14 @@
-import { subcommunities } from "@/constants";
+import {
+  agriculturalTrends,
+  subcommunities,
+  marketplaceProducts,
+} from "@/constants";
 import { slugifyData } from "@/lib/utils";
 import { Link } from "react-router-dom";
+
+const agriculturalTrendHashtags = Array.from(
+  new Set(agriculturalTrends.map((trend) => trend.category))
+).slice(0, 5);
 
 const FeedTopicsSidebar = () => {
   return (
@@ -13,30 +21,14 @@ const FeedTopicsSidebar = () => {
               Trends
             </h2>
             <div className="flex flex-col gap-3">
-              <Link
-                className="text-black/80 text-sm"
-                to="/user/topics?topic=Climate-Smart Agriculture"
-              >
-                #Climate-Smart Agriculture
-              </Link>
-              <Link
-                className="text-black/80 text-sm"
-                to="/user/topics?topic=Organic Farming"
-              >
-                #Organic Farming
-              </Link>
-              <Link
-                className="text-black/80 text-sm"
-                to="/user/topics?topic=Crop Rotation Techniques"
-              >
-                #Crop Rotation Techniques
-              </Link>
-              <Link
-                className="text-black/80 text-sm"
-                to="/user/topics?topic=Market Trends and Forecasts"
-              >
-                #Market Trends and Forecasts
-              </Link>
+              {agriculturalTrendHashtags.map((trend) => (
+                <Link
+                  className="text-black/80 text-sm"
+                  to={`/user/agriculture-trends?trend=${trend}`}
+                >
+                  #{trend}
+                </Link>
+              ))}
             </div>
           </section>
 
@@ -68,8 +60,8 @@ const FeedTopicsSidebar = () => {
             </h2>
 
             <div className="flex flex-col gap-6">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <MarketplaceItem key={i} />
+              {marketplaceProducts.slice(0, 4).map((item) => (
+                <MarketplaceItem key={item.id} item={item} />
               ))}
             </div>
           </section>
@@ -81,37 +73,40 @@ const FeedTopicsSidebar = () => {
 
 export default FeedTopicsSidebar;
 
-const MarketplaceItem = () => {
+const MarketplaceItem = ({
+  item,
+}: {
+  item: (typeof marketplaceProducts)[number];
+}) => {
   return (
     <div className="flex flex-col gap-3">
       <Link
         className="text-black/80 flex items-center gap-2 text-sm"
-        to="/user/marketplace?product=organic tomato seeds"
+        to={`/user/marketplace?product=${item.name.toLowerCase()}`}
       >
         <img
           src="/icons/plant.svg"
           alt="plant"
           className="object-contain w-10 h-10 rounded-full"
         />
-        <span className="text-primary-green">Organic Tomato Seeds</span>
+        <span className="text-primary-green">{item.name}</span>
       </Link>
 
       <p className="text-secondary-gray/50 text-sm">
         <span className="text-primary-brown">Price: </span>
-        ₦2,500 per pack
+        {item.price}
       </p>
       <p className="text-secondary-gray/50 text-sm">
         <span className="text-primary-brown">Description: </span>
-        High-yield organic tomato seeds suitable for all climates. Certified
-        organic and non-GMO.
+        {item.description}
       </p>
       <p className="text-secondary-gray/50 text-sm">
         <span className="text-primary-brown">Seller: </span>
-        Green Farms Nigeria
+        {item.seller}
       </p>
       <p className="text-secondary-gray/50 text-sm">
         <span className="text-primary-brown">Contact: </span>
-        greenfarms@example.com
+        {item.contact}
       </p>
     </div>
   );

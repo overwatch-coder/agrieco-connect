@@ -108,10 +108,8 @@ const BookAppointment = () => {
           <div className="scrollbar-hide flex flex-col flex-grow w-full gap-3 p-4 bg-white rounded-lg shadow-md">
             <p className="flex flex-col items-center gap-2 text-sm text-center">
               <span>
-                Click or highlight single/multiply empty slot(s) to select a
-                date and time.
+                NB: Click on an available slot to book an appointment.
               </span>
-              <span>NB: Use day or week view to select time slots</span>
             </p>
 
             <BookAppointmentCalendar />

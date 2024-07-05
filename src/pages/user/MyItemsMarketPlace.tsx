@@ -10,6 +10,15 @@ import { Link } from "react-router-dom";
 export type MarketPlaceItemType = (typeof marketplaceProducts)[number];
 
 const MyItemsMarketPlace = () => {
+  const [filteredItems, setFilteredItems] = useState(
+    marketplaceProducts.filter((item) => item.isUser === true)
+  );
+
+  const handleDeleteItem = (id: string) => {
+    const newItems = filteredItems.filter((item) => item.id.toString() !== id);
+    setFilteredItems(newItems);
+  };
+
   return (
     <div className="w-full">
       {/* Title */}
@@ -36,8 +45,12 @@ const MyItemsMarketPlace = () => {
         </section>
 
         <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {marketplaceProducts.map((item) => (
-            <MarketPlaceItem key={item.id} item={item} />
+          {filteredItems.map((item) => (
+            <MarketPlaceItem
+              key={item.id}
+              item={item}
+              handleDeleteItem={handleDeleteItem}
+            />
           ))}
         </section>
       </div>
@@ -47,7 +60,12 @@ const MyItemsMarketPlace = () => {
 
 export default MyItemsMarketPlace;
 
-const MarketPlaceItem = ({ item }: { item: MarketPlaceItemType }) => {
+type MarketPlaceItemProps = {
+  item: MarketPlaceItemType;
+  handleDeleteItem: (id: string) => void;
+};
+
+const MarketPlaceItem = ({ item, handleDeleteItem }: MarketPlaceItemProps) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
@@ -100,6 +118,10 @@ const MarketPlaceItem = ({ item }: { item: MarketPlaceItemType }) => {
       <DeleteItemModal
         openModal={openDeleteModal}
         setOpenModal={setOpenDeleteModal}
+        modalTitle={`Delete ${item.name}`}
+        modalDescription="Are you sure you want to delete this item?"
+        handleDelete={() => handleDeleteItem(item.id.toString())}
+        toastMessage={`The item has been deleted successfully`}
       />
     </div>
   );

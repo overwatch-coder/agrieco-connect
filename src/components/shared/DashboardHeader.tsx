@@ -138,17 +138,18 @@ export const UserProfile = () => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
+        {/* <DropdownMenuItem
           onClick={() => navigate(`/${firstPath}/settings`)}
           className="cursor-pointer"
         >
           Settings
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem className="cusror-pointer">Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <p className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground">
+        <DropdownMenuItem className="cusror-pointer">Report</DropdownMenuItem>
+        {/* <p className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground">
           <Logout headerLogout={true} />
-        </p>
+        </p> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

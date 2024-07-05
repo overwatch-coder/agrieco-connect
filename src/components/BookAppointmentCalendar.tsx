@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 type AppointmentFormProps = {
-  slotInfo: SlotInfo;
+  event: Event;
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   events: Event[];
@@ -67,18 +67,11 @@ for (let i = 1; i <= 8; i++) {
 
 const BookAppointmentCalendar = () => {
   const [openFormModal, setOpenFormModal] = useState(false);
-  const [slotInfo, setSlotInfo] = useState<SlotInfo>({
-    start: moment().toDate(),
-    end: moment().toDate(),
-    slots: [moment().toDate()],
-    action: "click",
-  });
   const [selectedEvent, setSelectedEvent] = useState<Event>({
     start: moment("2015-01-01").toDate(),
     end: moment("2015-01-01").toDate(),
     title: "Appointment 1",
   });
-  const [openSelectedEventModal, setSelectedEventModal] = useState(false);
 
   const localizer = momentLocalizer(moment);
   const [events, setEvents] = useState<Event[]>(currentEvents);
@@ -98,14 +91,9 @@ const BookAppointmentCalendar = () => {
         endAccessor={"end"}
         style={{ height: "100%" }}
         selectable={true}
-        onSelectSlot={(slotInfo) => {
-          console.log({ slotInfo });
-          setSlotInfo(slotInfo);
-          setOpenFormModal(true);
-        }}
         onSelectEvent={(event) => {
           setSelectedEvent(event);
-          setSelectedEventModal(true);
+          setOpenFormModal(true);
         }}
         eventPropGetter={(event) => {
           return {
@@ -120,17 +108,11 @@ const BookAppointmentCalendar = () => {
       />
 
       <AppointmentForm
-        slotInfo={slotInfo}
+        event={selectedEvent}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
         events={events}
         setEvents={setEvents}
-      />
-
-      <SelectedEvent
-        openModal={openSelectedEventModal}
-        setOpenModal={setSelectedEventModal}
-        event={selectedEvent}
       />
     </div>
   );
@@ -139,7 +121,7 @@ const BookAppointmentCalendar = () => {
 export default BookAppointmentCalendar;
 
 const AppointmentForm = ({
-  slotInfo,
+  event,
   openModal,
   setOpenModal,
   events,
@@ -165,8 +147,8 @@ const AppointmentForm = ({
       setEvents([
         ...events,
         {
-          start: slotInfo.start,
-          end: slotInfo.end,
+          start: event.start,
+          end: event.end,
           title: variables.note,
           resource: {
             name: variables.name,
@@ -213,10 +195,10 @@ const AppointmentForm = ({
             <div className="flex flex-col gap-2">
               <p className="text-base font-medium text-black">Selected Slot</p>
               <p className="text-xs text-black">
-                Start: {slotInfo.start.toLocaleString()}
+                Start: {event.start?.toLocaleString()}
               </p>
               <p className="text-xs text-black">
-                End: {slotInfo.end.toLocaleString()}
+                End: {event.end?.toLocaleString()}
               </p>
             </div>
 
@@ -233,12 +215,12 @@ const AppointmentForm = ({
               <input
                 type="hidden"
                 {...register("startDate")}
-                value={slotInfo.start.toISOString()}
+                value={event.start?.toISOString()}
               />
               <input
                 type="hidden"
                 {...register("endDate")}
-                value={slotInfo.end.toISOString()}
+                value={event.end?.toISOString()}
               />
 
               <CustomFormField
@@ -278,59 +260,59 @@ const AppointmentForm = ({
   );
 };
 
-type SelectedEventProps = {
-  event: Event;
-  openModal: boolean;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-};
+// type SelectedEventProps = {
+//   event: Event;
+//   openModal: boolean;
+//   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+// };
 
-const SelectedEvent = ({
-  event,
-  openModal,
-  setOpenModal,
-}: SelectedEventProps) => {
-  return (
-    <Dialog open={openModal} onOpenChange={setOpenModal}>
-      <DialogContent className="md:max-w-md w-full p-4 bg-white border-2 border-black rounded shadow">
-        <div className="flex items-start justify-between">
-          <DialogTitle className="gap-7 flex flex-col">
-            <span className="text-primary-brown text-lg font-bold">
-              {event.title}
-            </span>
-          </DialogTitle>
+// const SelectedEvent = ({
+//   event,
+//   openModal,
+//   setOpenModal,
+// }: SelectedEventProps) => {
+//   return (
+//     <Dialog open={openModal} onOpenChange={setOpenModal}>
+//       <DialogContent className="md:max-w-md w-full p-4 bg-white border-2 border-black rounded shadow">
+//         <div className="flex items-start justify-between">
+//           <DialogTitle className="gap-7 flex flex-col">
+//             <span className="text-primary-brown text-lg font-bold">
+//               {event.title}
+//             </span>
+//           </DialogTitle>
 
-          <DialogClose
-            onClick={() => setOpenModal(false)}
-            className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full"
-          >
-            <X size={20} className="text-red-500" />
-          </DialogClose>
-        </div>
+//           <DialogClose
+//             onClick={() => setOpenModal(false)}
+//             className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full"
+//           >
+//             <X size={20} className="text-red-500" />
+//           </DialogClose>
+//         </div>
 
-        <DialogDescription>
-          <div className="flex flex-col w-full gap-4">
-            <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
-              <p>Name:</p>
-              <p>{event.resource?.name}</p>
-            </div>
+//         <DialogDescription>
+//           <div className="flex flex-col w-full gap-4">
+//             <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
+//               <p>Name:</p>
+//               <p>{event.resource?.name}</p>
+//             </div>
 
-            <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
-              <p>Emal:</p>
-              <p>{event?.resource?.email}</p>
-            </div>
+//             <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
+//               <p>Emal:</p>
+//               <p>{event?.resource?.email}</p>
+//             </div>
 
-            <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
-              <p>Start:</p>
-              <p>{event?.start?.toLocaleString()}</p>
-            </div>
+//             <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
+//               <p>Start:</p>
+//               <p>{event?.start?.toLocaleString()}</p>
+//             </div>
 
-            <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
-              <p>End:</p>
-              <p>{event?.end?.toLocaleString()}</p>
-            </div>
-          </div>
-        </DialogDescription>
-      </DialogContent>
-    </Dialog>
-  );
-};
+//             <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
+//               <p>End:</p>
+//               <p>{event?.end?.toLocaleString()}</p>
+//             </div>
+//           </div>
+//         </DialogDescription>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// };

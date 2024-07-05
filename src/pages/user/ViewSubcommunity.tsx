@@ -9,6 +9,7 @@ import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
+import CreateFeedPost from "@/components/CreateFeedPost";
 
 const ViewSubcommunity = () => {
   const [subcommunityActivities, setSubcommunityActivities] = useState(
@@ -87,7 +88,19 @@ const ViewSubcommunity = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="activities">
+            <TabsContent
+              value="activities"
+              className="flex flex-col w-full gap-5"
+            >
+              {/* Post Something */}
+              <div className="rounded-2xl flex flex-col gap-3 py-4 bg-white shadow">
+                <h2 className="text-primary-green border-b-secondary-gray px-4 pb-3 text-xl font-normal border-b">
+                  Post Something
+                </h2>
+
+                <CreateFeedPost />
+              </div>
+
               <section id="activities" className="flex flex-col w-full gap-5">
                 <InfiniteScroll
                   key={crypto.randomUUID()}

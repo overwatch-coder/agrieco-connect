@@ -15,12 +15,24 @@ import { X } from "lucide-react";
 type DeleteItemModalProps = {
   openModal: boolean;
   setOpenModal: (openModal: boolean) => void;
+  handleDelete: (id?: string) => void;
+  modalTitle: string;
+  modalDescription: string;
+  toastMessage?: string;
 };
 
-const DeleteItemModal = ({ openModal, setOpenModal }: DeleteItemModalProps) => {
+const DeleteItemModal = ({
+  openModal,
+  setOpenModal,
+  handleDelete,
+  modalTitle,
+  modalDescription,
+  toastMessage,
+}: DeleteItemModalProps) => {
   // handle delete item
   const handleDeleteItem = async () => {
-    toast.success("Item has been deleted successfully");
+    handleDelete();
+    toast.success(toastMessage ?? "Item has been deleted successfully");
   };
 
   return (
@@ -32,7 +44,7 @@ const DeleteItemModal = ({ openModal, setOpenModal }: DeleteItemModalProps) => {
         <AlertDialogHeader className="flex flex-col gap-3">
           <AlertDialogTitle className="flex items-center justify-between">
             <span className="text-primary-brown text-2xl font-bold">
-              Delete Item
+              {modalTitle}
             </span>
             <AlertDialogCancel className="hover:bg-transparent hover:outline-none bg-transparent border-0 outline-none">
               <X
@@ -44,7 +56,7 @@ const DeleteItemModal = ({ openModal, setOpenModal }: DeleteItemModalProps) => {
 
           <AlertDialogDescription className="flex flex-col gap-5">
             <p className="text-secondary-gray font-semibold">
-              Are you sure you want to delete this item?
+              {modalDescription}
             </p>
           </AlertDialogDescription>
         </AlertDialogHeader>

@@ -3,7 +3,7 @@ import AppointmentExpertInformation from "@/components/AppointmentExpertInformat
 import CustomDropdown from "@/components/CustomDropdown";
 import { Button } from "@/components/ui/button";
 import { appointments } from "@/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { FaRegStar, FaStar } from "react-icons/fa6";
 import { Link } from "react-router-dom";
@@ -21,6 +21,11 @@ const dropdownItemsTwo = [
 ];
 
 const Appointments = () => {
+  const [selectedItem, setSelectedItem] = useState("Specialty");
+  const [selectedItem2, setSelectedItem2] = useState("Availability");
+  const [filteredAppointments, setFilteredAppointments] =
+    useState(appointments);
+
   return (
     <div className="w-full">
       {/* Title */}
@@ -45,12 +50,15 @@ const Appointments = () => {
 
           <div className="md:items-center md:justify-center flex flex-wrap gap-5">
             <CustomDropdown
-              initialSelectedItem="Specialty"
               items={dropdownItemsOne}
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
             />
+
             <CustomDropdown
-              initialSelectedItem="Availability"
               items={dropdownItemsTwo}
+              selectedItem={selectedItem2}
+              setSelectedItem={setSelectedItem2}
             />
 
             <Link
@@ -70,7 +78,7 @@ const Appointments = () => {
         </p>
 
         <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {appointments.map((item) => (
+          {filteredAppointments.map((item) => (
             <AppointmentItem key={item.id} item={item} />
           ))}
         </section>

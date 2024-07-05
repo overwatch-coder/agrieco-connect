@@ -11,6 +11,17 @@ import AddEvent from "@/components/AddEvent";
 export type MarketPlaceEventType = (typeof marketplaceEvents)[number];
 
 const MyEvents = () => {
+  const [filteredEvents, setFilteredEvents] = useState(
+    marketplaceEvents.filter((item) => item.isUser === true)
+  );
+
+  const handleDeleteItem = (id: string) => {
+    const newEvents = filteredEvents.filter(
+      (item) => item.id.toString() !== id
+    );
+    setFilteredEvents(newEvents);
+  };
+
   return (
     <div className="w-full">
       {/* Title */}
@@ -37,8 +48,12 @@ const MyEvents = () => {
         </section>
 
         <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {marketplaceEvents.slice(0, 6).map((item) => (
-            <MarketPlaceEventItem key={item.id} item={item} />
+          {filteredEvents.map((item) => (
+            <MarketPlaceEventItem
+              key={item.id}
+              item={item}
+              handleDeleteItem={handleDeleteItem}
+            />
           ))}
         </section>
       </div>
@@ -48,7 +63,15 @@ const MyEvents = () => {
 
 export default MyEvents;
 
-const MarketPlaceEventItem = ({ item }: { item: MarketPlaceEventType }) => {
+type MarketPlaceEventItemProps = {
+  item: MarketPlaceEventType;
+  handleDeleteItem: (id: string) => void;
+};
+
+const MarketPlaceEventItem = ({
+  item,
+  handleDeleteItem,
+}: MarketPlaceEventItemProps) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
@@ -104,6 +127,10 @@ const MarketPlaceEventItem = ({ item }: { item: MarketPlaceEventType }) => {
       <DeleteItemModal
         openModal={openDeleteModal}
         setOpenModal={setOpenDeleteModal}
+        modalTitle="Delete Event"
+        modalDescription="Are you sure you want to delete this event?"
+        handleDelete={() => handleDeleteItem(item.id.toString())}
+        toastMessage="Event has been deleted successfully"
       />
     </div>
   );

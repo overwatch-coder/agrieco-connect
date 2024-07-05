@@ -4,6 +4,7 @@ import CustomDropdown from "@/components/CustomDropdown";
 import { Link } from "react-router-dom";
 import { slugifyData } from "@/lib/utils";
 import AddEvent from "@/components/AddEvent";
+import { useState } from "react";
 
 type EventsItemType = (typeof events)[number];
 
@@ -18,6 +19,9 @@ const dropdownItemsTwo = [
 ];
 
 const Events = () => {
+  const [selectedItem, setSelectedItem] = useState("Event Type");
+  const [selectedItem2, setSelectedItem2] = useState("Activity");
+
   return (
     <div className="w-full">
       {/* Title */}
@@ -42,12 +46,14 @@ const Events = () => {
 
           <div className="md:items-center md:justify-center flex flex-wrap gap-5">
             <CustomDropdown
-              initialSelectedItem="Event Type"
               items={dropdownItemsOne}
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
             />
             <CustomDropdown
-              initialSelectedItem="Activity"
               items={dropdownItemsTwo}
+              selectedItem={selectedItem2}
+              setSelectedItem={setSelectedItem2}
             />
 
             <Link

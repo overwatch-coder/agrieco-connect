@@ -51,7 +51,7 @@ const CreateFeedPost = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="flex items-center gap-3 px-4 py-3">
+        <div className="flex items-center gap-3 px-4 py-3 bg-white">
           <img
             src="/images/avatar.png"
             alt="User Icon"

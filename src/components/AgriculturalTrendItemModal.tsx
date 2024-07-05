@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { AgriculturalTrendsItemType } from "@/pages/user/AgriculturalTrends";
 import { X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type AgriculturalTrendItemModalProps = {
   item: AgriculturalTrendsItemType;
@@ -69,9 +70,15 @@ const AgriculturalTrendItemModal = ({
 
               <div className="flex flex-wrap items-center gap-5">
                 {item.hashtags.map((hashtag) => (
-                  <p key={hashtag} className="text-black/80 text-sm">
-                    #{hashtag}
-                  </p>
+                  <DialogClose asChild key={hashtag}>
+                    <Link
+                      to={`/user/agriculture-trends?trend=${hashtag.replace(/([A-Z])/g, " $1").trim()}`}
+                      key={hashtag}
+                      className="text-black/80 text-sm"
+                    >
+                      #{hashtag}
+                    </Link>
+                  </DialogClose>
                 ))}
               </div>
             </div>
