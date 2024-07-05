@@ -2,7 +2,6 @@ import Notifications from "@/components/Notifications";
 import AdminSidebarMobile from "@/components/shared/AdminSidebarMobile";
 import DashboardMobile from "@/components/shared/DashboardMobile";
 import Logout from "@/components/shared/Logout";
-import SearchUser from "@/components/shared/SearchUser";
 import UserSidebarMobile from "@/components/shared/UserSidebarMobile";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,8 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { Settings } from "lucide-react";
-import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import AddUser from "@/components/shared/AddUser";
+import SearchBox from "@/components/shared/SearchBox";
 
 const DashboardHeader = () => {
   const [auth] = useAuth();
@@ -69,21 +69,9 @@ const DashboardHeader = () => {
         </div>
 
         <ul className="md:flex items-center hidden gap-5">
-          <SearchUser />
+          <SearchBox />
 
-          <Link
-            to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}
-            className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
-          >
-            <AiOutlineUserAdd
-              size={20}
-              className={
-                pathname === `/${firstPath}/add-new`
-                  ? "text-primary-green"
-                  : "text-primary-brown"
-              }
-            />
-          </Link>
+          <AddUser />
 
           <Notifications />
 

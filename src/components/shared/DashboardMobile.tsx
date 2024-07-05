@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/sheet";
 import { Menu, Settings } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { AiOutlineUserAdd, AiOutlineSearch } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom";
 import Notifications from "@/components/Notifications";
 import { UserProfile } from "@/components/shared/DashboardHeader";
-import SearchUser from "@/components/shared/SearchUser";
+import AddUser from "@/components/shared/AddUser";
+import SearchBox from "@/components/shared/SearchBox";
 
 const DashboardMobile = () => {
   const pathname = useLocation().pathname;
@@ -44,30 +44,9 @@ const DashboardMobile = () => {
           <SheetDescription>
             {/* Dashboard Menu Items */}
             <div className="flex flex-col gap-6 mb-auto">
-              <SearchUser />
+              <SearchBox />
 
-              <Link
-                to={`/${firstPath}/${firstPath === "admin" ? "dashboard" : "feed"}`}
-                className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
-              >
-                <AiOutlineUserAdd
-                  size={20}
-                  className={`${
-                    pathname === `/${firstPath}/add-new`
-                      ? "text-primary-green"
-                      : "text-white"
-                  }`}
-                />
-                <span
-                  className={`${
-                    pathname === `/${firstPath}/add-new`
-                      ? "text-primary-green"
-                      : "text-white"
-                  } text-base`}
-                >
-                  Add New
-                </span>
-              </Link>
+              <AddUser />
 
               <Notifications />
 

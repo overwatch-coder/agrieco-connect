@@ -6,7 +6,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Search, X } from "lucide-react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineUserAdd } from "react-icons/ai";
 import { userFeeds as allUsers } from "@/constants";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ type UserType = Pick<
   "authorName" | "authorImage" | "id"
 >;
 
-const SearchUser = () => {
+const AddUser = () => {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState<UserType[]>([]);
 
@@ -39,11 +39,11 @@ const SearchUser = () => {
   return (
     <Dialog>
       <DialogTrigger className="md:bg-secondary-gray/10 md:rounded-full hover:scale-105 bg-white/30 md:items-center md:flex-col flex flex-row gap-3 p-4 transition rounded">
-        <AiOutlineSearch
+        <AiOutlineUserAdd
           size={20}
           className={"text-white md:text-primary-brown"}
         />
-        <span className="md:hidden text-base text-white">Search</span>
+        <span className="md:hidden text-base text-white">Add User</span>
       </DialogTrigger>
 
       <DialogContent className="w-full max-w-2xl h-[90vh] flex bg-white rounded-none flex-col gap-5 overflow-y-scroll scrollbar-hide">
@@ -51,10 +51,10 @@ const SearchUser = () => {
         <div className="flex items-start justify-between">
           <DialogTitle className="flex flex-col gap-3">
             <span className="text-primary-brown md:text-2xl text-xl font-bold">
-              Search
+              Add to Following
             </span>
             <span className="text-secondary-gray text-sm font-normal">
-              Search and follow
+              Search for a user and add to following list
             </span>
           </DialogTitle>
 
@@ -87,7 +87,7 @@ const SearchUser = () => {
                 </p>
               </div>
             ) : (
-              users.map((user) => <SearchUserItem key={user.id} user={user} />)
+              users.map((user) => <AddUserItem key={user.id} user={user} />)
             )}
           </div>
         </div>
@@ -96,9 +96,11 @@ const SearchUser = () => {
   );
 };
 
-export default SearchUser;
+export default AddUser;
 
-const SearchUserItem = ({ user }: { user: UserType }) => {
+const AddUserItem = ({ user }: { user: UserType }) => {
+  const [isFollowing, setIsFollowing] = useState(false);
+
   return (
     <div key={user.id} className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -115,10 +117,11 @@ const SearchUserItem = ({ user }: { user: UserType }) => {
       </div>
 
       <Button
+        onClick={() => setIsFollowing(!isFollowing)}
         variant={"link"}
         className="text-primary-green hover:no-underline"
       >
-        Follow
+        {isFollowing ? "Unfollow" : "Follow"}
       </Button>
     </div>
   );
