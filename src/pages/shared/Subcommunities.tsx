@@ -91,10 +91,18 @@ const Subcommunities = () => {
     <div className="w-full">
       {/* Title */}
       <Helmet>
-        <title> Subcommunities - Agrieco-Connect </title>
+        <title>
+          {" "}
+          {UrlPath() === "admin"
+            ? "Subcommunity Management"
+            : "Subcommunities"}{" "}
+          - Agrieco-Connect{" "}
+        </title>
         <meta
           name="description"
-          content="Subcommunities - Agrieco-Connect </title>"
+          content={
+            UrlPath() === "admin" ? "Subcommunity Management" : "Subcommunities"
+          }
         />
       </Helmet>
 

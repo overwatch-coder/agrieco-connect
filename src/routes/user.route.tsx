@@ -4,7 +4,7 @@ import UserDashboardLayout from "@/layout/UserDashboardLayout";
 import Settings from "@/components/shared/Settings";
 import Feed from "@/pages/user/Feed";
 import Topics from "@/pages/user/Topics";
-import MarketPlace from "@/pages/user/MarketPlace";
+import MarketPlace from "@/pages/shared/MarketPlace";
 import Events from "@/pages/user/Events";
 import MyItemsMarketPlace from "@/pages/user/MyItemsMarketPlace";
 import EventDetails from "@/pages/user/EventDetails";

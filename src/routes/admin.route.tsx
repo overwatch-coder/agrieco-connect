@@ -6,6 +6,7 @@ import Settings from "@/components/shared/Settings";
 import UserManagement from "@/pages/admin/UserManagement";
 import Subcommunities from "@/pages/shared/Subcommunities";
 import ViewSubcommunity from "@/pages/shared/ViewSubcommunity";
+import MarketPlace from "@/pages/shared/MarketPlace";
 
 const AdminRoutes = () => {
   const [auth] = useAuth();
@@ -32,6 +33,7 @@ const AdminRoutes = () => {
           path="subcommunity-management/:slug"
           element={<ViewSubcommunity />}
         />
+        <Route path="marketplace-management" element={<MarketPlace />} />
       </Route>
     </>
   );
