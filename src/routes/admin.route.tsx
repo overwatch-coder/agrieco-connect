@@ -4,6 +4,7 @@ import AdminDashboardLayout from "@/layout/AdminDashboardLayout";
 import Dashboard from "@/pages/admin/Dashboard";
 import Home from "@/pages/Home";
 import Settings from "@/components/shared/Settings";
+import UserManagement from "@/pages/admin/UserManagement";
 
 const AdminRoutes = () => {
   const [auth] = useAuth();
@@ -24,7 +25,7 @@ const AdminRoutes = () => {
       >
         <Route path="settings" element={<Settings />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="user-management" element={<Home />} />
+        <Route path="user-management" element={<UserManagement />} />
       </Route>
     </>
   );

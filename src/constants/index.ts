@@ -1,10 +1,9 @@
 import { MdOutlineDashboard, MdOutlineTopic } from "react-icons/md";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { LiaCalendarCheck } from "react-icons/lia";
-import { TbMessage2, TbMessageChatbot } from "react-icons/tb";
-import { IoIosPeople } from "react-icons/io";
-import { CalendarRange, CircleHelp, TrendingUp } from "lucide-react";
-import { RiCalendarTodoFill } from "react-icons/ri";
+import { CalendarRange, FileText, TrendingUp } from "lucide-react";
+import { RiCalendarScheduleLine, RiCalendarTodoFill } from "react-icons/ri";
+import { FaUsers, FaUsersGear } from "react-icons/fa6";
 
 // Admin dashboard links
 export const adminDashboardLinks = [
@@ -16,22 +15,17 @@ export const adminDashboardLinks = [
   {
     name: "User Management",
     path: "/admin/user-management",
-    icon: MdOutlineTopic,
+    icon: FaUsersGear,
   },
   {
-    name: "Subcommunity Management",
+    name: "Subcommunities",
     path: "/admin/subcommunity-management",
-    icon: HiOutlineSpeakerphone,
-  },
-  {
-    name: "Content Moderation",
-    path: "/admin/content-moderation",
-    icon: LiaCalendarCheck,
+    icon: FaUsers,
   },
   {
     name: "Marketplace Management",
     path: "/admin/marketplace-management",
-    icon: TbMessage2,
+    icon: HiOutlineSpeakerphone,
   },
   {
     name: "Event Management",
@@ -39,24 +33,19 @@ export const adminDashboardLinks = [
     icon: CalendarRange,
   },
   {
-    name: "Advertising & Promotions",
-    path: "/admin/advertising-promotions",
-    icon: CircleHelp,
-  },
-  {
-    name: "Analytics & Reports",
-    path: "/admin/analytics-reports",
-    icon: TbMessageChatbot,
+    name: "All Appointments",
+    path: "/admin/appointment-management",
+    icon: RiCalendarScheduleLine,
   },
   {
     name: "System Logs",
     path: "/admin/system-logs",
-    icon: CircleHelp,
+    icon: FileText,
   },
   {
-    name: "Feedback & Support",
-    path: "/admin/feedback-support",
-    icon: CircleHelp,
+    name: "Topics",
+    path: "/admin/topics",
+    icon: MdOutlineTopic,
   },
 ];
 
@@ -90,7 +79,7 @@ export const userDashboardLinks = [
   {
     name: "Subcommunities",
     path: "/user/subcommunities",
-    icon: IoIosPeople,
+    icon: FaUsers,
   },
   {
     name: "Agriculture Trends",
@@ -1420,5 +1409,144 @@ export const agriculturalTrends = [
     category: "Urban Farming",
     postedBy: "Dr. Emmanuel Akin",
     hashtags: ["UrbanFarming", "CommunityFarming"],
+  },
+];
+
+// user management
+export const userManagement = [
+  {
+    username: "cynthia23",
+    fullName: "Josephine Cynthia",
+    email: "josephine.cynthia@example.com",
+    occupation: "Farmer",
+    location: "Lagos, Nigeria",
+    id: "AGC001",
+    image: "https://randomuser.me/api/portraits/women/1.jpg",
+  },
+  {
+    username: "ademola42",
+    fullName: "Ademola Akinyemi",
+    email: "ademola.akinyemi@example.com",
+    occupation: "Agricultural Engineer",
+    location: "Ibadan, Nigeria",
+    id: "AGC002",
+    image: "https://randomuser.me/api/portraits/men/2.jpg",
+  },
+  {
+    username: "uchechi88",
+    fullName: "Uchechi Eze",
+    email: "uchechi.eze@example.com",
+    occupation: "Soil Scientist",
+    location: "Enugu, Nigeria",
+    id: "AGC003",
+    image: "https://randomuser.me/api/portraits/women/3.jpg",
+  },
+  {
+    username: "amara_kings",
+    fullName: "Amara Kingsley",
+    email: "amara.kingsley@example.com",
+    occupation: "Crop Researcher",
+    location: "Abuja, Nigeria",
+    id: "AGC004",
+    image: "https://randomuser.me/api/portraits/women/4.jpg",
+  },
+  {
+    username: "tolulope21",
+    fullName: "Tolulope Adeoye",
+    email: "tolulope.adeoye@example.com",
+    occupation: "Livestock Specialist",
+    location: "Akure, Nigeria",
+    id: "AGC005",
+    image: "https://randomuser.me/api/portraits/men/5.jpg",
+  },
+  {
+    username: "chidi_jones",
+    fullName: "Chidi Jones",
+    email: "chidi.jones@example.com",
+    occupation: "Agricultural Economist",
+    location: "Owerri, Nigeria",
+    id: "AGC006",
+    image: "https://randomuser.me/api/portraits/men/6.jpg",
+  },
+  {
+    username: "ngozi_89",
+    fullName: "Ngozi Umeh",
+    email: "ngozi.umeh@example.com",
+    occupation: "Horticulturist",
+    location: "Onitsha, Nigeria",
+    id: "AGC007",
+    image: "https://randomuser.me/api/portraits/women/7.jpg",
+  },
+  {
+    username: "kola_ajayi",
+    fullName: "Kola Ajayi",
+    email: "kola.ajayi@example.com",
+    occupation: "Agronomist",
+    location: "Ibadan, Nigeria",
+    id: "AGC008",
+    image: "https://randomuser.me/api/portraits/men/8.jpg",
+  },
+  {
+    username: "fatimah_smith",
+    fullName: "Fatimah Smith",
+    email: "fatimah.smith@example.com",
+    occupation: "Extension Officer",
+    location: "Kano, Nigeria",
+    id: "AGC009",
+    image: "https://randomuser.me/api/portraits/women/9.jpg",
+  },
+  {
+    username: "samuel_34",
+    fullName: "Samuel Olatunji",
+    email: "samuel.olatunji@example.com",
+    occupation: "Aquaculture Specialist",
+    location: "Lagos, Nigeria",
+    id: "AGC010",
+    image: "https://randomuser.me/api/portraits/men/10.jpg",
+  },
+  {
+    username: "ikechi_90",
+    fullName: "Ikechi Okoro",
+    email: "ikechi.okoro@example.com",
+    occupation: "Poultry Farmer",
+    location: "Port Harcourt, Nigeria",
+    id: "AGC011",
+    image: "https://randomuser.me/api/portraits/men/11.jpg",
+  },
+  {
+    username: "grace_akins",
+    fullName: "Grace Akins",
+    email: "grace.akins@example.com",
+    occupation: "Agricultural Extension Worker",
+    location: "Abeokuta, Nigeria",
+    id: "AGC012",
+    image: "https://randomuser.me/api/portraits/women/12.jpg",
+  },
+  {
+    username: "yusuf_88",
+    fullName: "Yusuf Ibrahim",
+    email: "yusuf.ibrahim@example.com",
+    occupation: "Plant Pathologist",
+    location: "Kaduna, Nigeria",
+    id: "AGC013",
+    image: "https://randomuser.me/api/portraits/men/13.jpg",
+  },
+  {
+    username: "glory_ike",
+    fullName: "Glory Ike",
+    email: "glory.ike@example.com",
+    occupation: "Agricultural Consultant",
+    location: "Benin City, Nigeria",
+    id: "AGC014",
+    image: "https://randomuser.me/api/portraits/women/14.jpg",
+  },
+  {
+    username: "chioma_76",
+    fullName: "Chioma Nwosu",
+    email: "chioma.nwosu@example.com",
+    occupation: "Farm Manager",
+    location: "Awka, Nigeria",
+    id: "AGC015",
+    image: "https://randomuser.me/api/portraits/women/15.jpg",
   },
 ];

@@ -1,9 +1,13 @@
+import UserManagementTable from "@/components/admin/UserManagementTable";
 import { recentActivities, reports } from "@/constants";
-import { Calendar, Trash2 } from "lucide-react";
+import { Calendar, CalendarRange, Trash2, UserRoundCheck } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { GoPeople } from "react-icons/go";
 import { GrPowerCycle } from "react-icons/gr";
 import { IoCheckboxOutline } from "react-icons/io5";
+import { userManagement } from "@/constants";
+
+export type UserManagement = (typeof userManagement)[number];
 
 const Dashboard = () => {
   return (
@@ -29,7 +33,7 @@ const Dashboard = () => {
         </div>
       </section>
 
-      {/* Numbers */}
+      {/* Analytics */}
       <section className="sm:grid-cols-2 lg:grid-cols-4 grid grid-cols-1 gap-10">
         <div className="rounded-xl 2xl:p-10 flex items-center justify-between col-span-1 gap-2 p-5 bg-white">
           <div className="flex flex-col gap-3">
@@ -56,35 +60,32 @@ const Dashboard = () => {
             <p className="text-2xl font-bold text-black">{250}</p>
             <p className="text-primary-brown text-sm font-medium">Events</p>
           </div>
-          <GoPeople size={30} className="text-primary-green" />
+          <CalendarRange size={30} className="text-primary-green" />
         </div>
 
         <div className="rounded-xl bg-primary-brown 2xl:p-10 flex items-center justify-between col-span-1 gap-2 p-5">
           <div className="flex flex-col gap-3">
             <p className="text-2xl font-bold text-white">{150}</p>
-            <p className="text-sm font-medium text-white">Total Users</p>
+            <p className="text-sm font-medium text-white">Total Experts</p>
           </div>
-          <GoPeople size={30} className="text-white" />
+          <UserRoundCheck size={30} className="text-primary-green" />
         </div>
       </section>
 
       {/* User Management, Recent Activities & Reports */}
       <section className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
         {/* User Management */}
-        <div className="md:col-span-2 w-full h-full col-span-1 bg-white rounded-md shadow">
-          <h2 className="flex items-center justify-between gap-2 px-3 py-3">
+        <div className="md:col-span-2 flex flex-col w-full h-full col-span-1 gap-5 bg-white rounded-md shadow">
+          <h2 className="flex items-center justify-between gap-2 px-5 py-3">
             <span className="text-primary-brown font-medium">
               User Management
             </span>
-            <p className="flex items-center gap-2">
-              <GrPowerCycle size={20} className="text-red-500 cursor-pointer" />
-            </p>
           </h2>
 
           <hr className="w-full bg-secondary-gray h-0.5" />
 
           {/* User List */}
-          <div></div>
+          <UserManagementTable users={userManagement} />
         </div>
 
         <div className="flex flex-col w-full col-span-1 gap-5">

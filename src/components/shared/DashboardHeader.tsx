@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import Notifications from "@/components/Notifications";
 import AdminSidebarMobile from "@/components/shared/AdminSidebarMobile";
 import DashboardMobile from "@/components/shared/DashboardMobile";
-import Logout from "@/components/shared/Logout";
 import UserSidebarMobile from "@/components/shared/UserSidebarMobile";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,13 @@ const DashboardHeader = () => {
   const isUser = !auth?.email.toLowerCase().startsWith("admin");
   const pathname = useLocation().pathname;
   const firstPath = pathname.split("/")[1] === "user" ? "user" : "admin";
+  const [headerName, setHeaderName] = useState("Dashboard");
+
+  useEffect(() => {
+    setHeaderName(pathname.split("/")[2].split("-").join(" "));
+  }, [pathname]);
+
+  console.log({ pathname });
 
   return (
     <header
@@ -59,7 +66,9 @@ const DashboardHeader = () => {
               </h1>
             </Link>
           ) : (
-            "Dashboard"
+            <p className="capitalize">
+              {headerName.toLowerCase() === "admin" ? "Dashboard" : headerName}
+            </p>
           )}
         </h2>
 
