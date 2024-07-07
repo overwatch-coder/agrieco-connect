@@ -3,14 +3,22 @@ import { marketplaceEvents } from "@/constants";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import { useState } from "react";
-import { slugifyData } from "@/lib/utils";
+import { slugifyData, UrlPath } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import MarketPlaceEditEvent from "@/components/MarketPlaceEditEvent";
 import AddEvent from "@/components/AddEvent";
 
 export type MarketPlaceEventType = (typeof marketplaceEvents)[number];
 
-const MyEvents = () => {
+type MyEventsProps = {
+  adminFilteredEvents?: MarketPlaceEventType[];
+  handleAdminEventDelete?: (id: string) => void;
+};
+
+const MyEvents = ({
+  adminFilteredEvents,
+  handleAdminEventDelete,
+}: MyEventsProps) => {
   const [filteredEvents, setFilteredEvents] = useState(
     marketplaceEvents.filter((item) => item.isUser === true)
   );
@@ -26,35 +34,70 @@ const MyEvents = () => {
     <div className="w-full">
       {/* Title */}
       <Helmet>
-        <title> My Events | Events - Agrieco-Connect </title>
-        <meta name="description" content="My Events | Events" />
+        <title>
+          {" "}
+          My Events | {UrlPath() === "admin" ? "Event Management" : "Events"} -
+          Agrieco-Connect{" "}
+        </title>
+        <meta
+          name="description"
+          content={UrlPath() === "admin" ? "Event Management" : "Events"}
+        />
       </Helmet>
 
-      <div className="md:gap-6 flex flex-col w-full gap-10 p-5">
-        <Link
-          to="/user/events"
-          className="text-primary-brown flex items-center gap-2"
-        >
-          <ArrowLeft size={20} className="text-primary-brown" />
-          <span>Go Back</span>
-        </Link>
+      <div
+        className={`md:gap-6 flex flex-col w-full gap-10 ${UrlPath() !== "admin" ? "p-5" : "p-0"}`}
+      >
+        {UrlPath() !== "admin" && (
+          <>
+            <Link
+              to="/user/events"
+              className="text-primary-brown flex items-center gap-2"
+            >
+              <ArrowLeft size={20} className="text-primary-brown" />
+              <span>Go Back</span>
+            </Link>
 
-        <section className="flex items-center justify-between w-full gap-5">
-          <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown">
-            My Events
-          </h2>
+            <section className="flex items-center justify-between w-full gap-5">
+              <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown">
+                My Events
+              </h2>
 
-          <AddEvent />
-        </section>
+              <AddEvent />
+            </section>
+          </>
+        )}
 
         <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {filteredEvents.map((item) => (
-            <MarketPlaceEventItem
-              key={item.id}
-              item={item}
-              handleDeleteItem={handleDeleteItem}
-            />
-          ))}
+          {UrlPath() === "admin" ? (
+            adminFilteredEvents && adminFilteredEvents.length > 0 ? (
+              adminFilteredEvents.map((item) => (
+                <MarketPlaceEventItem
+                  key={item.id}
+                  item={item}
+                  handleDeleteItem={handleAdminEventDelete!}
+                />
+              ))
+            ) : (
+              <div className="md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center col-span-1 gap-5 mx-auto text-center">
+                <h2 className="text-primary-brown text-lg font-bold">
+                  No Events Found
+                </h2>
+
+                <p className="text-secondary-gray text-sm">
+                  Try changing the search term or filter
+                </p>
+              </div>
+            )
+          ) : (
+            filteredEvents.map((item) => (
+              <MarketPlaceEventItem
+                key={item.id}
+                item={item}
+                handleDeleteItem={handleDeleteItem}
+              />
+            ))
+          )}
         </section>
       </div>
     </div>

@@ -16,7 +16,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
-import { MarketPlaceEventType } from "@/pages/user/MyEvents";
+import { MarketPlaceEventType } from "@/pages/shared/MyEvents";
 
 type MarketPlaceEditEventProps = {
   item: MarketPlaceEventType;
