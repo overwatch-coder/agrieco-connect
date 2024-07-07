@@ -1,3 +1,4 @@
+import { useAppContext } from "@/hooks/useAppContext";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import slugify from "slugify";
@@ -22,5 +23,8 @@ export const slugifyData = (data: string) => {
   });
 };
 
-export const urlPath =
-  window.location.pathname.split("/")[1] === "user" ? "user" : "admin";
+export const UrlPath = () => {
+  const { urlPath } = useAppContext();
+
+  return urlPath;
+};

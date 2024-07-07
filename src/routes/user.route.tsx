@@ -12,9 +12,9 @@ import MyEvents from "@/pages/user/MyEvents";
 import Appointments from "@/pages/user/Appointments";
 import MyAppointments from "@/pages/user/MyAppointments";
 import BookAppointment from "@/pages/user/BookAppointment";
-import Subcommunities from "@/pages/user/Subcommunities";
-import ViewSubcommunity from "@/pages/user/ViewSubcommunity";
+import Subcommunities from "@/pages/shared/Subcommunities";
 import AgriculturalTrends from "@/pages/user/AgriculturalTrends";
+import ViewSubcommunity from "@/pages/shared/ViewSubcommunity";
 
 const UserRoutes = () => {
   const [auth] = useAuth();

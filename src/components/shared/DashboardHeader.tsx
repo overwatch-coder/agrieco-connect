@@ -17,7 +17,7 @@ import { Settings } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddUser from "@/components/shared/AddUser";
 import SearchBox from "@/components/shared/SearchBox";
-import { urlPath } from "@/lib/utils";
+import { UrlPath } from "@/lib/utils";
 
 const DashboardHeader = () => {
   const [auth] = useAuth();
@@ -84,13 +84,13 @@ const DashboardHeader = () => {
           <Notifications />
 
           <Link
-            to={`/${urlPath}/settings`}
+            to={`/${UrlPath()}/settings`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <Settings
               size={20}
               className={
-                pathname === `/${urlPath}/settings`
+                pathname === `/${UrlPath()}/settings`
                   ? "text-primary-green"
                   : "text-primary-brown"
               }
@@ -146,7 +146,7 @@ export const UserProfile = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {/* <DropdownMenuItem
-          onClick={() => navigate(`/${urlPath}/settings`)}
+          onClick={() => navigate(`/${UrlPath()}/settings`)}
           className="cursor-pointer"
         >
           Settings

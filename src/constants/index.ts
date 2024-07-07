@@ -23,7 +23,7 @@ export const adminDashboardLinks = [
     icon: FaUsers,
   },
   {
-    name: "Marketplace Management",
+    name: "Marketplace",
     path: "/admin/marketplace-management",
     icon: HiOutlineSpeakerphone,
   },

@@ -2,11 +2,10 @@ import { Navigate, Route } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import AdminDashboardLayout from "@/layout/AdminDashboardLayout";
 import Dashboard from "@/pages/admin/Dashboard";
-import Home from "@/pages/Home";
 import Settings from "@/components/shared/Settings";
 import UserManagement from "@/pages/admin/UserManagement";
-import Subcommunities from "@/pages/user/Subcommunities";
-import ViewSubcommunity from "@/pages/user/ViewSubcommunity";
+import Subcommunities from "@/pages/shared/Subcommunities";
+import ViewSubcommunity from "@/pages/shared/ViewSubcommunity";
 
 const AdminRoutes = () => {
   const [auth] = useAuth();

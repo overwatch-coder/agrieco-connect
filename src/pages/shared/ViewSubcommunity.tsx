@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { subcommunities, userFeeds as subcommunityActivity } from "@/constants";
-import { slugifyData } from "@/lib/utils";
+import { slugifyData, UrlPath } from "@/lib/utils";
 import SubcommunityActivities from "@/components/SubcommunityActivities";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
@@ -60,7 +60,11 @@ const ViewSubcommunity = () => {
       </Helmet>
       <div className="md:gap-6 xl:max-w-4xl flex flex-col w-full gap-10 p-5 mx-auto">
         <Link
-          to="/user/subcommunities"
+          to={
+            UrlPath() === "admin"
+              ? "/admin/subcommunity-management"
+              : "/user/subcommunities"
+          }
           className="text-primary-brown flex items-center gap-2 text-xl font-bold"
         >
           <ArrowLeft size={20} className="text-primary-brown" />
@@ -73,33 +77,37 @@ const ViewSubcommunity = () => {
 
         <section className="flex flex-col w-full gap-5">
           <Tabs defaultValue="activities">
-            <TabsList className="bg-transparent">
-              <TabsTrigger
-                value="activities"
-                className="text-back data-[state=active]:text-primary-green data-[state=active]:bg-transparent data-[state=active]:border-b-2 rounded-none bg-transparent data-[state=active]:border-primary-green pb-2"
-              >
-                Activities
-              </TabsTrigger>
-              <TabsTrigger
-                value="members"
-                className="pb-2 text-black data-[state=active]:text-primary-green data-[state=active]:bg-transparent data-[state=active]:border-b-2 rounded-none bg-transparent data-[state=active]:border-primary-green"
-              >
-                Members
-              </TabsTrigger>
-            </TabsList>
+            {UrlPath() !== "admin" && (
+              <TabsList className="bg-transparent">
+                <TabsTrigger
+                  value="activities"
+                  className="text-back data-[state=active]:text-primary-green data-[state=active]:bg-transparent data-[state=active]:border-b-2 rounded-none bg-transparent data-[state=active]:border-primary-green pb-2"
+                >
+                  Activities
+                </TabsTrigger>
+                <TabsTrigger
+                  value="members"
+                  className="pb-2 text-black data-[state=active]:text-primary-green data-[state=active]:bg-transparent data-[state=active]:border-b-2 rounded-none bg-transparent data-[state=active]:border-primary-green"
+                >
+                  Members
+                </TabsTrigger>
+              </TabsList>
+            )}
 
             <TabsContent
               value="activities"
               className="flex flex-col w-full gap-5"
             >
               {/* Post Something */}
-              <div className="rounded-2xl flex flex-col gap-3 py-4 bg-white shadow">
-                <h2 className="text-primary-green border-b-secondary-gray px-4 pb-3 text-xl font-normal border-b">
-                  Post Something
-                </h2>
+              {UrlPath() !== "admin" && (
+                <div className="rounded-2xl flex flex-col gap-3 py-4 bg-white shadow">
+                  <h2 className="text-primary-green border-b-secondary-gray px-4 pb-3 text-xl font-normal border-b">
+                    Post Something
+                  </h2>
 
-                <CreateFeedPost />
-              </div>
+                  <CreateFeedPost />
+                </div>
+              )}
 
               <section id="activities" className="flex flex-col w-full gap-5">
                 <InfiniteScroll

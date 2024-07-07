@@ -13,7 +13,7 @@ import Notifications from "@/components/Notifications";
 import { UserProfile } from "@/components/shared/DashboardHeader";
 import AddUser from "@/components/shared/AddUser";
 import SearchBox from "@/components/shared/SearchBox";
-import { urlPath } from "@/lib/utils";
+import { UrlPath } from "@/lib/utils";
 
 const DashboardMobile = () => {
   const pathname = useLocation().pathname;
@@ -51,20 +51,20 @@ const DashboardMobile = () => {
               <Notifications />
 
               <Link
-                to={`/${urlPath}/settings`}
+                to={`/${UrlPath()}/settings`}
                 className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
               >
                 <Settings
                   size={20}
                   className={`${
-                    pathname === `/${urlPath}/settings`
+                    pathname === `/${UrlPath()}/settings`
                       ? "text-primary-green"
                       : "text-white"
                   }`}
                 />
                 <span
                   className={`${
-                    pathname === `/${urlPath}/settings`
+                    pathname === `/${UrlPath()}/settings`
                       ? "text-primary-green"
                       : "text-white"
                   } text-base`}
@@ -83,7 +83,7 @@ const DashboardMobile = () => {
               {"Josepine Ekhator"}
             </span>
             <span className="text-white/70 text-base font-normal">
-              {urlPath === "user" ? "User" : "Admin"}
+              {UrlPath() === "user" ? "User" : "Admin"}
             </span>
           </p>
         </div>

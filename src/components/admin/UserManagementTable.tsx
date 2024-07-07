@@ -2,15 +2,13 @@ import { useLocation } from "react-router-dom";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { UserManagement } from "@/pages/admin/Dashboard";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
 

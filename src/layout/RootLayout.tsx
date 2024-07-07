@@ -1,11 +1,13 @@
-import React from "react";
+import ContextProvider from "@/providers/ContextProvider";
 import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
   return (
-    <section>
-      <Outlet />
-    </section>
+    <ContextProvider>
+      <section>
+        <Outlet />
+      </section>
+    </ContextProvider>
   );
 };
 
