@@ -1,11 +1,10 @@
 import UserManagementTable from "@/components/admin/UserManagementTable";
-import { recentActivities, reports } from "@/constants";
-import { Calendar, CalendarRange, Trash2, UserRoundCheck } from "lucide-react";
+import { Calendar, CalendarRange, UserRoundCheck } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { GoPeople } from "react-icons/go";
-import { GrPowerCycle } from "react-icons/gr";
-import { IoCheckboxOutline } from "react-icons/io5";
 import { userManagement } from "@/constants";
+import DashboardEventCategoriesChart from "@/components/admin/DashboardEventCategoriesChart";
+import DashboardUserAnalyticsChart from "@/components/admin/DashboardUserAnalyticsChart";
 
 export type UserManagement = (typeof userManagement)[number];
 
@@ -72,7 +71,7 @@ const Dashboard = () => {
         </div>
       </section>
 
-      {/* User Management, Recent Activities & Reports */}
+      {/* User Management, Event and User Analytics */}
       <section className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
         {/* User Management */}
         <div className="md:col-span-2 flex flex-col w-full h-full col-span-1 gap-5 bg-white rounded-md shadow">
@@ -84,98 +83,37 @@ const Dashboard = () => {
 
           <hr className="w-full bg-secondary-gray h-0.5" />
 
-          {/* User List */}
+          {/* User Management */}
           <UserManagementTable users={userManagement} />
         </div>
 
         <div className="flex flex-col w-full col-span-1 gap-5">
-          {/* Recent Activities */}
-          <div>
-            <div className="md:col-span-2 w-full h-full col-span-1 bg-white rounded-md shadow">
-              <h2 className="flex items-center justify-between gap-2 px-3 py-3">
-                <span className="text-secondary-gray font-medium">
-                  Recent Activities
-                </span>
-                <p className="flex items-center gap-4">
-                  <GrPowerCycle
-                    size={20}
-                    className="text-red-500 cursor-pointer"
-                  />
+          {/* Events (Categories) */}
+          <div className="flex flex-col w-full h-full col-span-1 gap-5 bg-white rounded-md shadow">
+            <h2 className="flex items-center justify-between gap-2 px-3 py-3">
+              <span className="text-primary-brown font-medium">
+                Events (Categories)
+              </span>
+            </h2>
 
-                  <Trash2
-                    size={20}
-                    className="text-primary-green cursor-pointer"
-                  />
-                </p>
-              </h2>
+            <hr className="w-full bg-secondary-gray h-0.5" />
 
-              <hr className="w-full bg-secondary-gray h-0.5" />
-
-              <div className="flex flex-col gap-3 px-3 py-5">
-                {recentActivities.slice(0, 5).map((activity, idx) => (
-                  <div
-                    key={idx}
-                    className="text-secondary-gray flex flex-col gap-3"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <IoCheckboxOutline size={22} className="text-black" />
-
-                        <div className="flex flex-col gap-2">
-                          <h3 className="2xl:text-base text-xs font-semibold">
-                            {activity.title}
-                          </h3>
-                          <p className="2xl:text-sm text-xs font-light opacity-50">
-                            {activity.description}
-                          </p>
-
-                          <p className="sm:hidden text-xs font-semibold text-red-300">
-                            {activity.timeAgo}
-                          </p>
-                        </div>
-                      </div>
-
-                      <p className="sm:block 2xl:text-sm hidden text-xs font-semibold text-red-300">
-                        {activity.timeAgo}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="flex flex-col h-full gap-3 px-3 py-5">
+              <DashboardEventCategoriesChart />
             </div>
           </div>
 
-          {/* Reports */}
-          <div>
-            <div className="md:col-span-2 w-full h-full col-span-1 bg-white rounded-md shadow">
-              <h2 className="flex items-center justify-between gap-2 px-3 py-3">
-                <span className="text-secondary-gray font-medium">
-                  Recent Activities
-                </span>
-                <p className="flex items-center gap-2">
-                  <GrPowerCycle
-                    size={20}
-                    className="text-red-500 cursor-pointer"
-                  />
-                </p>
-              </h2>
-              <hr className="w-full bg-secondary-gray h-0.5" />
+          {/* Users Analytics */}
+          <div className="flex flex-col w-full h-full col-span-1 gap-5 bg-white rounded-md shadow">
+            <h2 className="flex items-center justify-between gap-2 px-3 py-3">
+              <span className="text-primary-brown font-medium">
+                Users Analytics
+              </span>
+            </h2>
+            <hr className="w-full bg-secondary-gray h-0.5" />
 
-              <div className="flex flex-col gap-3 px-3 py-5">
-                {reports.slice(0, 6).map((report, idx) => (
-                  <div
-                    key={idx}
-                    className="text-secondary-gray flex flex-col gap-3"
-                  >
-                    <h3 className="2xl:text-base text-sm font-semibold">
-                      {report.title}
-                    </h3>
-                    <p className="2xl:text-sm text-xs font-light opacity-50">
-                      {report.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
+            <div className="flex flex-col h-full gap-3 px-3 py-5">
+              <DashboardUserAnalyticsChart />
             </div>
           </div>
         </div>

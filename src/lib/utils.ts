@@ -21,3 +21,6 @@ export const slugifyData = (data: string) => {
     replacement: "-",
   });
 };
+
+export const urlPath =
+  window.location.pathname.split("/")[1] === "user" ? "user" : "admin";

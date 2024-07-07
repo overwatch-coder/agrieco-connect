@@ -17,19 +17,18 @@ import { Settings } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddUser from "@/components/shared/AddUser";
 import SearchBox from "@/components/shared/SearchBox";
+import { urlPath } from "@/lib/utils";
 
 const DashboardHeader = () => {
   const [auth] = useAuth();
   const isUser = !auth?.email.toLowerCase().startsWith("admin");
   const pathname = useLocation().pathname;
-  const firstPath = pathname.split("/")[1] === "user" ? "user" : "admin";
+
   const [headerName, setHeaderName] = useState("Dashboard");
 
   useEffect(() => {
     setHeaderName(pathname.split("/")[2].split("-").join(" "));
   }, [pathname]);
-
-  console.log({ pathname });
 
   return (
     <header
@@ -85,13 +84,13 @@ const DashboardHeader = () => {
           <Notifications />
 
           <Link
-            to={`/${firstPath}/settings`}
+            to={`/${urlPath}/settings`}
             className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
           >
             <Settings
               size={20}
               className={
-                pathname === `/${firstPath}/settings`
+                pathname === `/${urlPath}/settings`
                   ? "text-primary-green"
                   : "text-primary-brown"
               }
@@ -127,7 +126,6 @@ export default DashboardHeader;
 export const UserProfile = () => {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
-  const firstPath = pathname.split("/")[1] === "user" ? "user" : "admin";
 
   return (
     <DropdownMenu>
@@ -148,7 +146,7 @@ export const UserProfile = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {/* <DropdownMenuItem
-          onClick={() => navigate(`/${firstPath}/settings`)}
+          onClick={() => navigate(`/${urlPath}/settings`)}
           className="cursor-pointer"
         >
           Settings

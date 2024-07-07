@@ -17,6 +17,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
+import { urlPath } from "@/lib/utils";
 
 type SearchType = {
   id: number;
@@ -196,12 +197,10 @@ type AddSearchBoxItemProps = {
 };
 
 const AddSearchBoxItem = ({ data, setSearch }: AddSearchBoxItemProps) => {
-  const pathname = useLocation().pathname;
-  const firstPath = pathname.split("/")[1] === "user" ? "user" : "admin";
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/${firstPath}${data.link}`);
+    navigate(`/${urlPath}${data.link}`);
     setSearch("");
   };
 

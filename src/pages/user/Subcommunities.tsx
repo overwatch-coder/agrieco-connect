@@ -7,7 +7,7 @@ import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
-import { slugifyData } from "@/lib/utils";
+import { slugifyData, urlPath } from "@/lib/utils";
 
 export type SubcommunitiesItemType = (typeof subcommunitiesData)[number];
 
@@ -215,7 +215,7 @@ const SubcommunitiesItem = ({
                 </Button>
               ))}
 
-            <Link to={`/user/subcommunities/${slugifyData(item.title)}`}>
+            <Link to={`/${urlPath}/subcommunities/${slugifyData(item.title)}`}>
               <Button className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none">
                 View Activity
               </Button>
