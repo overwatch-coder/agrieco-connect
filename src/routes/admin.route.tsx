@@ -8,6 +8,7 @@ import Subcommunities from "@/pages/shared/Subcommunities";
 import ViewSubcommunity from "@/pages/shared/ViewSubcommunity";
 import MarketPlace from "@/pages/shared/MarketPlace";
 import Events from "@/pages/shared/Events";
+import AppointmentManagement from "@/pages/admin/AppointmentManagement";
 
 const AdminRoutes = () => {
   const [auth] = useAuth();
@@ -36,6 +37,10 @@ const AdminRoutes = () => {
         />
         <Route path="marketplace-management" element={<MarketPlace />} />
         <Route path="event-management" element={<Events />} />
+        <Route
+          path="appointment-management"
+          element={<AppointmentManagement />}
+        />
       </Route>
     </>
   );

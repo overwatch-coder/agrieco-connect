@@ -16,3 +16,16 @@ export const AppointmentsAvailabilitySchema = z.object({
   contactInfo: z.string().trim().min(1, "Contact Info is required"),
   bio: z.string().trim().min(1, "Bio is required"),
 });
+
+export const AppointmentsSchema = z.object({
+  fullName: z.string().trim().min(1, "Full Name is required"),
+  speciality: z.string().trim().min(1, "Speciality is required"),
+  location: z.string().trim().min(1, "Location is required"),
+  experienceLevel: z.string().trim().min(1, "Experience Level is required"),
+  availabilitySlot: z.string().trim().min(1, "Availability Slot is required"),
+  bio: z.string().trim().min(1, "Bio is required"),
+  title: z.string().trim().min(1, "Title is required"),
+  email: z.string().trim().min(1, "Contact Info (email) is required"),
+  status: z.string().trim().min(1, "Status is required"),
+  id: z.string().trim().optional(),
+});

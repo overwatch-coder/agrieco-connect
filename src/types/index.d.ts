@@ -6,7 +6,10 @@ import {
   MarketplaceProductsSchema,
 } from "@/schema/marketplace.schema";
 import { FeedSchema } from "@/schema/feed.schema";
-import { AppointmentsAvailabilitySchema } from "@/schema/appointments.schema";
+import {
+  AppointmentsAvailabilitySchema,
+  AppointmentsSchema,
+} from "@/schema/appointments.schema";
 import { SubcommunitySchema } from "@/schema/subcommunity.schema";
 
 export type Auth = z.infer<typeof AuthSchema>;
@@ -17,4 +20,5 @@ export type FeedType = z.infer<typeof FeedSchema>;
 export type AppointmentsAvailability = z.infer<
   typeof AppointmentsAvailabilitySchema
 >;
+export type AppointmentsType = z.infer<typeof AppointmentsSchema>;
 export type Subcommunity = z.infer<typeof SubcommunitySchema>;
