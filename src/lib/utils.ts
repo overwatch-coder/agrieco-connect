@@ -28,3 +28,9 @@ export const UrlPath = () => {
 
   return urlPath;
 };
+
+export const IsUserAuthenticated = () => {
+  const { isUserAuthenticated } = useAppContext();
+
+  return isUserAuthenticated;
+};

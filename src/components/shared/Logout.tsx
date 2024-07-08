@@ -14,6 +14,7 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAppContext } from "@/hooks/useAppContext";
 
 const Logout = ({
   showLogoutName,
@@ -24,10 +25,12 @@ const Logout = ({
 }) => {
   const [auth, setAuth] = useAuth();
   const isUser = !auth?.email.toLowerCase().startsWith("admin");
+  const { setIsUserAuthenticated } = useAppContext();
 
   // handle logout
   const handleLogout = async () => {
     setAuth(null);
+    setIsUserAuthenticated(false);
     toast.success("You have been logged out");
   };
 
