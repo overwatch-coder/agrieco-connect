@@ -9,6 +9,8 @@ import ViewSubcommunity from "@/pages/shared/ViewSubcommunity";
 import MarketPlace from "@/pages/shared/MarketPlace";
 import Events from "@/pages/shared/Events";
 import AppointmentManagement from "@/pages/admin/AppointmentManagement";
+import SystemLogs from "@/pages/admin/SystemLogs";
+import AdminTopics from "@/pages/admin/AdminTopics";
 
 const AdminRoutes = () => {
   const [auth] = useAuth();
@@ -41,6 +43,8 @@ const AdminRoutes = () => {
           path="appointment-management"
           element={<AppointmentManagement />}
         />
+        <Route path="system-logs" element={<SystemLogs />} />
+        <Route path="topics" element={<AdminTopics />} />
       </Route>
     </>
   );

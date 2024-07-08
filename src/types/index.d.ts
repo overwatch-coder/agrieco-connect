@@ -11,6 +11,7 @@ import {
   AppointmentsSchema,
 } from "@/schema/appointments.schema";
 import { SubcommunitySchema } from "@/schema/subcommunity.schema";
+import { TopicsSchema } from "@/schema/topics.schema";
 
 export type Auth = z.infer<typeof AuthSchema>;
 export type SettingsType = z.infer<typeof SettingsSchema>;
@@ -22,3 +23,4 @@ export type AppointmentsAvailability = z.infer<
 >;
 export type AppointmentsType = z.infer<typeof AppointmentsSchema>;
 export type Subcommunity = z.infer<typeof SubcommunitySchema>;
+export type TopicsType = z.infer<typeof TopicsSchema>;

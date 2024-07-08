@@ -1734,3 +1734,296 @@ export const appointmentManagement = [
     id: "APT015",
   },
 ];
+
+// system logs
+export const systemLogs = [
+  {
+    logID: "001",
+    timestamp: new Date("2024-06-01T12:34:56")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "Database connection failed",
+    severity: "high",
+    logType: "Error",
+  },
+  {
+    logID: "002",
+    timestamp: new Date("2024-06-02T08:45:23")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "system",
+    description: "User authentication successful",
+    severity: "low",
+    logType: "Info",
+  },
+  {
+    logID: "003",
+    timestamp: new Date("2024-06-03T10:15:42")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "Scheduled backup completed",
+    severity: "medium",
+    logType: "Warning",
+  },
+  {
+    logID: "004",
+    timestamp: new Date("2024-06-04T14:55:30")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "jdoe",
+    description: "Failed login attempt",
+    severity: "medium",
+    logType: "Error",
+  },
+  {
+    logID: "005",
+    timestamp: new Date("2024-06-05T16:22:13")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "System rebooted",
+    severity: "high",
+    logType: "Error",
+  },
+  {
+    logID: "006",
+    timestamp: new Date("2024-06-06T09:05:19")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "Memory usage exceeded threshold",
+    severity: "medium",
+    logType: "Warning",
+  },
+  {
+    logID: "007",
+    timestamp: new Date("2024-06-07T13:37:44")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "User account created",
+    severity: "low",
+    logType: "Info",
+  },
+  {
+    logID: "008",
+    timestamp: new Date("2024-06-08T11:25:50")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "jsmith",
+    description: "Service restarted",
+    severity: "medium",
+    logType: "Warning",
+  },
+  {
+    logID: "009",
+    timestamp: new Date("2024-06-09T17:46:12")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "Disk space running low",
+    severity: "high",
+    logType: "Error",
+  },
+  {
+    logID: "010",
+    timestamp: new Date("2024-06-10T12:10:29")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "system",
+    description: "System update installed",
+    severity: "low",
+    logType: "Info",
+  },
+  {
+    logID: "011",
+    timestamp: new Date("2024-06-11T14:02:15")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "Unauthorized access attempt detected",
+    severity: "high",
+    logType: "Error",
+  },
+  {
+    logID: "012",
+    timestamp: new Date("2024-06-12T09:45:56")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "Configuration file modified",
+    severity: "medium",
+    logType: "Warning",
+  },
+  {
+    logID: "013",
+    timestamp: new Date("2024-06-13T16:25:34")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "jdoe",
+    description: "Failed password reset attempt",
+    severity: "medium",
+    logType: "Error",
+  },
+  {
+    logID: "014",
+    timestamp: new Date("2024-06-14T11:50:28")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "System maintenance scheduled",
+    severity: "low",
+    logType: "Info",
+  },
+  {
+    logID: "015",
+    timestamp: new Date("2024-06-15T15:39:08")
+      .toISOString()
+      .split("T")
+      .join(" ")
+      .split(".")[0],
+    user: "admin",
+    description: "High CPU usage detected",
+    severity: "high",
+    logType: "Error",
+  },
+];
+
+// admin dashboard topics
+export const adminDashboardTopics = [
+  {
+    topic: "Crop Farming",
+    category: "Sustainable Farming Practices",
+    id: "T001",
+    description:
+      "This topic covers various sustainable practices in crop farming that help maintain soil health, reduce water usage, and improve crop yields.",
+  },
+  {
+    topic: "Pest Control",
+    category: "Integrated Pest Management",
+    id: "T002",
+    description:
+      "Integrated Pest Management (IPM) involves using a combination of biological, cultural, mechanical, and chemical methods to control pests in an environmentally friendly manner.",
+  },
+  {
+    topic: "Soil Fertility",
+    category: "Organic Farming",
+    id: "T003",
+    description:
+      "Organic farming practices to enhance soil fertility, including the use of compost, green manures, and crop rotations to maintain healthy soil ecosystems.",
+  },
+  {
+    topic: "Water Conservation",
+    category: "Irrigation Management",
+    id: "T004",
+    description:
+      "Strategies and techniques for efficient water use in farming, including drip irrigation, rainwater harvesting, and soil moisture management.",
+  },
+  {
+    topic: "Climate Change Adaptation",
+    category: "Environmental Sustainability",
+    id: "T005",
+    description:
+      "Methods and practices to adapt farming systems to the impacts of climate change, ensuring resilience and productivity in varying climatic conditions.",
+  },
+  {
+    topic: "Agroforestry",
+    category: "Sustainable Land Management",
+    id: "T006",
+    description:
+      "The integration of trees and shrubs into agricultural landscapes to enhance biodiversity, improve soil health, and provide additional sources of income.",
+  },
+  {
+    topic: "Crop Rotation",
+    category: "Sustainable Farming Practices",
+    id: "T007",
+    description:
+      "The practice of growing different types of crops in the same area in sequential seasons to improve soil health, reduce pest and disease cycles, and increase biodiversity.",
+  },
+  {
+    topic: "Organic Pest Control",
+    category: "Organic Farming",
+    id: "T008",
+    description:
+      "Natural and organic methods for controlling pests in farming, including the use of beneficial insects, natural predators, and organic pesticides.",
+  },
+  {
+    topic: "Conservation Tillage",
+    category: "Soil Management",
+    id: "T009",
+    description:
+      "Practices that minimize soil disturbance, such as no-till or reduced-till farming, to maintain soil structure, reduce erosion, and improve water retention.",
+  },
+  {
+    topic: "Biodiversity Enhancement",
+    category: "Environmental Sustainability",
+    id: "T010",
+    description:
+      "Strategies to enhance biodiversity on farms, including the creation of habitats, planting diverse crop species, and protecting natural ecosystems.",
+  },
+  {
+    topic: "Precision Agriculture",
+    category: "Technological Innovations",
+    id: "T011",
+    description:
+      "The use of technology and data-driven approaches to optimize farming practices, improve efficiency, and increase yields while minimizing environmental impacts.",
+  },
+  {
+    topic: "Sustainable Livestock Management",
+    category: "Animal Husbandry",
+    id: "T012",
+    description:
+      "Practices that promote the health and welfare of livestock while minimizing the environmental impact of livestock production.",
+  },
+  {
+    topic: "Nutrient Management",
+    category: "Soil Health",
+    id: "T013",
+    description:
+      "The efficient and effective management of nutrients in farming systems to optimize plant growth, reduce nutrient runoff, and maintain soil health.",
+  },
+  {
+    topic: "Greenhouse Farming",
+    category: "Controlled Environment Agriculture",
+    id: "T014",
+    description:
+      "The use of greenhouses to create controlled environments for growing crops, allowing for year-round production and protection from adverse weather conditions.",
+  },
+  {
+    topic: "Renewable Energy in Agriculture",
+    category: "Sustainable Energy",
+    id: "T015",
+    description:
+      "The integration of renewable energy sources, such as solar and wind power, into farming operations to reduce reliance on fossil fuels and lower greenhouse gas emissions.",
+  },
+];
