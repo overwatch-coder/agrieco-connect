@@ -19,13 +19,14 @@ export const AppContext = createContext<AppContextType>({
 const ContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [urlPath, setUrlPath] = useState<"user" | "admin">("user");
   const pathname = useLocation().pathname;
+  const location = useLocation();
   const [auth] = useAuth();
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   const searchParams = useMemo(
-    () => new URLSearchParams(window.location.search),
-    []
+    () => new URLSearchParams(location.search),
+    [location.search]
   );
 
   useEffect(() => {
