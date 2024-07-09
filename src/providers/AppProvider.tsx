@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Provider } from "jotai";
 import { createStore } from "jotai";
+import { Toaster } from "@/components/ui/toaster";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,6 +17,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         {children}
+        <Toaster />
         <ReactQueryDevtools initialIsOpen={false} />
         <ToastContainer />
       </QueryClientProvider>

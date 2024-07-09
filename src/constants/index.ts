@@ -5,6 +5,210 @@ import { CalendarRange, FileText, TrendingUp } from "lucide-react";
 import { RiCalendarScheduleLine, RiCalendarTodoFill } from "react-icons/ri";
 import { FaUsers, FaUsersGear } from "react-icons/fa6";
 
+// about us - Nav links
+export const navLinks = [
+  {
+    name: "About Us",
+    path: "#about-us",
+  },
+  {
+    name: "Marketplace",
+    path: "#marketplace",
+  },
+  { name: "Testimonials", path: "#testimonials" },
+];
+
+// about us - images
+export const aboutUsImages = [
+  {
+    id: 1,
+    name: "Knowledge Sharing",
+    image: "/icons/about-us-1.svg",
+  },
+  {
+    id: 2,
+    name: "Sustainable Farming",
+    image: "/icons/about-us-2.svg",
+  },
+  {
+    id: 3,
+    name: "Market Access",
+    image: "/icons/about-us-3.svg",
+  },
+  {
+    id: 4,
+    name: "Agricultural Innovation",
+    image: "/icons/about-us-4.svg",
+  },
+  {
+    id: 5,
+    name: "Community Collaboration",
+    image: "/icons/about-us-5.svg",
+  },
+  {
+    id: 6,
+    name: "Empower Farmers",
+    image: "/icons/about-us-6.svg",
+  },
+];
+
+// about us - why choose us
+export const whyChooseUs = [
+  {
+    id: 1,
+    title: "Comprehensive Resource Hub",
+  },
+  {
+    id: 2,
+    title: "Innovative Technolofy Solutions",
+  },
+  {
+    id: 3,
+    title: "Expert Network and Community Support",
+  },
+  {
+    id: 4,
+    title: "Market Access and Business Opportunities",
+  },
+  {
+    id: 5,
+    title: "Commitment to Sustainability and Growth",
+  },
+];
+
+// about us - services
+export const aboutUsServices = [
+  {
+    id: 1,
+    image: "/icons/services-1.svg",
+    title: "Expert Consultation and Mentorship",
+    description:
+      "Connect with agricultural experts for personalized advice, mentorship, and support to help you overcome challenges and achieve your agricultural goals.",
+  },
+  {
+    id: 2,
+    image: "/icons/services-2.svg",
+    title: "Training and Workshops",
+    description:
+      "Participate in training sessions, workshops, and webinars led by industry professionals to stay updated on the latest farming techniques, technologies, and best practices.",
+  },
+  {
+    id: 3,
+    image: "/icons/services-3.svg",
+    title: "Market Access and Business Development",
+    description:
+      "Gain access to local and international markets, business development resources, and networking opportunities to grow your agricultural enterprise.",
+  },
+
+  {
+    id: 4,
+    image: "/icons/services-4.svg",
+    title: "Community Forums and Networking",
+    description:
+      "Engage with a vibrant community of agricultural, experts, and enthusiasts through our interactive forums, discussion groups, and networking events.",
+  },
+  {
+    id: 5,
+    image: "/icons/services-5.svg",
+    title: "Sustainable Farming Resources",
+    description:
+      "Access a comprehensive library of resources, including articles, research papers, and guides on sustainable farming practices and environmental stewardship.",
+  },
+  {
+    id: 6,
+    image: "/icons/services-6.svg",
+    title: "Technology and Innovation Tools",
+    description:
+      "Utilize cutting-edge tools and technologies, such as precision farming equipment, data analytics, and IoT solutions, to enhance your farming efficiency and productivity.",
+  },
+];
+
+// about us - benefits
+export const aboutUsBenefits = [
+  {
+    id: 1,
+    image: "/icons/services-1.svg",
+    title: "Increased Productivity",
+    description:
+      "Leverage advanced tools, expert advice, and best practices to enhance your farm’s productivity and efficiency.",
+  },
+  {
+    id: 2,
+    image: "/icons/services-2.svg",
+    title: "Expanded Market Reach",
+    description:
+      "Access a wider range of buyers and business opportunities, helping you to sell your products more effectively and at better prices.",
+  },
+  {
+    id: 3,
+    image: "/icons/services-3.svg",
+    title: "Knowledge and Skills Enhancement",
+    description:
+      "Continuously improve your agricultural knowledge and skills through our comprehensive resources, training programs, and expert-led workshops.",
+  },
+
+  {
+    id: 4,
+    image: "/icons/services-4.svg",
+    title: "Stronger Community Connections",
+    description:
+      "Build meaningful connections with fellow farmers, experts, and industry professionals, fostering a supportive network that promotes collaboration and mutual growth.",
+  },
+];
+
+export const aboutUsTestimonials = [
+  {
+    id: 1,
+    name: "Fatiman Usman",
+    location: "Kano, Nigeria",
+    image: "https://randomuser.me/api/portraits/women/1.jpg",
+    testimonial:
+      "Agrieco-Connect has transformed the way I manage my farm. The expert advice and resources available have helped me increase my yield and adopt more sustainable practices. I feel more connected to the agricultural community than ever before.",
+  },
+  {
+    id: 2,
+    name: "Chinedu Okafor",
+    location: "Lagos, Nigeria",
+    image: "https://randomuser.me/api/portraits/men/2.jpg",
+    testimonial:
+      "Since joining Agrieco-Connect, I've seen a significant improvement in my crop quality. The platform's community support and valuable insights are unmatched. It's a must-have for every serious farmer.",
+  },
+  {
+    id: 3,
+    name: "Aisha Mohammed",
+    location: "Abuja, Nigeria",
+    image: "https://randomuser.me/api/portraits/women/3.jpg",
+    testimonial:
+      "Agrieco-Connect provides an excellent network for farmers to share knowledge and best practices. The workshops and training sessions have been incredibly beneficial for my agricultural business.",
+  },
+  {
+    id: 4,
+    name: "Babatunde Adebayo",
+    location: "Ibadan, Nigeria",
+    image: "https://randomuser.me/api/portraits/men/4.jpg",
+    testimonial:
+      "The resources and expert advice available on Agrieco-Connect have been instrumental in helping me transition to organic farming. The support from the community has been invaluable.",
+  },
+  {
+    id: 5,
+    name: "Ngozi Uche",
+    location: "Enugu, Nigeria",
+    image: "https://randomuser.me/api/portraits/women/5.jpg",
+    testimonial:
+      "Thanks to Agrieco-Connect, I've been able to implement more efficient farming techniques. The platform's expert tips and community feedback have made a real difference in my farm's productivity.",
+  },
+  {
+    id: 6,
+    name: "Emeka Chukwu",
+    location: "Port Harcourt, Nigeria",
+    image: "https://randomuser.me/api/portraits/men/6.jpg",
+    testimonial:
+      "Agrieco-Connect is a fantastic resource for any farmer looking to improve their operations. The network of professionals and wealth of information have been crucial to my farm's success.",
+  },
+];
+
+// === Admin Dashboard ===
+
 // Admin dashboard links
 export const adminDashboardLinks = [
   {

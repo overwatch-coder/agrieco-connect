@@ -6,31 +6,16 @@ import {
 } from "react-router-dom";
 import RootLayout from "@/layout/RootLayout";
 import NotFound from "@/pages/NotFound";
-import { useAuth } from "@/hooks/useAuth";
 import AuthRoutes from "@/routes/auth.route";
 import UserRoutes from "@/routes/user.route";
 import AdminRoutes from "@/routes/admin.route";
+import AboutUs from "@/pages/AboutUs";
 
 export default function ConfigureRoutes() {
-  const [auth] = useAuth();
-  const isAdmin = auth?.email.toLowerCase().startsWith("admin");
-
   const routes = createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route
-        index
-        element={
-          auth ? (
-            isAdmin ? (
-              <Navigate to="/admin/dashboard" />
-            ) : (
-              <Navigate to="/user/feed" />
-            )
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
+      <Route index element={<Navigate to="/about-us" />} />
+      <Route path="about-us" element={<AboutUs />} />
 
       <>
         {/* Auth Routes */}

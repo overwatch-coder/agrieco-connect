@@ -19,6 +19,9 @@ module.exports = {
     extend: {
       backgroundImage: {
         "login-bg": "url('/images/login-bg.png')",
+        "cover-image":
+          "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/cover-image.png')",
+        "forest-image": "url('/images/bg-image.png')",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -33,6 +36,8 @@ module.exports = {
           brown: "#795548",
           gray: "#333333",
           lightBlue: "#EDF2F6",
+          yellow: "#FFC300",
+          darkgreen: "#043927",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
