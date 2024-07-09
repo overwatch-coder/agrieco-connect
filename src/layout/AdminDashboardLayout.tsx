@@ -11,15 +11,14 @@ const AdminDashboardLayout = () => {
       <section className="md:ml-16 lg:ml-60 flex flex-col flex-grow min-h-screen">
         {/* Dashboard Header */}
         <DashboardHeader />
-
         {/* Main Content */}
         <main className="w-full px-4 mb-auto">
           <Outlet />
         </main>
-
         {/* Footer */}
         <footer className="text-primary-green px-4 pt-5 pb-5 text-sm font-medium">
-          &copy; {new Date().getFullYear()} campusguardian. All rights reserved.
+          &copy; copyright agrieco-connect {new Date().getFullYear()} All rights
+          reserved.
         </footer>
       </section>
     </div>
