@@ -14,7 +14,6 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useAppContext } from "@/hooks/useAppContext";
 
 const Logout = ({
   showLogoutName,
