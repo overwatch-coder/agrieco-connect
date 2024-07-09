@@ -25,12 +25,10 @@ const Logout = ({
 }) => {
   const [auth, setAuth] = useAuth();
   const isUser = !auth?.email.toLowerCase().startsWith("admin");
-  const { setIsUserAuthenticated } = useAppContext();
 
   // handle logout
   const handleLogout = async () => {
     setAuth(null);
-    setIsUserAuthenticated(false);
     toast.success("You have been logged out");
   };
 
