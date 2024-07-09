@@ -33,7 +33,10 @@ const AboutUsMobileNav = ({ scrolled, isAdmin }: AboutUsMobileNavProps) => {
       <SheetContent className="bg-primary-brown flex flex-col min-h-screen px-3 pt-10 pb-5 text-white">
         <SheetHeader className="flex flex-col gap-5">
           <SheetTitle className="flex flex-col gap-3 py-3">
-            <Link to={"/"} className="flex items-end justify-center gap-2">
+            <Link
+              to={"/about-us"}
+              className="flex items-end justify-center gap-2"
+            >
               <img
                 src="/icons/logo-white.svg"
                 alt="agrieco-connect logo"
@@ -69,7 +72,7 @@ const AboutUsMobileNav = ({ scrolled, isAdmin }: AboutUsMobileNavProps) => {
               <Button
                 className={`bg-primary-green hover:bg-primary-green px-10 w-full py-2 text-center text-white border-2 border-white rounded-none`}
               >
-                {!auth ? "Login" : "Dashboard"}
+                {!auth ? "Login" : isAdmin ? "Dashboard" : "Feed"}
               </Button>
             </Link>
           </SheetDescription>

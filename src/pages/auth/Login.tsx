@@ -6,7 +6,7 @@ import { LoginSchema } from "@/schema/auth.schema";
 import { Auth } from "@/types";
 import { Eye, EyeOff, LockKeyhole, User } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/utils";
@@ -21,6 +21,9 @@ const Login = () => {
   //  usestate
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const redirect = searchParams.get("redirect");
 
   // react-hook-form
   const {
@@ -39,20 +42,6 @@ const Login = () => {
       const res = await axiosInstance.get("/users");
       const resData: Omit<Auth, "confirmPassword">[] = res.data;
 
-      // check if user exists
-      // const user = resData.find((user) => user.email === data.email);
-      // if (!user) {
-      //   throw new Error("Invalid credentials");
-      // }
-
-      // // check if password is correct
-      // const isCorrectPassword = user.email === data.email;
-      // if (!isCorrectPassword) {
-      //   throw new Error("Invalid credentials");
-      // }
-
-      // const { password, ...rest } = user;
-
       return {
         name: data.email.startsWith("admin") ? "Admin" : "User",
         topic: "Agrieco",
@@ -70,7 +59,11 @@ const Login = () => {
       toast.success("Login Successful");
 
       navigate(
-        data.email.startsWith("admin") ? "/admin/dashboard" : "/user/feed"
+        redirect
+          ? redirect
+          : data.email.startsWith("admin")
+            ? "/admin/dashboard"
+            : "/user/feed"
       );
     },
   });

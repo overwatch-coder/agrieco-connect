@@ -47,6 +47,7 @@ const Topics = () => {
 
   const [searchTopic, setSearchTopic] = useState("");
   const [subscribedTopics, setSubscribedTopics] = useState<string[]>([
+    "All",
     "Poultry",
     "Cash Crop Farming",
     "Forestry",
@@ -59,7 +60,7 @@ const Topics = () => {
     if (search) {
       setTopics(
         userTopics.filter((topic) =>
-          topic.description.toLowerCase().includes(search)
+          topic.description.toLowerCase().includes(search.toLowerCase())
         )
       );
     } else {
@@ -107,8 +108,10 @@ const Topics = () => {
         </section>
 
         <section className="flex items-center justify-between w-full gap-5">
-          <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown">
-            All Topics
+          <h2 className="text-lg md:text-2xl capitalize font-bold font-[poppins] text-primary-brown">
+            {searchParams.get("search")
+              ? `${searchParams.get("search")} Topics`
+              : "All Topics"}
           </h2>
 
           <SubscribeModal
@@ -118,16 +121,13 @@ const Topics = () => {
         </section>
 
         <section className="md:gap-5 flex flex-row flex-wrap items-center w-full gap-3">
-          <Link
-            to={`/user/topics`}
-            className="border-primary-brown text-secondary-gray px-5 py-2 text-sm font-normal bg-white border"
-          >
-            {"All"}
-          </Link>
-
           {subscribedTopics.map((topic) => (
             <Link
-              to={`/user/topics?search=${topic.toLowerCase()}`}
+              to={
+                topic.toLowerCase() === "all"
+                  ? `/user/topics`
+                  : `/user/topics?search=${topic.toLowerCase()}`
+              }
               key={topic}
               className="border-primary-brown text-secondary-gray px-5 py-2 text-sm font-normal bg-white border"
             >

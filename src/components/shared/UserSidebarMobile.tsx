@@ -1,4 +1,5 @@
 import Logout from "@/components/shared/Logout";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -6,11 +7,13 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { userDashboardLinks } from "@/constants";
+import { useAuth } from "@/hooks/useAuth";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { useLocation, Link } from "react-router-dom";
 
 const UserSidebarMobile = () => {
   const pathname = useLocation().pathname;
+  const [auth] = useAuth();
 
   return (
     <Sheet>
@@ -18,7 +21,7 @@ const UserSidebarMobile = () => {
         <CgMenuLeftAlt size={25} className="text-secondary-gray" />
       </SheetTrigger>
       <SheetContent side={"left"} className="flex flex-col gap-5 bg-white">
-        <Link to="/" className="flex items-center gap-1">
+        <Link to={"/about-us"} className="flex items-center gap-1">
           <img
             src="/icons/logo-brown.svg"
             alt="Agrieco-Connect"
@@ -59,7 +62,15 @@ const UserSidebarMobile = () => {
           })}
 
           <div className="mt-auto">
-            <Logout showLogoutName />
+            {!auth && (
+              <Link to={`/login`} className="flex items-center">
+                <Button className="bg-primary-brown hover:bg-primary-brown w-full px-10 py-3 text-white rounded-none">
+                  Login
+                </Button>
+              </Link>
+            )}
+
+            {auth && <Logout showLogoutName />}
           </div>
         </ul>
       </SheetContent>

@@ -69,7 +69,7 @@ const marketplaceProductData = marketplaceProducts.map(
   })
 );
 
-const SearchBox = () => {
+const SearchBox = ({ size }: { size?: number }) => {
   const [search, setSearch] = useState("");
   const allSearchData = useMemo(
     () => [
@@ -109,7 +109,7 @@ const SearchBox = () => {
     <Dialog>
       <DialogTrigger className="md:bg-secondary-gray/10 md:rounded-full hover:scale-105 bg-white/30 md:items-center md:flex-col flex flex-row gap-3 p-4 transition rounded">
         <AiOutlineSearch
-          size={20}
+          size={size || 20}
           className={"text-white md:text-primary-brown"}
         />
         <span className="md:hidden text-base text-white">Search</span>

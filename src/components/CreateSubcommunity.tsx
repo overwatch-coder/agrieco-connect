@@ -5,7 +5,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/utils";
+import { axiosInstance, IsAuth } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { X } from "lucide-react";
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import { Subcommunity } from "@/types";
 import { SubcommunitySchema } from "@/schema/subcommunity.schema";
+import LoginModal from "@/components/shared/LoginModal";
 
 const CreateSubcommunity = () => {
   const {
@@ -47,9 +48,18 @@ const CreateSubcommunity = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
-        {"Create Subcommunity"}
-      </DialogTrigger>
+      {IsAuth() ? (
+        <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
+          {"Create Subcommunity"}
+        </DialogTrigger>
+      ) : (
+        <LoginModal
+          className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none"
+          hasChildren={true}
+        >
+          {"Create Subcommunity"}
+        </LoginModal>
+      )}
 
       <DialogContent className="scrollbar-hide flex flex-col w-full max-w-2xl gap-5">
         {/* Header */}

@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { subcommunities, userFeeds as subcommunityActivity } from "@/constants";
-import { slugifyData, UrlPath } from "@/lib/utils";
+import { IsAuth, slugifyData, UrlPath } from "@/lib/utils";
 import SubcommunityActivities from "@/components/SubcommunityActivities";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
@@ -169,12 +169,14 @@ const ViewSubcommunity = () => {
                       </div>
                     </div>
 
-                    <Button
-                      variant={"link"}
-                      className="text-primary-green hover:no-underline"
-                    >
-                      Follow
-                    </Button>
+                    {IsAuth() && (
+                      <Button
+                        variant={"link"}
+                        className="text-primary-green hover:no-underline"
+                      >
+                        Follow
+                      </Button>
+                    )}
                   </div>
                 ))
               )}

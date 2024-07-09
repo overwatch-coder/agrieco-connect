@@ -13,22 +13,49 @@ import { cn } from "@/lib/utils";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-type PopUpLoginAlertProps = {
-  buttonName: string;
+type LoginWithChildrenProps = {
+  children?: React.ReactNode;
   className?: string;
+  hasChildren: boolean;
+  endPath?: string;
 };
 
-const PopUpLoginAlert = ({ buttonName, className }: PopUpLoginAlertProps) => {
+type LoginWithButtonNameProps = {
+  buttonName?: string;
+  className?: string;
+  endPath?: string;
+};
+
+type PopUpLoginAlertProps = LoginWithChildrenProps & LoginWithButtonNameProps;
+
+const LoginModal = ({
+  buttonName,
+  className,
+  children,
+  hasChildren,
+  endPath,
+}: PopUpLoginAlertProps) => {
   const navigate = useNavigate();
   const pathname = useLocation().pathname;
 
   const handleRedirect = () => {
-    navigate(`/login?redirect=${pathname}`);
+    navigate(`/login?redirect=${pathname}${endPath ? endPath : ""}`);
   };
 
   return (
     <Dialog>
-      <DialogTrigger className={cn("", className)}>{buttonName}</DialogTrigger>
+      {hasChildren ? (
+        <DialogTrigger className={cn("", className)}>{children}</DialogTrigger>
+      ) : (
+        <DialogTrigger
+          className={cn(
+            "bg-primary-brown text-white px-7 py-3 rounded text-center",
+            className
+          )}
+        >
+          {buttonName}
+        </DialogTrigger>
+      )}
 
       <DialogContent
         id="hide"
@@ -37,7 +64,7 @@ const PopUpLoginAlert = ({ buttonName, className }: PopUpLoginAlertProps) => {
         <DialogHeader className="flex flex-col gap-3">
           <DialogTitle className="flex items-center justify-center">
             <span className="text-primary-brown text-2xl font-bold">
-              Only logged in users can see this
+              You must be logged in to do this
             </span>
           </DialogTitle>
 
@@ -64,4 +91,4 @@ const PopUpLoginAlert = ({ buttonName, className }: PopUpLoginAlertProps) => {
   );
 };
 
-export default PopUpLoginAlert;
+export default LoginModal;

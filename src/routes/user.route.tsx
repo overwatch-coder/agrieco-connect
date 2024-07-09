@@ -22,34 +22,64 @@ const UserRoutes = () => {
 
   return (
     <>
-      <Route
-        path="user"
-        element={
-          !auth ? (
-            <Navigate to="/login" />
-          ) : isAdmin ? (
-            <Navigate to="/admin/dashboard" />
-          ) : (
-            <UserDashboardLayout />
-          )
-        }
-      >
-        <Route path="settings" element={<Settings />} />
+      <Route path="user" element={<UserDashboardLayout />}>
+        <Route
+          path="settings"
+          element={
+            auth ? (
+              <Settings />
+            ) : (
+              <Navigate
+                to={`/login?redirect=${isAdmin ? "/admin/settings" : "/user/settings"}`}
+              />
+            )
+          }
+        />
         <Route path="feed" element={<Feed />} />
         <Route path="topics" element={<Topics />} />
         <Route path="marketplace" element={<MarketPlace />} />
-        <Route path="marketplace/my-items" element={<MyItemsMarketPlace />} />
+        <Route
+          path="marketplace/my-items"
+          element={
+            auth ? (
+              <MyItemsMarketPlace />
+            ) : (
+              <Navigate to={`/login?redirect=/user/marketplace/my-items`} />
+            )
+          }
+        />
         <Route path="events" element={<Events />} />
-        <Route path="events/my-events" element={<MyEvents />} />
+        <Route
+          path="events/my-events"
+          element={
+            auth ? (
+              <MyEvents />
+            ) : (
+              <Navigate to={`/login?redirect=/user/events/my-events`} />
+            )
+          }
+        />
         <Route path="events/:slug" element={<EventDetails />} />
         <Route path="appointments" element={<Appointments />} />
         <Route
           path="appointments/my-appointments"
-          element={<MyAppointments />}
+          element={
+            auth ? (
+              <MyAppointments />
+            ) : (
+              <Navigate to="/login?redirect=/user/appointments/my-appointments" />
+            )
+          }
         />
         <Route
           path="appointments/bookings/:appointmentId"
-          element={<BookAppointment />}
+          element={
+            auth ? (
+              <BookAppointment />
+            ) : (
+              <Navigate to="/login?redirect=/user/appointments/bookings/:appointmentId" />
+            )
+          }
         />
         <Route path="subcommunities" element={<Subcommunities />} />
         <Route path="subcommunities/:slug" element={<ViewSubcommunity />} />

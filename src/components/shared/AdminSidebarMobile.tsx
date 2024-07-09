@@ -1,4 +1,5 @@
 import Logout from "@/components/shared/Logout";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -6,11 +7,13 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { adminDashboardLinks } from "@/constants";
+import { useAuth } from "@/hooks/useAuth";
 import { CgMenuLeftAlt } from "react-icons/cg";
 import { useLocation, Link } from "react-router-dom";
 
 const AdminSidebarMobile = () => {
   const pathname = useLocation().pathname;
+  const [auth] = useAuth();
 
   return (
     <Sheet>
@@ -22,7 +25,7 @@ const AdminSidebarMobile = () => {
         className="bg-primary-brown scrollbar-hide flex flex-col gap-5 overflow-y-scroll"
       >
         <div className="flex flex-col gap-3 pt-8 pb-5">
-          <Link to={"/"} className="flex items-end gap-1 pb-2">
+          <Link to={"/about-us"} className="flex items-end gap-1 pb-2">
             <img
               src="/icons/logo-white.svg"
               alt="agrieco-connect logo"
@@ -65,7 +68,14 @@ const AdminSidebarMobile = () => {
           })}
 
           <div className="flex flex-col gap-3 mt-auto">
-            <Logout showLogoutName />
+            {!auth && (
+              <Link to={`/login`} className="flex items-center">
+                <Button className="hover:bg-white text-primary-brown w-full px-10 py-3 bg-white rounded-none">
+                  Login
+                </Button>
+              </Link>
+            )}
+            {auth && <Logout showLogoutName />}
           </div>
         </ul>
       </SheetContent>

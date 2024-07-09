@@ -17,8 +17,12 @@ import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
 import { FeedSchema } from "@/schema/feed.schema";
+import { useAuth } from "@/hooks/useAuth";
+import LoginModal from "@/components/shared/LoginModal";
 
 const CreateFeedPost = () => {
+  const [auth] = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -51,22 +55,13 @@ const CreateFeedPost = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="flex items-center gap-3 px-4 py-3 bg-white">
-          <img
-            src="/images/avatar.png"
-            alt="User Icon"
-            className="w-10 h-10 rounded-full"
-          />
-          <input
-            type="text"
-            placeholder="What's trending in agriculture today?"
-            className="text-primary-gray flex-grow w-full px-3 py-4 text-sm bg-transparent outline-none cursor-default"
-          />
-
-          <button>
-            <Edit size={25} className="text-secondary-gray" />
-          </button>
-        </div>
+        {auth ? (
+          <CreateFeedPostTrigger />
+        ) : (
+          <LoginModal hasChildren={true}>
+            <CreateFeedPostTrigger />
+          </LoginModal>
+        )}
       </DialogTrigger>
 
       <DialogContent className="scrollbar-hide flex flex-col w-full h-[95vh] max-w-2xl gap-5 overflow-y-scroll">
@@ -162,3 +157,24 @@ const CreateFeedPost = () => {
 };
 
 export default CreateFeedPost;
+
+const CreateFeedPostTrigger = () => {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 bg-white">
+      <img
+        src="/images/avatar.png"
+        alt="User Icon"
+        className="w-10 h-10 rounded-full"
+      />
+      <input
+        type="text"
+        placeholder="What's trending in agriculture today?"
+        className="text-primary-gray flex-grow w-full px-3 py-4 text-sm bg-transparent outline-none cursor-default"
+      />
+
+      <button>
+        <Edit size={25} className="text-secondary-gray" />
+      </button>
+    </div>
+  );
+};

@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import Logout from "@/components/shared/Logout";
 import { userDashboardLinks } from "@/constants";
+import { useAuth } from "@/hooks/useAuth";
 
 const UserDashboardSidebar = () => {
   const pathname = useLocation().pathname;
+  const [auth] = useAuth();
 
   return (
     <div className="scrollbar-hide pb-7 lg:w-60 lg:items-start pt-28 md:flex fixed top-0 left-0 flex-col items-center hidden w-16 h-full gap-3 px-5 overflow-y-scroll bg-white">
@@ -34,7 +36,7 @@ const UserDashboardSidebar = () => {
           );
         })}
 
-        <Logout />
+        {auth && <Logout />}
       </ul>
     </div>
   );

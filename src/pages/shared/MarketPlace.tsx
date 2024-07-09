@@ -10,6 +10,8 @@ import DeleteItemModal from "@/components/DeleteItemModal";
 import { UrlPath } from "@/lib/utils";
 import MarketplaceAnalytics from "@/components/admin/MarketplaceAnalytics";
 import { Search, Trash2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import LoginModal from "@/components/shared/LoginModal";
 
 type MarketPlaceItemType = (typeof marketplaceProducts)[number];
 
@@ -24,6 +26,7 @@ const dropdownItemsTwo = [
 ];
 
 const MarketPlace = () => {
+  const [auth] = useAuth();
   const [selectedItem, setSelectedItem] = useState("Popular");
   const [selectedItem2, setSelectedItem2] = useState("New");
   const [openModal, setOpenModal] = useState(false);
@@ -129,12 +132,17 @@ const MarketPlace = () => {
                   selectedItem={selectedItem2}
                   setSelectedItem={setSelectedItem2}
                 />
-                <Link
-                  to="/user/marketplace/my-items"
-                  className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border"
-                >
-                  <span className="text-secondary-gray text-sm">My Items</span>
-                </Link>
+
+                {auth && (
+                  <Link
+                    to="/user/marketplace/my-items"
+                    className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border"
+                  >
+                    <span className="text-secondary-gray text-sm">
+                      My Items
+                    </span>
+                  </Link>
+                )}
               </div>
             </section>
           </>
@@ -209,6 +217,7 @@ const MarketPlaceItem = ({
   setItemToBeDeleteId,
 }: MarketPlaceItemProps) => {
   const [openModal, setOpenModal] = useState(false);
+  const [auth] = useAuth();
 
   return (
     <div className="rounded-xl relative flex flex-col w-full col-span-1 gap-5 p-4 bg-white shadow">
@@ -240,12 +249,21 @@ const MarketPlaceItem = ({
         </button>
 
         <div className="flex items-center justify-between w-full gap-3 mt-auto">
-          <Button
-            onClick={() => setOpenModal(true)}
-            className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-2 text-center text-white transition rounded-none"
-          >
-            Purchase
-          </Button>
+          {auth ? (
+            <Button
+              onClick={() => setOpenModal(true)}
+              className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-2 text-center text-white transition rounded-none"
+            >
+              Purchase
+            </Button>
+          ) : (
+            <LoginModal
+              className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-2 text-center text-white transition rounded-none"
+              hasChildren={true}
+            >
+              Purchase
+            </LoginModal>
+          )}
 
           {UrlPath() === "admin" && (
             <button

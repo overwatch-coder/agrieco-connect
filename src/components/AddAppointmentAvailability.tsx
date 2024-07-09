@@ -5,7 +5,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/utils";
+import { axiosInstance, IsAuth } from "@/lib/utils";
 import { AppointmentsAvailability } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -16,6 +16,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import { AppointmentsAvailabilitySchema } from "@/schema/appointments.schema";
+import LoginModal from "@/components/shared/LoginModal";
 
 const AddAppointmentAvailability = () => {
   const {
@@ -47,9 +48,18 @@ const AddAppointmentAvailability = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
-        {"Post Availability"}
-      </DialogTrigger>
+      {IsAuth() ? (
+        <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
+          {"Post Availability"}
+        </DialogTrigger>
+      ) : (
+        <LoginModal
+          className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none"
+          hasChildren={true}
+        >
+          {"Post Availability"}
+        </LoginModal>
+      )}
 
       <DialogContent className="scrollbar-hide flex flex-col w-full h-screen max-w-2xl gap-5 overflow-y-scroll">
         {/* Header */}

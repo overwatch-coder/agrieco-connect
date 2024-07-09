@@ -1,8 +1,11 @@
 import AddAppointmentAvailability from "@/components/AddAppointmentAvailability";
 import AppointmentExpertInformation from "@/components/AppointmentExpertInformation";
 import CustomDropdown from "@/components/CustomDropdown";
+import LoginModal from "@/components/shared/LoginModal";
 import { Button } from "@/components/ui/button";
 import { appointments } from "@/constants";
+import { useAuth } from "@/hooks/useAuth";
+import { IsAuth } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { FaRegStar, FaStar } from "react-icons/fa6";
@@ -61,14 +64,16 @@ const Appointments = () => {
               setSelectedItem={setSelectedItem2}
             />
 
-            <Link
-              to="/user/appointments/my-appointments"
-              className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border"
-            >
-              <span className="text-secondary-gray text-sm">
-                My Applications
-              </span>
-            </Link>
+            {IsAuth() && (
+              <Link
+                to="/user/appointments/my-appointments"
+                className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border"
+              >
+                <span className="text-secondary-gray text-sm">
+                  My Applications
+                </span>
+              </Link>
+            )}
           </div>
         </section>
 
@@ -133,18 +138,34 @@ const AppointmentItem = ({ item }: { item: AppointmentsItemType }) => {
           </p>
 
           <div className="grid grid-cols-2 gap-3">
-            <Button
-              onClick={() => setOpenModal(true)}
-              className="bg-primary-green hover:bg-primary-green w-full text-xs text-center text-white rounded-none"
-            >
-              Contact Expert
-            </Button>
-
-            <Link to={`/user/appointments/bookings/${item.id}`}>
-              <Button className="bg-primary-brown hover:bg-primary-brown w-full text-xs text-center text-white rounded-none">
-                Book Appointment
+            {IsAuth() ? (
+              <Button
+                onClick={() => setOpenModal(true)}
+                className="bg-primary-green hover:bg-primary-green w-full text-xs text-center text-white rounded-none"
+              >
+                Contact Expert
               </Button>
-            </Link>
+            ) : (
+              <LoginModal hasChildren={true}>
+                <Button className="bg-primary-green hover:bg-primary-green w-full text-xs text-center text-white rounded-none">
+                  Contact Expert
+                </Button>
+              </LoginModal>
+            )}
+
+            {IsAuth() ? (
+              <Link to={`/user/appointments/bookings/${item.id}`}>
+                <Button className="bg-primary-brown hover:bg-primary-brown w-full text-xs text-center text-white rounded-none">
+                  Book Appointment
+                </Button>
+              </Link>
+            ) : (
+              <LoginModal hasChildren={true} endPath={`/${item.id}`}>
+                <Button className="bg-primary-brown hover:bg-primary-brown w-full text-xs text-center text-white rounded-none">
+                  Book Appointment
+                </Button>
+              </LoginModal>
+            )}
           </div>
         </div>
       </div>

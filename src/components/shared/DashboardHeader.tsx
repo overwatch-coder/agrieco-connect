@@ -54,7 +54,7 @@ const DashboardHeader = () => {
 
         <h2 className="md:text-2xl text-primary-brown text-xl font-bold capitalize">
           {isUser ? (
-            <Link to="/" className="flex items-center gap-1">
+            <Link to={"/about-us"} className="flex items-center gap-1">
               <img
                 src="/icons/logo-brown.svg"
                 alt="Agrieco-Connect"
@@ -77,44 +77,56 @@ const DashboardHeader = () => {
         </div>
 
         <ul className="md:flex items-center hidden gap-5">
-          <SearchBox />
+          <SearchBox size={auth ? 20 : 15} />
 
-          <AddUser />
+          {!auth && (
+            <Link to={`/login`} className="flex items-center">
+              <Button className="bg-primary-green hover:bg-primary-green px-10 py-3 text-white rounded-none">
+                Login
+              </Button>
+            </Link>
+          )}
 
-          <Notifications />
+          {auth && (
+            <>
+              <AddUser />
 
-          <Link
-            to={`/${UrlPath()}/settings`}
-            className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
-          >
-            <Settings
-              size={20}
-              className={
-                pathname === `/${UrlPath()}/settings`
-                  ? "text-primary-green"
-                  : "text-primary-brown"
-              }
-            />
-          </Link>
+              <Notifications />
 
-          <div
-            className={`${
-              isUser ? "bg-transparent" : "bg-secondary-gray/10"
-            } flex items-center gap-3 px-3 py-1 rounded-md cursor-pointer`}
-          >
-            <UserProfile />
+              <Link
+                to={`/${UrlPath()}/settings`}
+                className="hover:scale-105 bg-secondary-gray/10 flex flex-col items-center p-4 transition rounded-full"
+              >
+                <Settings
+                  size={20}
+                  className={
+                    pathname === `/${UrlPath()}/settings`
+                      ? "text-primary-green"
+                      : "text-primary-brown"
+                  }
+                />
+              </Link>
 
-            {!isUser && (
-              <p className="text-primary-brown flex flex-col gap-1">
-                <span className="font-bold capitalize">
-                  {"Josepine Ekhator"}
-                </span>
-                <span className="text-secondary-gray text-sm font-normal">
-                  {"Admin"}
-                </span>
-              </p>
-            )}
-          </div>
+              <div
+                className={`${
+                  isUser ? "bg-transparent" : "bg-secondary-gray/10"
+                } flex items-center gap-3 px-3 py-1 rounded-md cursor-pointer`}
+              >
+                <UserProfile />
+
+                {!isUser && (
+                  <p className="text-primary-brown flex flex-col gap-1">
+                    <span className="font-bold capitalize">
+                      {"Josepine Ekhator"}
+                    </span>
+                    <span className="text-secondary-gray text-sm font-normal">
+                      {"Admin"}
+                    </span>
+                  </p>
+                )}
+              </div>
+            </>
+          )}
         </ul>
       </div>
     </header>
@@ -125,7 +137,6 @@ export default DashboardHeader;
 
 export const UserProfile = () => {
   const navigate = useNavigate();
-  const pathname = useLocation().pathname;
 
   return (
     <DropdownMenu>
@@ -134,29 +145,28 @@ export const UserProfile = () => {
           variant="outline"
           size="icon"
           className="overflow-hidden rounded-full"
+          aria-label="User Profile"
         >
           <img
             src={"/images/avatar.png"}
             alt="avatar"
             className="object-contain w-10 h-10 overflow-hidden rounded-full"
+            loading="lazy"
           />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {/* <DropdownMenuItem
-          onClick={() => navigate(`/${UrlPath()}/settings`)}
+        <DropdownMenuItem
+          onClick={() => navigate("/about-us")}
           className="cursor-pointer"
         >
-          Settings
-        </DropdownMenuItem> */}
-        <DropdownMenuItem className="cusror-pointer">Support</DropdownMenuItem>
+          About Us
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cusror-pointer">Report</DropdownMenuItem>
-        {/* <p className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground">
-          <Logout headerLogout={true} />
-        </p> */}
+        <DropdownMenuItem className="cursor-pointer">Report</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

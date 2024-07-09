@@ -4,6 +4,7 @@ import { navLinks } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { NavHashLink } from "react-router-hash-link";
 
 const Header = () => {
   const [auth] = useAuth();
@@ -34,7 +35,7 @@ const Header = () => {
         scrolled ? "bg-white" : "bg-transparent"
       }`}
     >
-      <Link to={"/"} className="flex items-center gap-2">
+      <Link to={"/about-us"} className="flex items-center gap-2">
         <img
           src={scrolled ? "/icons/logo-brown.svg" : "/icons/logo-white.svg"}
           alt="Logo"
@@ -54,13 +55,14 @@ const Header = () => {
       <nav className="lg:flex items-center hidden gap-5">
         {navLinks.map((item, index) => {
           return (
-            <Link
+            <NavHashLink
               key={index}
               to={item.path}
               className={`${scrolled ? "text-primary-brown" : "text-white"} ${item.path === "/about-us" ? "font-bold" : "font-medium"} capitalize hover:text-primary-green`}
+              smooth
             >
               {item.name}
-            </Link>
+            </NavHashLink>
           );
         })}
       </nav>
@@ -71,7 +73,7 @@ const Header = () => {
         <Button
           className={`bg-primary-brown hover:bg-primary-brown hidden lg:block px-10 py-2 text-center text-white border-2 border-white rounded-none`}
         >
-          {!auth ? "Login" : "Dashboard"}
+          {!auth ? "Login" : isAdmin ? "Dashboard" : "Feed"}
         </Button>
       </Link>
 

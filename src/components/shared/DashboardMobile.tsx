@@ -14,9 +14,11 @@ import { UserProfile } from "@/components/shared/DashboardHeader";
 import AddUser from "@/components/shared/AddUser";
 import SearchBox from "@/components/shared/SearchBox";
 import { UrlPath } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const DashboardMobile = () => {
   const pathname = useLocation().pathname;
+  const [auth] = useAuth();
 
   return (
     <Sheet>
@@ -27,7 +29,10 @@ const DashboardMobile = () => {
       <SheetContent className="bg-primary-brown flex flex-col min-h-screen px-3 pt-10 pb-5 text-white">
         <SheetHeader className="mb-auto">
           <SheetTitle className="flex flex-col gap-3 py-5">
-            <Link to={"/"} className="flex items-end justify-center gap-2">
+            <Link
+              to={"/about-us"}
+              className="flex items-end justify-center gap-2"
+            >
               <img
                 src="/icons/logo-white.svg"
                 alt="agrieco-connect logo"
@@ -46,47 +51,62 @@ const DashboardMobile = () => {
             <div className="flex flex-col gap-6 mb-auto">
               <SearchBox />
 
-              <AddUser />
-
-              <Notifications />
-
-              <Link
-                to={`/${UrlPath()}/settings`}
-                className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
-              >
-                <Settings
-                  size={20}
-                  className={`${
-                    pathname === `/${UrlPath()}/settings`
-                      ? "text-primary-green"
-                      : "text-white"
-                  }`}
-                />
-                <span
-                  className={`${
-                    pathname === `/${UrlPath()}/settings`
-                      ? "text-primary-green"
-                      : "text-white"
-                  } text-base`}
+              {!auth && (
+                <Link
+                  to={`/login`}
+                  className="bg-primary-green flex items-center justify-center gap-3 p-4 text-lg text-center text-white transition rounded"
                 >
-                  Settings
-                </span>
-              </Link>
+                  Login
+                </Link>
+              )}
+
+              {auth && (
+                <>
+                  <AddUser />
+
+                  <Notifications />
+
+                  <Link
+                    to={`/${UrlPath()}/settings`}
+                    className="hover:scale-105 bg-white/30 flex items-center gap-3 p-4 transition rounded"
+                  >
+                    <Settings
+                      size={20}
+                      className={`${
+                        pathname === `/${UrlPath()}/settings`
+                          ? "text-primary-green"
+                          : "text-white"
+                      }`}
+                    />
+                    <span
+                      className={`${
+                        pathname === `/${UrlPath()}/settings`
+                          ? "text-primary-green"
+                          : "text-white"
+                      } text-base`}
+                    >
+                      Settings
+                    </span>
+                  </Link>
+                </>
+              )}
             </div>
           </SheetDescription>
         </SheetHeader>
 
-        <div className="bg-white/40 flex items-center gap-5 px-2 py-3 rounded-md">
-          <UserProfile />
-          <p className="flex flex-col gap-1 text-white">
-            <span className="text-lg font-medium capitalize">
-              {"Josepine Ekhator"}
-            </span>
-            <span className="text-white/70 text-base font-normal">
-              {UrlPath() === "user" ? "User" : "Admin"}
-            </span>
-          </p>
-        </div>
+        {auth && (
+          <div className="bg-white/40 flex items-center gap-5 px-2 py-3 rounded-md">
+            <UserProfile />
+            <p className="flex flex-col gap-1 text-white">
+              <span className="text-lg font-medium capitalize">
+                {"Josepine Ekhator"}
+              </span>
+              <span className="text-white/70 text-base font-normal">
+                {UrlPath() === "user" ? "User" : "Admin"}
+              </span>
+            </p>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

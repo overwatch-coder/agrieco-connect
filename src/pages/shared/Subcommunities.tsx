@@ -7,10 +7,11 @@ import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
-import { slugifyData, UrlPath } from "@/lib/utils";
+import { IsAuth, slugifyData, UrlPath } from "@/lib/utils";
 import SubcommunityAnalytics from "@/components/admin/SubcommunityAnalytics";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
+import LoginModal from "@/components/shared/LoginModal";
 
 export type SubcommunitiesItemType = (typeof subcommunitiesData)[number];
 
@@ -140,12 +141,14 @@ const Subcommunities = () => {
                 >
                   All
                 </TabsTrigger>
-                <TabsTrigger
-                  value="subcommunities"
-                  className="pb-2 text-black data-[state=active]:text-primary-green data-[state=active]:bg-transparent data-[state=active]:border-b-2 rounded-none bg-transparent data-[state=active]:border-primary-green"
-                >
-                  Your Subcommunities
-                </TabsTrigger>
+                {IsAuth() && (
+                  <TabsTrigger
+                    value="subcommunities"
+                    className="pb-2 text-black data-[state=active]:text-primary-green data-[state=active]:bg-transparent data-[state=active]:border-b-2 rounded-none bg-transparent data-[state=active]:border-primary-green"
+                  >
+                    Your Subcommunities
+                  </TabsTrigger>
+                )}
               </TabsList>
             )}
 
@@ -267,6 +270,7 @@ const SubcommunitiesItem = ({
     UrlPath() === "admin"
       ? "/admin/subcommunity-management"
       : "/user/subcommunities";
+
   return (
     <div className="flex flex-col w-full h-full gap-3 p-4 bg-white rounded-md shadow-md">
       <section className="flex items-center justify-between gap-2">
@@ -318,8 +322,8 @@ const SubcommunitiesItem = ({
 
           {UrlPath() !== "admin" && (
             <div className="flex items-center gap-3">
-              {type === "all" &&
-                (item.joined ? (
+              {type === "all" && IsAuth() ? (
+                item.joined ? (
                   <Button
                     onClick={() => handleLeaveSubcommunity(item.id)}
                     className="bg-primary-green py-2 text-white rounded-none"
@@ -333,7 +337,14 @@ const SubcommunitiesItem = ({
                   >
                     Join
                   </Button>
-                ))}
+                )
+              ) : (
+                <LoginModal hasChildren={true} endPath={`/${item.id}`}>
+                  <Button className="bg-primary-green py-2 text-white rounded-none">
+                    Join
+                  </Button>
+                </LoginModal>
+              )}
 
               <Link
                 to={`/${UrlPath()}/subcommunities/${slugifyData(item.title)}`}

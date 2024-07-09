@@ -56,7 +56,7 @@ const Footer = () => {
       <div className="xl:grid-cols-4 sm:grid-cols-2 grid grid-cols-1 gap-10">
         {/* Logo */}
         <div className="flex flex-col w-full gap-5">
-          <Link to={"/"} className="flex items-center gap-2">
+          <Link to={"/about-us"} className="flex items-center gap-2">
             <img
               src={"/icons/logo-white.svg"}
               alt="Logo"

@@ -17,8 +17,12 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
+import LoginModal from "@/components/shared/LoginModal";
+import { useAuth } from "@/hooks/useAuth";
 
 const AddEvent = () => {
+  const [auth] = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -50,9 +54,18 @@ const AddEvent = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
-        {"Add Event"}
-      </DialogTrigger>
+      {auth ? (
+        <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
+          {"Add Event"}
+        </DialogTrigger>
+      ) : (
+        <LoginModal
+          hasChildren={true}
+          className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none"
+        >
+          Add Event
+        </LoginModal>
+      )}
 
       <DialogContent className="scrollbar-hide flex flex-col w-full h-screen max-w-2xl gap-5 overflow-y-scroll">
         {/* Header */}

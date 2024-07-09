@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MyEvents from "@/pages/shared/MyEvents";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
+import { useAuth } from "@/hooks/useAuth";
 
 type EventsItemType = (typeof events)[number];
 
@@ -24,6 +25,7 @@ const dropdownItemsTwo = [
 ];
 
 const Events = () => {
+  const [auth] = useAuth();
   const [selectedItem, setSelectedItem] = useState("Event Type");
   const [selectedItem2, setSelectedItem2] = useState("Activity");
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,12 +102,16 @@ const Events = () => {
                   setSelectedItem={setSelectedItem2}
                 />
 
-                <Link
-                  to="/user/events/my-events"
-                  className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border"
-                >
-                  <span className="text-secondary-gray text-sm">My Events</span>
-                </Link>
+                {auth && (
+                  <Link
+                    to="/user/events/my-events"
+                    className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border"
+                  >
+                    <span className="text-secondary-gray text-sm">
+                      My Events
+                    </span>
+                  </Link>
+                )}
               </div>
             </section>
           </>

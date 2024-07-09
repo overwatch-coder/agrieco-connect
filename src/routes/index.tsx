@@ -14,7 +14,7 @@ import AboutUs from "@/pages/AboutUs";
 export default function ConfigureRoutes() {
   const routes = createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route index element={<Navigate to="/about-us" />} />
+      <Route index element={<Navigate to="/user/feed" />} />
       <Route path="about-us" element={<AboutUs />} />
 
       <>

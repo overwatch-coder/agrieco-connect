@@ -8,6 +8,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAuth } from "@/hooks/useAuth";
+import LoginModal from "@/components/shared/LoginModal";
 
 const FeedItem = ({
   authorImage,
@@ -19,6 +21,7 @@ const FeedItem = ({
   numberOfLikes,
   numberOfShares,
 }: UserFeedsType) => {
+  const [auth] = useAuth();
   const [comment, setComment] = useState("");
 
   const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,7 +58,11 @@ const FeedItem = ({
           variant={"link"}
           className="text-primary-green hover:no-underline"
         >
-          Following
+          {auth ? (
+            "Following"
+          ) : (
+            <LoginModal hasChildren={true}>Follow</LoginModal>
+          )}
         </Button>
       </div>
 
@@ -91,55 +98,50 @@ const FeedItem = ({
       </div>
 
       <div className="border-b-secondary-gray text-start md:justify-between md:gap-4 flex flex-wrap items-center w-full gap-1 pb-5 border-b">
-        <Button
-          variant={"link"}
-          className="hover:no-underline md:gap-2 flex items-center gap-1"
-        >
-          <MessageCircle size={20} className="text-primary-brown" />
-          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
-            {numberOfComments} <span className="md:block hidden">comments</span>
-          </span>
-        </Button>
+        {/* Comments */}
+        {auth ? (
+          <CommentButton numberOfComments={numberOfComments} />
+        ) : (
+          <LoginModal hasChildren={true}>
+            <CommentButton numberOfComments={numberOfComments} />
+          </LoginModal>
+        )}
 
-        <Button
-          variant={"link"}
-          className="hover:no-underline md:gap-2 flex items-center gap-1"
-        >
-          <ThumbsUp size={20} className="text-primary-brown" />
-          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
-            {numberOfLikes} <span className="md:block hidden">likes</span>
-          </span>
-        </Button>
+        {/* Likes */}
+        {auth ? (
+          <LikeButton numberOfLikes={numberOfLikes} />
+        ) : (
+          <LoginModal hasChildren={true}>
+            <LikeButton numberOfLikes={numberOfLikes} />
+          </LoginModal>
+        )}
 
-        <Button
-          variant={"link"}
-          className="hover:no-underline md:gap-2 flex items-center gap-1"
-        >
-          <Share2 size={20} className="text-primary-brown" />
-          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
-            {numberOfShares} <span className="md:block hidden">shares</span>
-          </span>
-        </Button>
+        {/* Shares */}
+        {auth ? (
+          <ShareButton numberOfShares={numberOfShares} />
+        ) : (
+          <LoginModal hasChildren={true}>
+            <ShareButton numberOfShares={numberOfShares} />
+          </LoginModal>
+        )}
       </div>
 
       {/* Leave a comment */}
-      <form
-        onSubmit={handleCommentSubmit}
-        className="flex items-center gap-3 py-3"
-      >
-        <img
-          src={"/images/avatar.png"}
-          alt={"avatar"}
-          className="w-10 h-10 rounded-full"
+      {auth ? (
+        <LeaveAComment
+          comment={comment}
+          setComment={setComment}
+          handleCommentSubmit={handleCommentSubmit}
         />
-        <input
-          type="text"
-          placeholder="Comment on this"
-          className="text-primary-gray placeholder:text-primary-brown/50 bg-secondary-gray/10 flex-grow w-full px-3 py-3 text-sm rounded-full outline-none"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-      </form>
+      ) : (
+        <LoginModal hasChildren={true}>
+          <LeaveAComment
+            comment={comment}
+            setComment={setComment}
+            handleCommentSubmit={handleCommentSubmit}
+          />
+        </LoginModal>
+      )}
     </section>
   );
 };
@@ -187,5 +189,110 @@ const UserBio = ({ ...userInfo }: UserBioProps) => {
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+  );
+};
+
+export const CommentButton = ({
+  numberOfComments,
+}: {
+  numberOfComments: number;
+}) => {
+  return (
+    <Button
+      variant={"link"}
+      className="hover:no-underline md:gap-2 flex items-center gap-1"
+    >
+      <MessageCircle size={20} className="text-primary-brown" />
+      {numberOfComments > 0 ? (
+        <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+          {numberOfComments}{" "}
+          <span className="md:block hidden">
+            {numberOfComments > 1 ? "comments" : "comment"}
+          </span>
+        </span>
+      ) : (
+        <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+          Comment
+        </span>
+      )}
+    </Button>
+  );
+};
+
+export const LikeButton = ({ numberOfLikes }: { numberOfLikes: number }) => {
+  return (
+    <Button
+      variant={"link"}
+      className="hover:no-underline md:gap-2 flex items-center gap-1"
+    >
+      <ThumbsUp size={20} className="text-primary-brown" />
+      {numberOfLikes > 0 ? (
+        <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+          {numberOfLikes}{" "}
+          <span className="md:block hidden">
+            {numberOfLikes > 1 ? "likes" : "like"}
+          </span>
+        </span>
+      ) : (
+        <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+          Like
+        </span>
+      )}
+    </Button>
+  );
+};
+
+export const ShareButton = ({ numberOfShares }: { numberOfShares: number }) => {
+  return (
+    <Button
+      variant={"link"}
+      className="hover:no-underline md:gap-2 flex items-center gap-1"
+    >
+      <Share2 size={20} className="text-primary-brown" />
+      {numberOfShares > 0 ? (
+        <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+          {numberOfShares}{" "}
+          <span className="md:block hidden">
+            {numberOfShares > 1 ? "shares" : "share"}
+          </span>
+        </span>
+      ) : (
+        <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+          Share
+        </span>
+      )}
+    </Button>
+  );
+};
+
+export const LeaveAComment = ({
+  comment,
+  setComment,
+  handleCommentSubmit,
+  image,
+}: {
+  comment: string;
+  setComment: React.Dispatch<React.SetStateAction<string>>;
+  handleCommentSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  image?: string;
+}) => {
+  return (
+    <form
+      onSubmit={handleCommentSubmit}
+      className="flex items-center gap-3 py-3"
+    >
+      <img
+        src={image ?? "/images/avatar.png"}
+        alt={"avatar"}
+        className="w-10 h-10 rounded-full"
+      />
+      <input
+        type="text"
+        placeholder="Comment on this"
+        className="text-primary-gray placeholder:text-primary-brown/50 bg-secondary-gray/10 flex-grow w-full px-3 py-3 text-sm rounded-full outline-none"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+      />
+    </form>
   );
 };

@@ -1,4 +1,6 @@
+import AddToCalendarButton from "@/components/AddToCalendarButton";
 import CustomFormField from "@/components/shared/CustomFormField";
+import LoginModal from "@/components/shared/LoginModal";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { marketplaceEvents as events } from "@/constants";
+import { useAuth } from "@/hooks/useAuth";
 import { axiosInstance, slugifyData } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -47,7 +50,10 @@ const socialIcons = [
   },
 ];
 
+export type EventType = (typeof events)[number];
+
 const EventDetails = () => {
+  const [auth] = useAuth();
   const navigate = useNavigate();
   const { slug } = useParams();
   const eventInfo = events.find((event) => slugifyData(event.title) === slug);
@@ -137,9 +143,7 @@ const EventDetails = () => {
                       {eventInfo.date}
                     </p>
 
-                    <button className="text-primary-brown hover:underline text-sm">
-                      Add to Calendar
-                    </button>
+                    {auth && <AddToCalendarButton event={eventInfo} />}
 
                     <div className="flex flex-col w-full gap-4">
                       <RegisterEvent />
@@ -299,6 +303,7 @@ const RegisterEventSchema = z.object({
 type RegisterEventSchemaType = z.infer<typeof RegisterEventSchema>;
 
 const RegisterEvent = () => {
+  const [auth] = useAuth();
   const {
     register,
     handleSubmit,
@@ -328,11 +333,19 @@ const RegisterEvent = () => {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="bg-primary-brown w-full text-center text-white rounded">
-          Register
-        </Button>
-      </DialogTrigger>
+      {auth ? (
+        <DialogTrigger asChild>
+          <Button className="bg-primary-brown w-full text-center text-white rounded">
+            Register
+          </Button>
+        </DialogTrigger>
+      ) : (
+        <LoginModal hasChildren={true}>
+          <Button className="bg-primary-brown w-full text-center text-white rounded">
+            Register
+          </Button>
+        </LoginModal>
+      )}
 
       <DialogContent className="scrollbar-hide flex flex-col w-full max-w-xl gap-5 bg-white">
         {/* Header */}

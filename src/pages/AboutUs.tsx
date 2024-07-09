@@ -10,15 +10,12 @@ import {
   aboutUsBenefits,
   marketplaceEvents,
 } from "@/constants";
-import { useAuth } from "@/hooks/useAuth";
 import HeroLayout from "@/layout/HeroLayout";
 import { slugifyData } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AboutUs = () => {
-  const [auth] = useAuth();
-
   return (
     <section className="flex flex-col min-h-screen overflow-hidden">
       {/* Header */}
@@ -229,13 +226,7 @@ const AboutUs = () => {
                         <span className="text-white">{item.seller}</span>
                       </button>
 
-                      <Link
-                        to={
-                          auth
-                            ? "/user/marketplace"
-                            : "/login?redirect=/user/marketplace"
-                        }
-                      >
+                      <Link to={"/user/marketplace"}>
                         <Button className="bg-primary-brown hover:bg-primary-brown md:w-1/2 hover:scale-105 sm:w-fit w-full px-5 py-2 text-center text-white transition rounded-none">
                           Purchase
                         </Button>
@@ -363,11 +354,7 @@ const AboutUs = () => {
 
                     <div className="flex flex-col flex-1 gap-4 pb-3">
                       <Link
-                        to={
-                          auth
-                            ? `/user/events/${slugifyData(item.title)}`
-                            : `/login?redirect=/user/events/${slugifyData(item.title)}`
-                        }
+                        to={`/user/events/${slugifyData(item.title)}`}
                         className="max-w-xs mb-auto text-base font-normal text-black capitalize"
                       >
                         {item.title}

@@ -17,8 +17,12 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
+import { useAuth } from "@/hooks/useAuth";
+import LoginModal from "@/components/shared/LoginModal";
 
 const MarketPlaceAddItem = () => {
+  const [auth] = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -50,9 +54,18 @@ const MarketPlaceAddItem = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
-        {"Sell Item"}
-      </DialogTrigger>
+      {auth ? (
+        <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
+          {"Sell Item"}
+        </DialogTrigger>
+      ) : (
+        <LoginModal
+          hasChildren={true}
+          className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none"
+        >
+          Sell Item
+        </LoginModal>
+      )}
 
       <DialogContent className="scrollbar-hide flex flex-col w-full h-screen max-w-2xl gap-5 overflow-y-scroll">
         {/* Header */}

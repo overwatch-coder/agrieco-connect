@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const AuthBackgroundImage = () => {
   return (
     <section className="bg-login-bg flex flex-col w-full min-h-screen col-span-1 p-5 bg-center bg-no-repeat bg-cover">
-      <Link to="/" className="flex items-center gap-2">
+      <Link to={"/about-us"} className="flex items-center gap-2">
         <img
           src="/icons/logo-white.svg"
           alt="Agrieco-Connect"
@@ -23,7 +23,7 @@ const AuthBackgroundImage = () => {
           Collaboration
         </p>
 
-        <Link to={"/"}>
+        <Link to={"/about-us"}>
           <Button className="hover:bg-transparent border-primary-green md:w-fit hover:scale-105 flex items-center justify-center w-full gap-2 px-6 py-6 transition bg-transparent border-2 rounded-none">
             <span className="font-bold text-white">Discover More</span>
             <ArrowRight size={20} className="text-white" />

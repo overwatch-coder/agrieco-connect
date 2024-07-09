@@ -2,6 +2,14 @@ import { Button } from "@/components/ui/button";
 import { UserFeedsType } from "@/pages/user/Feed";
 import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import { useState } from "react";
+import LoginModal from "@/components/shared/LoginModal";
+import { IsAuth } from "@/lib/utils";
+import {
+  CommentButton,
+  LikeButton,
+  ShareButton,
+  LeaveAComment,
+} from "@/components/FeedItem";
 
 const SubcommunityActivities = ({
   authorName,
@@ -77,35 +85,32 @@ const SubcommunityActivities = ({
       </div>
 
       <div className="border-b-secondary-gray text-start md:justify-between md:gap-4 border-t-secondary-gray flex flex-wrap items-center w-full gap-2 pt-3 pb-3 border-t border-b">
-        <Button
-          variant={"link"}
-          className="hover:no-underline md:gap-2 flex items-center gap-1"
-        >
-          <MessageCircle size={20} className="text-primary-brown" />
-          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
-            {numberOfComments} <span className="md:block hidden">comments</span>
-          </span>
-        </Button>
+        {/* Comments */}
+        {IsAuth() ? (
+          <CommentButton numberOfComments={numberOfComments} />
+        ) : (
+          <LoginModal hasChildren={true}>
+            <CommentButton numberOfComments={numberOfComments} />
+          </LoginModal>
+        )}
 
-        <Button
-          variant={"link"}
-          className="hover:no-underline md:gap-2 flex items-center gap-1"
-        >
-          <ThumbsUp size={20} className="text-primary-brown" />
-          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
-            {numberOfLikes} <span className="md:block hidden">likes</span>
-          </span>
-        </Button>
+        {/* Likes */}
+        {IsAuth() ? (
+          <LikeButton numberOfLikes={numberOfLikes} />
+        ) : (
+          <LoginModal hasChildren={true}>
+            <LikeButton numberOfLikes={numberOfLikes} />
+          </LoginModal>
+        )}
 
-        <Button
-          variant={"link"}
-          className="hover:no-underline md:gap-2 flex items-center gap-1"
-        >
-          <Share2 size={20} className="text-primary-brown" />
-          <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
-            {numberOfShares} <span className="md:block hidden">shares</span>
-          </span>
-        </Button>
+        {/* Shares */}
+        {IsAuth() ? (
+          <ShareButton numberOfShares={numberOfShares} />
+        ) : (
+          <LoginModal hasChildren={true}>
+            <ShareButton numberOfShares={numberOfShares} />
+          </LoginModal>
+        )}
       </div>
 
       {/* Comments */}
@@ -125,47 +130,41 @@ const SubcommunityActivities = ({
             <p className="text-primary-brown flex items-center gap-1 text-sm font-normal">
               1h
             </p>
-            <Button
-              variant={"link"}
-              className="hover:no-underline md:gap-2 flex items-center"
-            >
-              <MessageCircle size={20} className="text-primary-brown" />
-              <span className="text-primary-brown md:flex items-center hidden gap-1 text-sm font-normal">
-                comment
-              </span>
-            </Button>
+            {IsAuth() ? (
+              <CommentButton numberOfComments={0} />
+            ) : (
+              <LoginModal hasChildren={true}>
+                <CommentButton numberOfComments={0} />
+              </LoginModal>
+            )}
 
-            <Button
-              variant={"link"}
-              className="hover:no-underline md:gap-2 flex items-center"
-            >
-              <ThumbsUp size={20} className="text-primary-brown" />
-              <span className="text-primary-brown md:flex items-center hidden gap-1 text-sm font-normal">
-                like
-              </span>
-            </Button>
+            {IsAuth() ? (
+              <LikeButton numberOfLikes={0} />
+            ) : (
+              <LoginModal hasChildren={true}>
+                <LikeButton numberOfLikes={0} />
+              </LoginModal>
+            )}
           </div>
         </div>
       </div>
 
       {/* Leave a comment */}
-      <form
-        onSubmit={handleCommentSubmit}
-        className="flex items-center gap-3 py-3"
-      >
-        <img
-          src={"/images/avatar.png"}
-          alt={"avatar"}
-          className="w-10 h-10 rounded-full"
+      {IsAuth() ? (
+        <LeaveAComment
+          setComment={setComment}
+          comment={comment}
+          handleCommentSubmit={handleCommentSubmit}
         />
-        <input
-          type="text"
-          placeholder="Comment on this"
-          className="text-primary-gray placeholder:text-primary-brown/50 bg-secondary-gray/10 flex-grow w-full px-3 py-3 text-sm rounded-full outline-none"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-      </form>
+      ) : (
+        <LoginModal hasChildren={true}>
+          <LeaveAComment
+            comment={comment}
+            handleCommentSubmit={handleCommentSubmit}
+            setComment={setComment}
+          />
+        </LoginModal>
+      )}
     </section>
   );
 };
