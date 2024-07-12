@@ -15,20 +15,11 @@ import LoginModal from "@/components/shared/LoginModal";
 
 type MarketPlaceItemType = (typeof marketplaceProducts)[number];
 
-const dropdownItemsOne = ["Popular", "New", "Sale", "All"];
-
-const dropdownItemsTwo = [
-  "Recently Added",
-  "Most Liked",
-  "Most Viewed",
-  "Most Commented",
-  "Most Shared",
-];
+const dropDownItems = ["Popular", "New", "Sale", "All"];
 
 const MarketPlace = () => {
   const [auth] = useAuth();
   const [selectedItem, setSelectedItem] = useState("Popular");
-  const [selectedItem2, setSelectedItem2] = useState("New");
   const [openModal, setOpenModal] = useState(false);
   const [itemToBeDeleteId, setItemToBeDeleteId] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -123,14 +114,9 @@ const MarketPlace = () => {
 
               <div className="md:items-center md:justify-center flex flex-wrap gap-5">
                 <CustomDropdown
-                  items={dropdownItemsOne}
+                  items={dropDownItems}
                   selectedItem={selectedItem}
                   setSelectedItem={setSelectedItem}
-                />
-                <CustomDropdown
-                  items={dropdownItemsTwo}
-                  selectedItem={selectedItem2}
-                  setSelectedItem={setSelectedItem2}
                 />
 
                 {auth && (
@@ -254,14 +240,14 @@ const MarketPlaceItem = ({
               onClick={() => setOpenModal(true)}
               className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-2 text-center text-white transition rounded-none"
             >
-              Purchase
+              Contact Seller
             </Button>
           ) : (
             <LoginModal
               className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-2 text-center text-white transition rounded-none"
               hasChildren={true}
             >
-              Purchase
+              Contact Seller
             </LoginModal>
           )}
 

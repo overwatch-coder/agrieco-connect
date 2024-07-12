@@ -20,7 +20,7 @@ const SellerInformation = ({
 }: SellerInformationProps) => {
   return (
     <Dialog open={openModal} onOpenChange={setOpenModal}>
-      <DialogContent className="flex flex-col w-full max-w-2xl gap-5 bg-white rounded-none">
+      <DialogContent className="flex flex-col w-full max-w-2xl gap-5 pb-10 bg-white rounded-none">
         {/* Header */}
         <div className="flex items-start justify-between">
           <DialogTitle className="flex flex-col gap-3">
