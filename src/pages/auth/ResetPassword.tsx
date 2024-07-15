@@ -38,7 +38,10 @@ const ResetPassword = () => {
 
   // use mutation
   const { mutateAsync, isPending, isError, error } = useMutateData<
-    Omit<ResetPasswordType, "confirmPassword">,
+    {
+      email: string;
+      new_password: string;
+    },
     { message: string }
   >({
     url: `/auth/reset-password?reset_code=${token}`,
@@ -50,7 +53,10 @@ const ResetPassword = () => {
   });
 
   const handleResetPassword = async (data: ResetPasswordType) => {
-    const res = await mutateAsync(data);
+    const res = await mutateAsync({
+      email: data.email,
+      new_password: data.password,
+    });
 
     toast.success(`${res.message}. Please login with your new password.`);
 
