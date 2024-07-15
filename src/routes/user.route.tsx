@@ -18,7 +18,7 @@ import ViewSubcommunity from "@/pages/shared/ViewSubcommunity";
 
 const UserRoutes = () => {
   const [auth] = useAuth();
-  const isAdmin = auth?.email.toLowerCase().startsWith("admin");
+  const isAdmin = auth?.user.role === "admin";
 
   return (
     <>

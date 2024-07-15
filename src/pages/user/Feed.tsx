@@ -7,10 +7,17 @@ import FeedTopicsSidebar from "@/components/FeedTopicsSidebar";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
 import CreateFeedPost from "@/components/CreateFeedPost";
+import { useFetch } from "@/hooks/useFetch";
+import ResponsiveArticle from "react-content-loader";
 
 export type UserFeedsType = (typeof userFeeds)[number];
 
 const Feed = () => {
+  // const { data, isLoading } = useFetch<UserFeedsType[]>({
+  //   url: "/feeds",
+  //   queryKey: "feeds",
+  // });
+
   const [feeds, setFeeds] = useState<UserFeedsType[]>(userFeeds.slice(0, 2));
   const [hasMore, setHasMore] = useState(true);
 
@@ -25,6 +32,21 @@ const Feed = () => {
       setFeeds(feeds.concat(userFeeds.slice(feeds.length, feeds.length + 2)));
     }, 500);
   };
+
+  //  if (isLoading) {
+  //    return <ResponsiveArticle width={500} height={300} />;
+  //  }
+
+  //  if (!userFeeds) {
+  //    return (
+  //      <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
+  //        <p>Sorry, could not fetch feeds</p>
+  //        <h2 className="text-primary-green text-xl font-normal">
+  //          Please try again later
+  //        </h2>
+  //      </div>
+  //    );
+  //  }
 
   return (
     <div>

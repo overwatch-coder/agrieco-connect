@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const AuthRoutes = () => {
   const [auth] = useAuth();
-  const isAdmin = auth && auth?.email?.toLowerCase().startsWith("admin");
+  const isAdmin = auth && auth?.user?.role === "admin";
   return (
     <>
       <Route

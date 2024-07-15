@@ -23,7 +23,7 @@ const Logout = ({
   headerLogout?: boolean;
 }) => {
   const [auth, setAuth] = useAuth();
-  const isUser = !auth?.email.toLowerCase().startsWith("admin");
+  const isUser = auth?.user.role === "user";
 
   // handle logout
   const handleLogout = async () => {

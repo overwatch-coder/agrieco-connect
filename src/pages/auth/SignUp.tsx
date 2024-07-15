@@ -9,18 +9,31 @@ import { MdOutlineTopic } from "react-icons/md";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
-import { axiosInstance } from "@/lib/utils";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { MultiSelect } from "@/components/ui/multi-select";
+import CustomError from "@/components/shared/CustomError";
 
 type SignUpType = Auth;
+
+interface ISignUp {
+  email: string;
+  fullname: string;
+  interested_topics_ids: number[];
+  password: string;
+  username: string;
+}
 
 const SignUp = () => {
   //  usestate
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const { data: topics } = useFetch<ITopic[]>({
+    url: "/topics",
+    queryKey: "topics",
+  });
 
   // react-hook-form
   const {
@@ -28,44 +41,41 @@ const SignUp = () => {
     handleSubmit,
     reset,
     formState: { errors },
+    setValue,
   } = useForm<SignUpType>({
     resolver: zodResolver(SignupSchema),
     mode: "all",
   });
 
-  // use mutation
-  const { mutateAsync, isPending, isError, error } = useMutation({
-    mutationFn: async (data: SignUpType) => {
-      const usersRes = await axiosInstance.get("/users");
-      const users: Auth[] = usersRes.data;
-      const userExists = users.find((user: Auth) => user.email === data.email);
-
-      if (userExists) {
-        throw new Error("User already exists");
-      }
-
-      const { confirmPassword, ...signUpData } = data;
-
-      const res = await axiosInstance.post("/users", signUpData);
-
-      const user: Omit<SignUpType, "confirmPassword"> = res.data;
-
-      const { password, ...rest } = user;
-
-      return rest;
-    },
-    onError: (error) => {
-      console.log(error);
-      reset({ password: "", confirmPassword: "" });
-    },
-    onSuccess: () => {
-      toast.success("Signup Successful");
-      navigate("/login");
+  const { mutateAsync, isPending, isError, error } = useMutateData<
+    ISignUp,
+    { message: string }
+  >({
+    url: "/auth/register",
+    config: {
+      method: "POST",
+      contentType: "application/json",
+      reset: () => reset({ password: "", confirmPassword: "" }),
+      resetValues: { password: "", confirmPassword: "" },
     },
   });
 
   const handleSignUp = async (data: SignUpType) => {
-    await mutateAsync(data);
+    const datToSubmit: ISignUp = {
+      email: data.email,
+      fullname: data.name,
+      interested_topics_ids: data.topic.split(",").map((id) => Number(id)),
+      password: data.password,
+      username: data.username,
+    };
+
+    const res = await mutateAsync(datToSubmit);
+
+    toast.success(res.message);
+
+    reset();
+
+    navigate("/login");
   };
 
   return (
@@ -96,13 +106,7 @@ const SignUp = () => {
               className="flex flex-col w-full gap-5 mt-5"
             >
               {/* Error */}
-              {isError && (
-                <div className="flex flex-col items-center gap-2 p-4 bg-red-300 rounded">
-                  <p className="text-start text-sm font-normal text-red-500">
-                    {error.message}
-                  </p>
-                </div>
-              )}
+              <CustomError isError={isError} error={error} />
 
               {/* Full Name */}
               <div className="flex flex-col gap-2">
@@ -122,6 +126,29 @@ const SignUp = () => {
                 />
                 {errors.name && (
                   <p className="text-xs text-red-500">{errors.name.message}</p>
+                )}
+              </div>
+
+              {/* Username */}
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="username"
+                  className="flex items-center gap-3 text-sm font-normal text-white"
+                >
+                  <User size={18} className="text-white" />
+                  <span className="text-white/50">Username</span>
+                </label>
+
+                <input
+                  type="text"
+                  id="username"
+                  className="border-b-primary-gray focus:border-b-2 w-full bg-transparent border-b-[1.5px] outline-none"
+                  {...register("username")}
+                />
+                {errors.username && (
+                  <p className="text-xs text-red-500">
+                    {errors.username.message}
+                  </p>
                 )}
               </div>
 
@@ -156,12 +183,24 @@ const SignUp = () => {
                   <span className="text-white/50">Topic Preference</span>
                 </label>
 
-                <input
-                  type="topic"
-                  id="topic"
-                  className="border-b-primary-gray focus:border-b-2 w-full bg-transparent border-b-[1.5px] outline-none"
-                  {...register("topic")}
+                <MultiSelect
+                  options={
+                    topics
+                      ? topics?.map((topic) => ({
+                          value: topic.id.toString(),
+                          label: topic.name,
+                        }))
+                      : []
+                  }
+                  placeholder="Select Topics"
+                  defaultValue={[]}
+                  onValueChange={(values: string[]) => {
+                    setValue("topic", values.join(","));
+                  }}
+                  placeholderClassName="text-white/50"
+                  className="border-b-primary-gray focus:border-b-2 w-full bg-transparent border-b-[1.5px] rounded-none"
                 />
+
                 {errors.topic && (
                   <p className="text-xs text-red-500">{errors.topic.message}</p>
                 )}
@@ -238,30 +277,6 @@ const SignUp = () => {
                   </p>
                 )}
               </div>
-
-              {/* <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="rememberMe"
-                    {...register("rememberMe")}
-                  />
-
-                  <label
-                    htmlFor="rememberMe"
-                    className="text-white/40 block text-sm"
-                  >
-                    Remember Me
-                  </label>
-                </div>
-
-                <Link
-                  to="/forgot-password"
-                  className="text-white/40 hover:underline hover:text-white/70 text-sm"
-                >
-                  Forgot Password ?
-                </Link>
-              </div> */}
 
               <Button className="bg-primary-green hover:bg-primary-green hover:scale-105 flex items-center justify-center w-full py-6 font-medium text-white transition rounded-none">
                 {isPending ? (

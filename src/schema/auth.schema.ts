@@ -13,10 +13,11 @@ export const AuthSchema = z.object({
     .min(1, "Confirm Password is required")
     .min(8, "Password must be at least 8 characters"),
   rememberMe: z.boolean().default(false),
+  username: z.string().min(1, "Username is required"),
 });
 
 export const LoginSchema = AuthSchema.pick({
-  email: true,
+  username: true,
   password: true,
   rememberMe: true,
 });
@@ -37,19 +38,16 @@ export const ForgotPasswordSchema = AuthSchema.pick({
 });
 
 export const ResetPasswordSchema = AuthSchema.pick({
+  email: true,
   password: true,
   confirmPassword: true,
-})
-  .extend({
-    token: z.string().min(1, "Token is required"),
-  })
-  .superRefine((data, context) => {
-    if (data.password !== data.confirmPassword) {
-      context.addIssue({
-        code: "custom",
-        message: "Passwords do not match",
-        path: ["confirmPassword"],
-      });
-    }
-    return true;
-  });
+}).superRefine((data, context) => {
+  if (data.password !== data.confirmPassword) {
+    context.addIssue({
+      code: "custom",
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
+  }
+  return true;
+});

@@ -21,7 +21,7 @@ import { UrlPath } from "@/lib/utils";
 
 const DashboardHeader = () => {
   const [auth] = useAuth();
-  const isUser = !auth?.email.toLowerCase().startsWith("admin");
+  const isUser = auth?.user.role === "user";
   const pathname = useLocation().pathname;
 
   const [headerName, setHeaderName] = useState("Dashboard");

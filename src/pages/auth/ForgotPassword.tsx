@@ -6,10 +6,10 @@ import { ArrowLeft, User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
-import { axiosInstance } from "@/lib/utils";
 import ClipLoader from "react-spinners/ClipLoader";
 import { z } from "zod";
+import { useMutateData } from "@/hooks/useFetch";
+import CustomError from "@/components/shared/CustomError";
 
 type ForgotPasswordType = z.infer<typeof ForgotPasswordSchema>;
 
@@ -29,26 +29,21 @@ const ForgotPassword = () => {
   });
 
   // use mutation
-  const { mutateAsync, isPending, isError, error } = useMutation({
-    mutationFn: async (data: ForgotPasswordType) => {
-      const res = await axiosInstance.post("/users", data);
-
-      return res.data;
-    },
-    onError: (error) => {
-      console.log(error);
-      reset({ email: "" });
-    },
-    onSuccess: (data, variable) => {
-      setSuccessMessage(
-        `An email has been sent to ${variable.email}. If an account with that address exists, instructions will be sent to it.`
-      );
-      reset();
+  const { mutateAsync, isPending, isError, error } = useMutateData<
+    { email: string },
+    { message: string }
+  >({
+    url: "/auth/forgot-password",
+    config: {
+      method: "POST",
+      reset: () => reset({ email: "" }),
+      resetValues: { email: "" },
     },
   });
 
   const handleForgotPassword = async (data: ForgotPasswordType) => {
-    await mutateAsync(data);
+    const res = await mutateAsync(data);
+    setSuccessMessage(res.message);
   };
 
   return (
@@ -93,13 +88,7 @@ const ForgotPassword = () => {
                   className="flex flex-col w-full gap-5 mt-5"
                 >
                   {/* Error */}
-                  {isError && (
-                    <div className="flex flex-col items-center gap-2 p-4 bg-red-300 rounded">
-                      <p className="text-sm font-normal text-red-500">
-                        {error.message}
-                      </p>
-                    </div>
-                  )}
+                  <CustomError isError={isError} error={error} />
 
                   {/* Email */}
                   <div className="flex flex-col gap-2">

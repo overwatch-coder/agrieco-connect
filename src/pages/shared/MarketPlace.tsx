@@ -238,13 +238,13 @@ const MarketPlaceItem = ({
           {auth ? (
             <Button
               onClick={() => setOpenModal(true)}
-              className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-2 text-center text-white transition rounded-none"
+              className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-3 text-sm text-center text-white transition rounded-none"
             >
               Contact Seller
             </Button>
           ) : (
             <LoginModal
-              className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-2 text-center text-white transition rounded-none"
+              className="bg-primary-green hover:bg-primary-green md:w-1/2 hover:scale-105 w-full px-5 py-3 text-sm text-center text-white transition rounded-none"
               hasChildren={true}
             >
               Contact Seller

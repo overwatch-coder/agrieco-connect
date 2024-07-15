@@ -6,11 +6,11 @@ import { ArrowLeft, Eye, EyeOff, LockKeyhole, User } from "lucide-react";
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
-import { axiosInstance } from "@/lib/utils";
 import ClipLoader from "react-spinners/ClipLoader";
 import { z } from "zod";
 import { toast } from "react-toastify";
+import { useMutateData } from "@/hooks/useFetch";
+import CustomError from "@/components/shared/CustomError";
 
 type ResetPasswordType = z.infer<typeof ResetPasswordSchema>;
 
@@ -23,7 +23,7 @@ const ResetPassword = () => {
 
   // get token from url search params
   const searchParams = new URLSearchParams(location.search);
-  const token = searchParams.get("token");
+  const token = searchParams.get("reset_code");
 
   // react-hook-form
   const {
@@ -37,30 +37,24 @@ const ResetPassword = () => {
   });
 
   // use mutation
-  const { mutateAsync, isPending, isError, error } = useMutation({
-    mutationFn: async (data: ResetPasswordType) => {
-      const res = await axiosInstance.post("/users", {
-        password: data.password,
-        token: data.token,
-      });
-
-      return res.data;
-    },
-    onError: (error) => {
-      console.log(error);
-      reset({ password: "", confirmPassword: "" });
-    },
-    onSuccess: () => {
-      toast.success("Password changed successfully");
-
-      reset();
-
-      navigate("/login");
+  const { mutateAsync, isPending, isError, error } = useMutateData<
+    Omit<ResetPasswordType, "confirmPassword">,
+    { message: string }
+  >({
+    url: `/auth/reset-password?reset_code=${token}`,
+    config: {
+      method: "POST",
+      reset: () => reset({ password: "", confirmPassword: "" }),
+      resetValues: { password: "", confirmPassword: "" },
     },
   });
 
   const handleResetPassword = async (data: ResetPasswordType) => {
-    await mutateAsync(data);
+    const res = await mutateAsync(data);
+
+    toast.success(`${res.message}. Please login with your new password.`);
+
+    navigate("/login");
   };
 
   if (!token) {
@@ -95,13 +89,32 @@ const ResetPassword = () => {
               className="gap-7 flex flex-col w-full mt-5"
             >
               {/* Error */}
-              {isError && (
-                <div className="flex flex-col items-center gap-2 p-4 bg-red-300 rounded">
-                  <p className="text-sm font-normal text-red-500">
-                    {error.message}
+              <CustomError isError={isError} error={error} />
+
+              {/* Email */}
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="email"
+                  className="flex items-center justify-between gap-3 text-sm font-normal text-white"
+                >
+                  <span className="flex items-center gap-2">
+                    <User size={18} className="text-primary-brown" />
+                    <span className="text-primary-brown/50">Email</span>
+                  </span>
+                </label>
+
+                <input
+                  type={"text"}
+                  id="email"
+                  className="border-b-primary-brown text-primary-brown focus:border-b-2 w-full bg-transparent border-b-[1.5px] outline-none"
+                  {...register("email")}
+                />
+                {errors.email && (
+                  <p className="text-start text-xs italic text-red-500">
+                    {errors.email.message}
                   </p>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Password */}
               <div className="flex flex-col gap-2">
@@ -176,15 +189,6 @@ const ResetPassword = () => {
                   </p>
                 )}
               </div>
-
-              {/* hidden input - token */}
-              <input
-                type="hidden"
-                id="token"
-                className="hidden"
-                value={token}
-                {...register("token")}
-              />
 
               <Button className="bg-primary-green/70 hover:bg-primary-green flex items-center justify-center w-full py-6 font-medium text-white rounded-none">
                 {isPending ? (

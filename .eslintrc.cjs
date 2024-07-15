@@ -19,6 +19,7 @@ module.exports = {
     "@tanstack/query/stable-query-client": "error",
     "no-unused-vars": "off",
     "no-undef": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-undef": "off",
   },

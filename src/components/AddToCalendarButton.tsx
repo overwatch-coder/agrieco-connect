@@ -14,7 +14,7 @@ const AddToCalendarButton = ({ event }: { event: EventType }) => {
   const startDate = `${event.date}`;
   const startTime = new Date(event.date).toLocaleTimeString();
   const endTime = getEndTime(startTime);
-  const attendee = `${auth?.name}|${auth?.email}`;
+  const attendee = `${auth?.user.fullname}|${auth?.user.email}`;
   const organizer = `${event.organizer}|events@gmail.com`;
 
   return (

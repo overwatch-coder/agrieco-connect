@@ -9,7 +9,7 @@ import { NavHashLink } from "react-router-hash-link";
 const Header = () => {
   const [auth] = useAuth();
   const [scrolled, setScrolled] = useState(false);
-  const isAdmin = auth?.email.startsWith("admin");
+  const isAdmin = auth?.user.role === "admin";
 
   // change header background color onscroll
   useEffect(() => {

@@ -8,16 +8,17 @@ import { Eye, EyeOff, LockKeyhole, User } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
-import { axiosInstance } from "@/lib/utils";
 import ClipLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
 import { useAuth } from "@/hooks/useAuth";
+import { useMutateData } from "@/hooks/useFetch";
+import CustomError from "@/components/shared/CustomError";
 
-type LoginType = Pick<Auth, "email" | "password" | "rememberMe">;
+type LoginType = Pick<Auth, "username" | "password" | "rememberMe">;
 
 const Login = () => {
-  const [auth, setAuth] = useAuth();
+  const [_, setAuth] = useAuth();
+
   //  usestate
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -36,40 +37,31 @@ const Login = () => {
     mode: "all",
   });
 
-  // use mutation
-  const { mutateAsync, isPending, isError, error } = useMutation({
-    mutationFn: async (data: LoginType) => {
-      const res = await axiosInstance.get("/users");
-      const resData: Omit<Auth, "confirmPassword">[] = res.data;
-
-      return {
-        name: data.email.startsWith("admin") ? "Admin" : "User",
-        topic: "Agrieco",
-        email: data.email,
-        rememberMe: data.rememberMe,
-      };
-    },
-    onError: (error) => {
-      console.log(error);
-      reset({ password: "" });
-    },
-    onSuccess: (data: Omit<Auth, "password" | "confirmPassword">) => {
-      setAuth(data);
-
-      toast.success("Login Successful");
-
-      navigate(
-        redirect
-          ? redirect
-          : data.email.startsWith("admin")
-            ? "/admin/dashboard"
-            : "/user/feed"
-      );
+  const { mutateAsync, isPending, isError, error } = useMutateData<
+    LoginType,
+    IAuth
+  >({
+    url: "/auth/login",
+    config: {
+      method: "POST",
+      reset: () => reset({ password: "" }),
+      resetValues: { password: "" },
     },
   });
 
   const handleLogin = async (data: LoginType) => {
-    await mutateAsync(data);
+    const res = await mutateAsync(data);
+
+    setAuth(res);
+
+    toast.success("Login Successful");
+    navigate(
+      redirect
+        ? redirect
+        : res.user.role === "admin"
+          ? "/admin/dashboard"
+          : "/user/feed"
+    );
   };
 
   return (
@@ -100,13 +92,7 @@ const Login = () => {
               className="flex flex-col w-full gap-5 mt-5"
             >
               {/* Error */}
-              {isError && (
-                <div className="flex flex-col items-center gap-2 p-4 bg-red-300 rounded">
-                  <p className="text-sm font-normal text-red-500">
-                    {error.message}
-                  </p>
-                </div>
-              )}
+              <CustomError isError={isError} error={error} />
 
               {/* Email */}
               <div className="flex flex-col gap-2">
@@ -115,18 +101,18 @@ const Login = () => {
                   className="flex items-center gap-3 text-sm font-normal text-white"
                 >
                   <User size={18} className="text-white" />
-                  <span className="text-white/50">Email</span>
+                  <span className="text-white/50">Username</span>
                 </label>
 
                 <input
-                  type="email"
-                  id="email"
+                  type="text"
+                  id="username"
                   className="border-b-primary-gray focus:border-b-2 w-full bg-transparent border-b-[1.5px] outline-none"
-                  {...register("email")}
+                  {...register("username")}
                 />
-                {errors.email && (
+                {errors.username && (
                   <p className="text-start text-xs text-red-600">
-                    {errors.email.message}
+                    {errors.username.message}
                   </p>
                 )}
               </div>

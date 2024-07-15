@@ -20,6 +20,11 @@ const Settings = () => {
     formState: { errors },
   } = useForm<SettingsType>({
     resolver: zodResolver(SettingsSchema),
+    defaultValues: {
+      name: auth?.user.fullname,
+      email: auth?.user.email,
+      username: auth?.user.username,
+    },
     mode: "all",
   });
 
@@ -114,7 +119,7 @@ const Settings = () => {
                   hasError={errors.name !== undefined}
                   errorMessage={errors.name?.message}
                   register={register}
-                  defaultValue={auth?.name}
+                  defaultValue={auth?.user.fullname}
                   isTextArea={false}
                 />
 
@@ -125,7 +130,7 @@ const Settings = () => {
                   hasError={errors.email !== undefined}
                   errorMessage={errors.email?.message}
                   register={register}
-                  defaultValue={auth?.email}
+                  defaultValue={auth?.user.email}
                   isTextArea={false}
                 />
 

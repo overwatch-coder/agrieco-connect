@@ -14,7 +14,7 @@ import AdminTopics from "@/pages/admin/AdminTopics";
 
 const AdminRoutes = () => {
   const [auth] = useAuth();
-  const isAdmin = auth?.email.toLowerCase().startsWith("admin");
+  const isAdmin = auth?.user.role === "admin";
   return (
     <>
       <Route
