@@ -1,19 +1,20 @@
 // === AUTH ===
 declare interface IAuth {
-  access_token: string;
   user: IAuthUser;
 }
 
 declare interface IAuthUser {
   id: number;
+  fullname: string;
   username: string;
   email: string;
   role: "admin" | "user";
-  fullname: string;
+  interested_topics: ITopic[];
+  token: string;
 }
 
 // === FEEDS ===
-declare interface IFeeds {
+declare interface IFeed {
   id: number;
   content: string;
   user_id: number;
@@ -22,6 +23,25 @@ declare interface IFeeds {
   images: string;
   is_active: boolean;
   topics: ITopic[];
+  likes: IFeedUser[];
+  comments: IComment[];
+}
+
+declare interface IComment {
+  id: number;
+  content: string;
+  user: IFeedUser;
+  feed_id: number;
+  created_at: string;
+  updated_at: string;
+  is_active: boolean;
+}
+
+declare interface IFeedUser {
+  id: number;
+  fullname: string;
+  username: string;
+  email: string;
 }
 
 declare interface ITopic {

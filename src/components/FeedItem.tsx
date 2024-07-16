@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -9,128 +9,212 @@ import {
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import LoginModal from "@/components/shared/LoginModal";
-import { userFeeds } from "@/constants";
+import { faker } from "@faker-js/faker";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Form } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
+import moment from "moment-timezone";
 
-type UserFeedsType = (typeof userFeeds)[number];
+const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+moment.tz.setDefault(timezone);
 
-const FeedItem = ({
-  authorImage,
-  authorName,
-  datePosted,
-  description,
-  images,
-  numberOfComments,
-  numberOfLikes,
-  numberOfShares,
-}: UserFeedsType) => {
+const FeedItem = ({ images, content, id }: IFeed) => {
+  const commentQuery = useFetch<IComment[]>({
+    queryKey: "comments",
+    url: `/feeds/${id}/comments`,
+  });
+
+  const likeQuery = useFetch<Omit<IAuthUser, "token">[]>({
+    queryKey: "likes",
+    url: `/feeds/${id}/likes`,
+  });
+
   const [auth] = useAuth();
   const [comment, setComment] = useState("");
+  const arrayOfImages = images.split(",");
+  const [allLikes, setAllLikes] = useState<IFeedUser[]>(likeQuery.data ?? []);
+  const [allComments, setAllComments] = useState<IComment[]>(
+    commentQuery.data ?? []
+  );
 
-  const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const filteredImages = arrayOfImages.filter((image) =>
+    image.includes("res.cloudinary.com")
+  );
+
+  const { mutateAsync: mutateLikes } = useMutateData<any, IFeed>({
+    url: `/feeds/${id}/likes`,
+    config: {
+      method: "PUT",
+      contentType: "application/json",
+      token: auth?.user?.token,
+      queryKey: "feeds",
+    },
+  });
+
+  const handleLikeSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(comment);
-    setComment("");
+
+    const res = await mutateLikes(null);
+
+    console.log({ res });
+
+    likeQuery.refetch();
+
+    setAllLikes(res.likes);
   };
+
+  const { mutateAsync: mutateComments, isPending: isCommentPending } =
+    useMutateData<{ content: string }, IComment>({
+      url: `/feeds/${id}/comments`,
+      config: {
+        method: "POST",
+        contentType: "application/json",
+        token: auth?.user?.token,
+        queryKey: "feeds",
+      },
+    });
+
+  const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!comment) return;
+
+    const res = await mutateComments({ content: comment });
+    setComment("");
+
+    commentQuery.refetch();
+
+    setAllComments((prev) => [...prev, res]);
+  };
+
   return (
     <section className="rounded-2xl text-start flex flex-col w-full gap-5 p-4 bg-white">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <UserBio
-            authorImage={authorImage}
-            authorName={authorName}
-            connections={numberOfLikes}
-            profession={
-              [
-                "Agriculture",
-                "Livestock",
-                "Crop Production",
-                "Farming",
-                "Selling",
-                "Marketing",
-              ][Math.floor(Math.random() * 6)]
-            }
-            bio={description}
+            authorImage={faker.image.avatar()}
+            authorName={faker.person.fullName()}
+            connections={faker.number.int({ min: 0, max: 1000 })}
+            profession={faker.person.jobTitle()}
+            bio={faker.person.bio()}
           />
           <div className="flex flex-col gap-1">
-            <p className="text-sm font-normal">{authorName}</p>
-            <p className="text-secondary-gray/50 text-xs">{datePosted}</p>
+            <p className="text-sm font-normal">{faker.person.fullName()}</p>
+            <p className="text-secondary-gray/50 text-xs">
+              {faker.date.recent().toLocaleString("en", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </p>
           </div>
         </div>
-        <Button
-          variant={"link"}
-          className="text-primary-green hover:no-underline"
-        >
-          {auth ? (
-            "Following"
-          ) : (
-            <LoginModal hasChildren={true}>Follow</LoginModal>
-          )}
-        </Button>
+
+        {auth ? (
+          <Button
+            variant={"link"}
+            className="text-primary-green hover:no-underline"
+          >
+            Following
+          </Button>
+        ) : (
+          <LoginModal hasChildren={true}>
+            <Button
+              variant={"link"}
+              className="text-primary-green hover:no-underline"
+            >
+              Follow
+            </Button>
+          </LoginModal>
+        )}
       </div>
 
       {/* Description */}
-      <p className="text-black/80 text-sm font-normal">{description}</p>
-
+      <p className="text-black/80 text-sm font-normal">{content}</p>
       {/* Featured Images */}
       <div className="md:grid-cols-3 border-b-secondary-gray grid grid-cols-1 gap-5 pb-5 border-b">
         {/* Large Image */}
-        <div className="group md:col-span-2 w-full h-full col-span-1 overflow-hidden rounded-lg">
-          <img
-            src={images[0]}
-            alt="Image"
-            className="group-hover:scale-110 object-cover w-full h-full transition"
-          />
-        </div>
+        {filteredImages.length > 0 && (
+          <div className="group md:col-span-2 w-full h-full col-span-1 overflow-hidden rounded-lg">
+            <img
+              src={
+                filteredImages.length > 0
+                  ? filteredImages[0]
+                  : faker.image.urlLoremFlickr()
+              }
+              alt="Image"
+              className="group-hover:scale-110 object-cover w-full h-full transition"
+            />
+          </div>
+        )}
 
         {/* Small Images */}
-        <div className="md:flex-col md:justify-start flex flex-row items-center justify-center col-span-1 gap-5">
-          {images.slice(1).map((image, index) => (
-            <div
-              key={index}
-              className="group w-full h-full overflow-hidden rounded-lg"
-            >
-              <img
-                src={image}
-                alt="Image"
-                className="group-hover:scale-110 object-cover w-full h-full transition"
-              />
-            </div>
-          ))}
-        </div>
+        {filteredImages.length > 1 && (
+          <div className="md:flex-col md:justify-start flex flex-row items-center justify-center col-span-1 gap-5">
+            {filteredImages.length >= 1 &&
+              filteredImages.slice(1).map((image, index) => (
+                <div
+                  key={index}
+                  className="group w-full h-full overflow-hidden rounded-lg"
+                >
+                  <img
+                    src={image}
+                    alt="Image"
+                    className="group-hover:scale-110 object-cover w-full h-full transition"
+                  />
+                </div>
+              ))}
+          </div>
+        )}
       </div>
 
       <div className="border-b-secondary-gray text-start md:justify-between md:gap-4 flex flex-wrap items-center w-full gap-1 pb-5 border-b">
         {/* Comments */}
         {auth ? (
-          <CommentButton numberOfComments={numberOfComments} />
+          <CommentButton numberOfComments={allComments.length} />
         ) : (
           <LoginModal hasChildren={true}>
-            <CommentButton numberOfComments={numberOfComments} />
+            <CommentButton numberOfComments={allComments.length} />
           </LoginModal>
         )}
 
         {/* Likes */}
         {auth ? (
-          <LikeButton numberOfLikes={numberOfLikes} />
+          <LikeButton
+            onClick={(e) => handleLikeSubmit(e)}
+            numberOfLikes={allLikes.length}
+            userLiked={allLikes.some((like) => like.id === auth?.user?.id)}
+          />
         ) : (
           <LoginModal hasChildren={true}>
-            <LikeButton numberOfLikes={numberOfLikes} />
+            <LikeButton numberOfLikes={allLikes.length} />
           </LoginModal>
         )}
 
         {/* Shares */}
         {auth ? (
-          <ShareButton numberOfShares={numberOfShares} />
+          <ShareButton numberOfShares={faker.number.int(40)} />
         ) : (
           <LoginModal hasChildren={true}>
-            <ShareButton numberOfShares={numberOfShares} />
+            <ShareButton numberOfShares={faker.number.int(40)} />
           </LoginModal>
         )}
       </div>
 
+      {allComments.length > 0 && (
+        <ScrollArea className="h-[200px] w-full p-4 flex flex-col">
+          <div className="flex flex-col gap-5">
+            {allComments.map((comment, index) => (
+              <CommentItem key={index} comment={comment} />
+            ))}
+          </div>
+        </ScrollArea>
+      )}
+
       {/* Leave a comment */}
       {auth ? (
         <LeaveAComment
+          isCommentPending={isCommentPending}
           comment={comment}
           setComment={setComment}
           handleCommentSubmit={handleCommentSubmit}
@@ -170,10 +254,7 @@ const UserBio = ({ ...userInfo }: UserBioProps) => {
           />
         </TooltipTrigger>
 
-        <TooltipContent
-          align="start"
-          className="md:w-2/3 w-full p-3 bg-white rounded"
-        >
+        <TooltipContent align="start" className="w-full p-3 bg-white rounded">
           <div className="flex flex-col gap-4">
             <h2 className="text-primary-brown text-xl font-normal">Bio</h2>
             <p className="text-sm font-normal text-black">{userInfo.bio}</p>
@@ -184,7 +265,7 @@ const UserBio = ({ ...userInfo }: UserBioProps) => {
               </p>
               <span className="w-[1.5px] h-5 bg-primary-brown" />
               <p className="text-primary-brown text-sm font-normal">
-                Professor in {userInfo.profession}
+                {userInfo.profession}
               </p>
             </div>
           </div>
@@ -194,13 +275,17 @@ const UserBio = ({ ...userInfo }: UserBioProps) => {
   );
 };
 
-export const CommentButton = ({
-  numberOfComments,
-}: {
+interface CommentButtonProps extends React.ComponentProps<typeof Button> {
   numberOfComments: number;
+}
+
+export const CommentButton: React.FC<CommentButtonProps> = ({
+  numberOfComments,
+  ...props
 }) => {
   return (
     <Button
+      {...props}
       variant={"link"}
       className="hover:no-underline md:gap-2 flex items-center gap-1"
     >
@@ -221,15 +306,30 @@ export const CommentButton = ({
   );
 };
 
-export const LikeButton = ({ numberOfLikes }: { numberOfLikes: number }) => {
+interface LikeButtonProps extends React.ComponentProps<typeof Button> {
+  numberOfLikes: number;
+  userLiked?: boolean;
+}
+
+export const LikeButton: React.FC<LikeButtonProps> = ({
+  numberOfLikes,
+  userLiked,
+  ...props
+}) => {
   return (
     <Button
+      {...props}
       variant={"link"}
       className="hover:no-underline md:gap-2 flex items-center gap-1"
     >
-      <ThumbsUp size={20} className="text-primary-brown" />
+      <ThumbsUp
+        size={20}
+        className={userLiked ? "text-primary-green" : "text-primary-brown"}
+      />
       {numberOfLikes > 0 ? (
-        <span className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+        <span
+          className={`flex items-center gap-1 text-sm font-normal ${userLiked ? "text-primary-green" : "text-primary-brown"}`}
+        >
           {numberOfLikes}{" "}
           <span className="md:block hidden">
             {numberOfLikes > 1 ? "likes" : "like"}
@@ -244,9 +344,17 @@ export const LikeButton = ({ numberOfLikes }: { numberOfLikes: number }) => {
   );
 };
 
-export const ShareButton = ({ numberOfShares }: { numberOfShares: number }) => {
+interface ShareButtonProps extends React.ComponentProps<typeof Button> {
+  numberOfShares: number;
+}
+
+export const ShareButton: React.FC<ShareButtonProps> = ({
+  numberOfShares,
+  ...props
+}) => {
   return (
     <Button
+      {...props}
       variant={"link"}
       className="hover:no-underline md:gap-2 flex items-center gap-1"
     >
@@ -267,19 +375,25 @@ export const ShareButton = ({ numberOfShares }: { numberOfShares: number }) => {
   );
 };
 
-export const LeaveAComment = ({
-  comment,
-  setComment,
-  handleCommentSubmit,
-  image,
-}: {
+interface LeaveACommentProps extends React.ComponentProps<typeof Form> {
   comment: string;
   setComment: React.Dispatch<React.SetStateAction<string>>;
   handleCommentSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   image?: string;
+  isCommentPending?: boolean;
+}
+
+export const LeaveAComment: React.FC<LeaveACommentProps> = ({
+  comment,
+  setComment,
+  handleCommentSubmit,
+  image,
+  isCommentPending,
+  ...props
 }) => {
   return (
     <form
+      {...props}
       onSubmit={handleCommentSubmit}
       className="flex items-center gap-3 py-3"
     >
@@ -288,6 +402,7 @@ export const LeaveAComment = ({
         alt={"avatar"}
         className="w-10 h-10 rounded-full"
       />
+
       <input
         type="text"
         placeholder="Comment on this"
@@ -295,6 +410,35 @@ export const LeaveAComment = ({
         value={comment}
         onChange={(e) => setComment(e.target.value)}
       />
+
+      {isCommentPending && (
+        <div>
+          <ClipLoader size={20} color="#333333" loading={isCommentPending} />
+        </div>
+      )}
     </form>
+  );
+};
+
+export const CommentItem = ({ comment }: { comment: IComment }) => {
+  return (
+    <div className="flex items-start w-full gap-3">
+      <div className="bg-secondary-gray flex items-center justify-center w-10 h-10 p-3 text-center text-white rounded-full">
+        {comment.user.fullname.split(" ")[0].charAt(0)}
+        {comment.user.fullname.split(" ")[1].charAt(0)}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-primary-brown bg-secondary-gray/40 flex items-center gap-1 p-3 text-sm font-normal rounded-md">
+          {comment.content}
+        </p>
+
+        <div className="md:gap-2 flex flex-wrap items-center">
+          <p className="text-primary-brown flex items-center gap-1 text-sm font-normal">
+            {moment(new Date(comment.created_at)).fromNow()}
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };

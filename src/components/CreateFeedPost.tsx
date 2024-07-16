@@ -5,10 +5,8 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/utils";
 import { FeedType } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { Edit, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -19,9 +17,24 @@ import CustomFileUpload from "@/components/shared/CustomFileUpload";
 import { FeedSchema } from "@/schema/feed.schema";
 import { useAuth } from "@/hooks/useAuth";
 import LoginModal from "@/components/shared/LoginModal";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { MultiSelect } from "@/components/ui/multi-select";
+import CustomError from "@/components/shared/CustomError";
+import { useNavigate } from "react-router-dom";
+import React from "react";
 
-const CreateFeedPost = () => {
+type CreateFeedPostProps = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const CreateFeedPost = ({ open, setOpen }: CreateFeedPostProps) => {
   const [auth] = useAuth();
+  const navigate = useNavigate();
+  const { data: topics } = useFetch<ITopic[]>({
+    url: "/topics",
+    queryKey: "topics",
+  });
 
   const {
     register,
@@ -35,34 +48,64 @@ const CreateFeedPost = () => {
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: FeedType) => {
-      const res = await axiosInstance.post("/users", data);
-
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Post added successfully");
-      reset();
+  const { mutateAsync, isPending, error, isError } = useMutateData<
+    FormData,
+    IFeed
+  >({
+    url: "/feeds",
+    config: {
+      queryKey: "feeds",
+      method: "POST",
+      contentType: "multipart/form-data",
+      token: auth?.user?.token,
     },
   });
 
   const handleSubmitForm = async (data: FeedType) => {
-    console.log(data);
-    await mutateAsync({ ...data });
+    const parsedTopics = data.topics
+      ? data.topics.split(",").map((id) => Number(id))
+      : [];
+
+    const formData = new FormData();
+    formData.append("content", data.content);
+
+    data.photo.forEach((photo) => {
+      formData.append("photo", photo);
+    });
+
+    formData.append("topics", parsedTopics.join(","));
+
+    console.log({
+      parsedFormData: Object.fromEntries(formData),
+    });
+
+    const res = await mutateAsync(formData);
+    console.log({ res });
+
+    toast.success("Feed added successfully");
+    reset();
+
+    setOpen(false);
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {auth ? (
+    <Dialog open={open} onOpenChange={setOpen}>
+      {auth ? (
+        <DialogTrigger
+          onClick={() => setOpen((prev) => !prev)}
+          className="flex items-center gap-3 px-4 py-3 bg-white"
+        >
           <CreateFeedPostTrigger />
-        ) : (
+        </DialogTrigger>
+      ) : (
+        <DialogTrigger asChild onClick={() => setOpen((prev) => !prev)}>
           <LoginModal hasChildren={true}>
-            <CreateFeedPostTrigger />
+            <div className="flex items-center gap-3 px-4 py-3 bg-white">
+              <CreateFeedPostTrigger />
+            </div>
           </LoginModal>
-        )}
-      </DialogTrigger>
+        </DialogTrigger>
+      )}
 
       <DialogContent className="scrollbar-hide flex flex-col w-full h-[95vh] max-w-2xl gap-5 overflow-y-scroll">
         {/* Header */}
@@ -91,11 +134,9 @@ const CreateFeedPost = () => {
           className="flex flex-col gap-5"
           encType="multipart/form-data"
         >
-          {isError && (
-            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
-              <p className="text-xs text-red-500">{error.message}</p>
-            </div>
-          )}
+          {/* Error */}
+          <CustomError isError={isError} error={error} />
+
           <div className="flex flex-col w-full gap-5">
             <CustomFormField
               labelName="Content"
@@ -106,18 +147,27 @@ const CreateFeedPost = () => {
               inputType="textarea"
             />
 
-            <CustomFormField
-              labelName="Tags"
-              inputName="tags"
-              placeholderText="eg. #food, #health, #travel"
-              errors={errors}
-              register={register}
-              inputType="text"
+            <MultiSelect
+              options={
+                topics
+                  ? topics?.map((topic) => ({
+                      value: topic.id.toString(),
+                      label: topic.name,
+                    }))
+                  : []
+              }
+              placeholder="Select Topics"
+              defaultValue={[]}
+              onValueChange={(values: string[]) => {
+                setValue("topics", values.join(","));
+              }}
+              placeholderClassName="text-secondary-gray"
+              className="bg-primary-lightBlue placeholder:text-secondary-gray text-primary-gray/70 focus:outline-none ring-0 placeholder:text-xs hover:bg-primary-lightBlue hover:outline-none w-full p-3 text-sm border-none rounded outline-none"
             />
 
             <CustomFileUpload
               title="Add Attachment"
-              itemName="images"
+              itemName="photo"
               setValue={setValue}
               watch={watch}
               allowMultiple={true}
@@ -160,7 +210,7 @@ export default CreateFeedPost;
 
 const CreateFeedPostTrigger = () => {
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-white">
+    <>
       <img
         src="/images/avatar.png"
         alt="User Icon"
@@ -175,6 +225,6 @@ const CreateFeedPostTrigger = () => {
       <button>
         <Edit size={25} className="text-secondary-gray" />
       </button>
-    </div>
+    </>
   );
 };

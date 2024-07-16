@@ -6,10 +6,12 @@ import {
 } from "@/components/FeedItem";
 import LoginModal from "@/components/shared/LoginModal";
 import { Button } from "@/components/ui/button";
+import { userFeeds } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
-import { UserFeedsType } from "@/pages/user/Feed";
 import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import { useState } from "react";
+
+type UserFeedsType = (typeof userFeeds)[0];
 
 const TopicItem = ({
   authorName,

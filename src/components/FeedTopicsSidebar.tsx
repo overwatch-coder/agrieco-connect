@@ -21,8 +21,9 @@ const FeedTopicsSidebar = () => {
               Trends
             </h2>
             <div className="flex flex-col gap-3">
-              {agriculturalTrendHashtags.map((trend) => (
+              {agriculturalTrendHashtags.map((trend, index) => (
                 <Link
+                  key={index}
                   className="text-black/80 text-sm"
                   to={`/user/agriculture-trends?trend=${trend}`}
                 >
@@ -39,8 +40,9 @@ const FeedTopicsSidebar = () => {
             </h2>
 
             <div className="flex flex-col gap-5">
-              {subcommunities.slice(0, 4).map((sub) => (
+              {subcommunities.slice(0, 4).map((sub, index) => (
                 <Link
+                  key={index}
                   className="text-black/80 flex items-center gap-2 text-sm"
                   to={`/user/subcommunities/${slugifyData(sub.title)}`}
                 >

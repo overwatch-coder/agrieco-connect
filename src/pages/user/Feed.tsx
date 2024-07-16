@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet-async";
 
-import { userFeeds } from "@/constants";
 import FeedItem from "@/components/FeedItem";
 import { useState } from "react";
 import FeedTopicsSidebar from "@/components/FeedTopicsSidebar";
@@ -10,43 +9,46 @@ import CreateFeedPost from "@/components/CreateFeedPost";
 import { useFetch } from "@/hooks/useFetch";
 import ResponsiveArticle from "react-content-loader";
 
-export type UserFeedsType = (typeof userFeeds)[number];
-
 const Feed = () => {
-  // const { data, isLoading } = useFetch<UserFeedsType[]>({
-  //   url: "/feeds",
-  //   queryKey: "feeds",
-  // });
+  const { data: userFeeds, isLoading } = useFetch<IFeed[]>({
+    url: "/feeds",
+    queryKey: "feeds",
+  });
 
-  const [feeds, setFeeds] = useState<UserFeedsType[]>(userFeeds.slice(0, 2));
+  const [feeds, setFeeds] = useState<IFeed[]>(userFeeds?.slice(0, 2) ?? []);
   const [hasMore, setHasMore] = useState(true);
+  const [openCreateFeedPost, setOpenCreateFeedPost] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
+        <ResponsiveArticle width={500} height={500} backgroundColor="#dddddd" />
+      </div>
+    );
+  }
+
+  if (!userFeeds) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
+        <p>Sorry, could not fetch feeds</p>
+        <h2 className="text-primary-green text-xl font-normal">
+          Please try again later
+        </h2>
+      </div>
+    );
+  }
 
   // fetch more feeds when user scrolls to the bottom
-  const fetchMoreFeeds = () => {
-    if (feeds.length >= userFeeds.length) {
+  const fetchMoreFeeds = async () => {
+    if (userFeeds?.length <= feeds.length) {
       setHasMore(false);
       return;
     }
 
     setTimeout(() => {
-      setFeeds(feeds.concat(userFeeds.slice(feeds.length, feeds.length + 2)));
+      setFeeds(feeds.concat(userFeeds?.slice(feeds.length, feeds.length + 2)));
     }, 500);
   };
-
-  //  if (isLoading) {
-  //    return <ResponsiveArticle width={500} height={300} />;
-  //  }
-
-  //  if (!userFeeds) {
-  //    return (
-  //      <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
-  //        <p>Sorry, could not fetch feeds</p>
-  //        <h2 className="text-primary-green text-xl font-normal">
-  //          Please try again later
-  //        </h2>
-  //      </div>
-  //    );
-  //  }
 
   return (
     <div>
@@ -64,7 +66,10 @@ const Feed = () => {
               Post Something
             </h2>
 
-            <CreateFeedPost />
+            <CreateFeedPost
+              setOpen={setOpenCreateFeedPost}
+              open={openCreateFeedPost}
+            />
           </div>
 
           <div id="feeds" className="flex flex-col w-full gap-5">
