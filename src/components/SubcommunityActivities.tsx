@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { UserFeedsType } from "@/pages/user/Feed";
 import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 import LoginModal from "@/components/shared/LoginModal";
@@ -10,6 +9,9 @@ import {
   ShareButton,
   LeaveAComment,
 } from "@/components/FeedItem";
+import { userFeeds } from "@/constants";
+
+type UserFeedsType = (typeof userFeeds)[number];
 
 const SubcommunityActivities = ({
   authorName,

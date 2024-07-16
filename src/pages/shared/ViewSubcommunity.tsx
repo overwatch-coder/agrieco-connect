@@ -16,6 +16,7 @@ const ViewSubcommunity = () => {
     subcommunityActivity.slice(0, 2)
   );
   const [hasMore, setHasMore] = useState(true);
+  const [openCreateFeedPost, setOpenCreateFeedPost] = useState(false);
 
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -105,7 +106,10 @@ const ViewSubcommunity = () => {
                     Post Something
                   </h2>
 
-                  <CreateFeedPost />
+                  <CreateFeedPost
+                    setOpen={setOpenCreateFeedPost}
+                    open={openCreateFeedPost}
+                  />
                 </div>
               )}
 
