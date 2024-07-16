@@ -193,10 +193,10 @@ const FeedItem = ({ images, content, id }: IFeed) => {
 
         {/* Shares */}
         {auth ? (
-          <ShareButton numberOfShares={faker.number.int(40)} />
+          <ShareButton numberOfShares={faker.seed(10)} />
         ) : (
           <LoginModal hasChildren={true}>
-            <ShareButton numberOfShares={faker.number.int(40)} />
+            <ShareButton numberOfShares={faker.seed(20)} />
           </LoginModal>
         )}
       </div>
