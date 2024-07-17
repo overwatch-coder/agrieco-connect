@@ -2,7 +2,6 @@ import { Search } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TopicItem from "@/components/TopicItem";
-import { userFeeds as userTopics } from "@/constants";
 import SubscribeModal from "@/components/SubscribeModal";
 import CustomDropdown from "@/components/CustomDropdown";
 import InfiniteScroll from "react-infinite-scroller";
@@ -144,7 +143,7 @@ const Topics = () => {
         </section>
 
         <section className="md:gap-5 flex flex-row flex-wrap items-center w-full gap-3">
-          {subscribedTopics.map((topic) => (
+          {Array.from(new Set(subscribedTopics)).map((topic) => (
             <Link
               to={
                 topic.toLowerCase() === "all"

@@ -5,11 +5,8 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/utils";
-import { MarketplaceProductsSchema } from "@/schema/marketplace.schema";
-import { MarketplaceProducts } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -19,9 +16,26 @@ import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
 import { useAuth } from "@/hooks/useAuth";
 import LoginModal from "@/components/shared/LoginModal";
+import { useMutateData } from "@/hooks/useFetch";
+import CustomError from "@/components/shared/CustomError";
+import { z } from "zod";
 
-const MarketPlaceAddItem = () => {
+type MarketPlaceAddItemProps = {
+  refetch?: () => void;
+};
+
+const MarketPlaceSchema = z.object({
+  name: z.string().trim().min(1, "Name is required"),
+  description: z.string().trim().min(1, "Description is required"),
+  price: z.string().min(1, "Price is required"),
+  image: z.instanceof(File),
+});
+
+type MarketplaceProducts = z.infer<typeof MarketPlaceSchema>;
+
+const MarketPlaceAddItem = ({ refetch }: MarketPlaceAddItemProps) => {
   const [auth] = useAuth();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -31,25 +45,51 @@ const MarketPlaceAddItem = () => {
     watch,
     formState: { errors },
   } = useForm<MarketplaceProducts>({
-    resolver: zodResolver(MarketplaceProductsSchema),
+    resolver: zodResolver(MarketPlaceSchema),
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: MarketplaceProducts) => {
-      const res = await axiosInstance.post("/users", data);
-
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Item added successfully");
-      reset();
+  const { mutateAsync, isPending, error, isError } = useMutateData<
+    FormData,
+    IMarketPlace
+  >({
+    url: "/marketplaces/items",
+    config: {
+      method: "POST",
+      token: auth?.user.token,
+      contentType: "multipart/form-data",
+      queryKey: "marketplace",
+      reset: () => reset({}),
     },
   });
 
-  const handleSubmitForm = async (data: MarketplaceProducts) => {
-    console.log(data);
-    await mutateAsync({ ...data });
+  const handleSubmitForm = async (
+    data: Omit<MarketplaceProducts, "location" | "seller">
+  ) => {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("image", data.image);
+
+    console.log({ data, ff: Object.fromEntries(formData) });
+
+    return;
+
+    const res = await mutateAsync(formData);
+
+    console.log({ res });
+
+    toast.success("Market product added successfully");
+    reset();
+
+    queryClient.invalidateQueries({
+      queryKey: ["marketplace", `/marketplaces/items`],
+    });
+
+    if (refetch) {
+      // refetch();
+    }
   };
 
   return (
@@ -94,13 +134,9 @@ const MarketPlaceAddItem = () => {
           className="flex flex-col gap-5"
           encType="multipart/form-data"
         >
-          {isError && (
-            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
-              <p className="text-xs text-red-500">{error.message}</p>
-            </div>
-          )}
+          <CustomError isError={isError} error={error} />
 
-          <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
+          <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Item Name"
               inputName="name"
@@ -119,14 +155,14 @@ const MarketPlaceAddItem = () => {
               inputType="text"
             />
 
-            <CustomFormField
+            {/* <CustomFormField
               labelName="Location"
               inputName="location"
               placeholderText="Please enter your location"
               errors={errors}
               register={register}
               inputType="text"
-            />
+            /> */}
           </div>
 
           <div className="flex flex-col w-full gap-5">
@@ -139,21 +175,21 @@ const MarketPlaceAddItem = () => {
               inputType="textarea"
             />
 
-            <CustomFormField
+            {/* <CustomFormField
               labelName="Seller Info"
               inputName="seller"
               placeholderText="Enter your seller info"
               errors={errors}
               register={register}
               inputType="text"
-            />
+            /> */}
 
             <CustomFileUpload
               title="Add Attachment"
-              itemName="attachments"
+              itemName="image"
               setValue={setValue}
               watch={watch}
-              allowMultiple={true}
+              allowMultiple={false}
             />
 
             {/* Submit Button */}

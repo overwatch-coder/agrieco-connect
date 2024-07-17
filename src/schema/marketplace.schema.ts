@@ -6,7 +6,7 @@ export const MarketplaceProductsSchema = z.object({
   price: z.string().min(1, "Price is required"),
   location: z.string().trim().min(1, "Location is required"),
   seller: z.string().trim().min(1, "Seller is required"),
-  attachments: z.any().optional(),
+  image: z.any({ required_error: "Image is required" }),
 });
 
 export const MarketplaceEventsSchema = z.object({

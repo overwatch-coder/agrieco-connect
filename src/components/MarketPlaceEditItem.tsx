@@ -17,9 +17,10 @@ import { Button } from "@/components/ui/button";
 import { MarketPlaceItemType } from "@/pages/user/MyItemsMarketPlace";
 import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
+import { faker } from "@faker-js/faker";
 
 type MarketPlaceEditItemProps = {
-  item: MarketPlaceItemType;
+  item: IMarketPlace;
   openEditModal: boolean;
   setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -40,11 +41,10 @@ const MarketPlaceEditItem = ({
     resolver: zodResolver(MarketplaceProductsSchema),
     defaultValues: {
       name: item.name,
-      price: item.price,
-      location: item.location,
+      price: item.price.toString(),
+      location: faker.location.city(),
       description: item.description,
-      seller: item.seller,
-      // attachments: item.image,
+      seller: faker.company.name(),
     },
     mode: "all",
   });
@@ -155,7 +155,7 @@ const MarketPlaceEditItem = ({
               title="Change Image/Add Image"
               watch={watch}
               setValue={setValue}
-              itemName="attachments"
+              itemName="image"
               allowMultiple
             />
 

@@ -1,23 +1,52 @@
 import { Helmet } from "react-helmet-async";
 import { marketplaceProducts } from "@/constants";
 import MarketPlaceAddItem from "@/components/MarketPlaceAddItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import MarketPlaceEditItem from "@/components/MarketPlaceEditItem";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import { Link } from "react-router-dom";
+import { useFetch } from "@/hooks/useFetch";
+import { useAuth } from "@/hooks/useAuth";
+import ResponsiveArticle from "react-content-loader";
+import { faker } from "@faker-js/faker";
 
 export type MarketPlaceItemType = (typeof marketplaceProducts)[number];
 
 const MyItemsMarketPlace = () => {
-  const [filteredItems, setFilteredItems] = useState(
-    marketplaceProducts.filter((item) => item.isUser === true)
-  );
+  const [auth] = useAuth();
+  const {
+    data: marketplaceProducts,
+    isLoading,
+    refetch: refetchMarketplaceProducts,
+  } = useFetch<IMarketPlace[]>({
+    queryKey: "marketplace",
+    url: "/marketplaces/items",
+    enabled: true,
+  });
+
+  const [filteredItems, setFilteredItems] = useState<IMarketPlace[]>([]);
+
+  useEffect(() => {
+    if (marketplaceProducts) {
+      setFilteredItems(
+        marketplaceProducts.filter((item) => item.user_id === auth?.user.id)
+      );
+    }
+  }, [auth?.user.id, marketplaceProducts]);
 
   const handleDeleteItem = (id: string) => {
     const newItems = filteredItems.filter((item) => item.id.toString() !== id);
     setFilteredItems(newItems);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
+        <ResponsiveArticle width={500} height={500} backgroundColor="#dddddd" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -44,15 +73,24 @@ const MyItemsMarketPlace = () => {
           <MarketPlaceAddItem />
         </section>
 
-        <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {filteredItems.map((item) => (
-            <MarketPlaceItem
-              key={item.id}
-              item={item}
-              handleDeleteItem={handleDeleteItem}
-            />
-          ))}
-        </section>
+        {filteredItems.length > 0 ? (
+          <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
+            {filteredItems.map((item) => (
+              <MarketPlaceItem
+                key={item.id}
+                item={item}
+                handleDeleteItem={handleDeleteItem}
+              />
+            ))}
+          </section>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-5 text-center">
+            <h2 className="text-primary-brown text-lg font-bold">
+              You have no items in your marketplace. Please add some items to
+              your marketplace to see them here.
+            </h2>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -61,7 +99,7 @@ const MyItemsMarketPlace = () => {
 export default MyItemsMarketPlace;
 
 type MarketPlaceItemProps = {
-  item: MarketPlaceItemType;
+  item: IMarketPlace;
   handleDeleteItem: (id: string) => void;
 };
 
@@ -75,6 +113,7 @@ const MarketPlaceItem = ({ item, handleDeleteItem }: MarketPlaceItemProps) => {
         <img
           src={item.image}
           alt-={item.name}
+          onError={(e) => (e.currentTarget.src = faker.image.avatar())}
           className="w-14 h-14 object-cover rounded-full"
         />
         <p className="flex items-center gap-1 text-base">
@@ -85,7 +124,7 @@ const MarketPlaceItem = ({ item, handleDeleteItem }: MarketPlaceItemProps) => {
 
       <div className="flex flex-col gap-2">
         <h2 className="text-primary-green text-lg font-normal">{item.name}</h2>
-        <p className="text-secondary-gray text-sm">{item.location}</p>
+        <p className="text-secondary-gray text-sm">{faker.location.city()}</p>
       </div>
 
       <p className="text-secondary-gray/50 text-start text-sm leading-normal">
@@ -95,7 +134,7 @@ const MarketPlaceItem = ({ item, handleDeleteItem }: MarketPlaceItemProps) => {
       <div className="flex flex-col w-full gap-3 mt-auto">
         <p className="flex items-center gap-1 text-sm">
           <span className="text-primary-brown font-normal">Seller:</span>
-          <span className="text-secondary-gray">{item.seller}</span>
+          <span className="text-secondary-gray">{faker.company.name()}</span>
         </p>
 
         <div className="flex items-center gap-4">

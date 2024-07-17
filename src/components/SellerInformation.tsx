@@ -4,13 +4,13 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
-import { MarketPlaceItemType } from "@/pages/user/MyItemsMarketPlace";
+import { faker } from "@faker-js/faker";
 import { X } from "lucide-react";
 
 type SellerInformationProps = {
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  item: MarketPlaceItemType;
+  item: IMarketPlace;
 };
 
 const SellerInformation = ({
@@ -41,23 +41,23 @@ const SellerInformation = ({
         <div className="flex flex-col w-full gap-4">
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Name</h3>
-            <p>{item.seller}</p>
+            <p>{item.name}</p>
           </div>
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Location</h3>
-            <p>{item.location}</p>
+            <p>{faker.location.city()}</p>
           </div>
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Contact Details</h3>
-            <p>{item.contact}</p>
+            <p>{faker.phone.number()}</p>
           </div>
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Company</h3>
-            <p>{item.seller}</p>
+            <p>{faker.company.name()}</p>
           </div>
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-base">
             <h3>Others</h3>
-            <p>{item.other}</p>
+            <p>{faker.internet.email()}</p>
           </div>
         </div>
       </DialogContent>

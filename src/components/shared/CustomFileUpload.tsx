@@ -27,7 +27,7 @@ const CustomFileUpload = <T extends FieldValues>({
   return (
     <div className="flex flex-col w-full gap-5">
       <label
-        htmlFor="attachment"
+        htmlFor={itemName}
         className="text-primary-green text-base font-medium"
       >
         {title}
@@ -36,8 +36,8 @@ const CustomFileUpload = <T extends FieldValues>({
       {/* Attachment */}
       <div className="border-secondary-gray bg-secondary-gray/50 flex flex-col w-full gap-4 p-2 border rounded-md">
         <FileDrop
-          id="profilePicture"
-          name="profilePicture"
+          id={itemName}
+          name={itemName}
           onDropAccepted={(file) => {
             setValue(itemName, file as PathValue<T, Path<T>>);
           }}
