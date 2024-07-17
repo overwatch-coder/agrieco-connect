@@ -11,6 +11,10 @@ import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import { AppointmentManagement } from "@/pages/admin/AppointmentManagement";
 import EditAppointment from "@/components/admin/EditAppointment";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
 
 type AppointmentManagementTableProps = {
   filteredAppointments: AppointmentManagement[];
@@ -48,15 +52,52 @@ const AppointmentManagementTable = ({
   appointments,
   appointmentType,
 }: AppointmentManagementTableProps) => {
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    isLoading,
+    refetch: refetchAppointments,
+  } = useFetch<ITopic[]>({
+    queryKey: "appointments",
+    url: "/appointments",
+    enabled: true,
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [itemToDeleteId, setItemToDeleteId] = useState<string>("0");
+  const [itemToDeleteId, setItemToDeleteId] = useState<number>(0);
 
-  const handleDelete = (id: string) => {
-    const filtered = filteredAppointments.filter(
-      (appointment) => appointment.id !== id
-    );
-    setFilteredAppointments(filtered);
+  // handle delete item
+  const {
+    mutateAsync,
+    isPending: pending,
+    error,
+  } = useMutateData<null, ITopic>({
+    url: `/appointments/${itemToDeleteId}`,
+    config: {
+      method: "DELETE",
+      token: auth?.user.token,
+      queryKey: "appointments",
+    },
+  });
+
+  const handleDeleteItem = async () => {
+    await mutateAsync(null, {
+      onError: () => {
+        toast.error("Something went wrong");
+        console.log({ error });
+      },
+    });
+
+    toast.success("Appointment deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["appointments", "/appointments"],
+    });
+
+    refetchAppointments();
 
     setOpenModal(false);
   };
@@ -145,7 +186,7 @@ const AppointmentManagementTable = ({
 
                   <button
                     onClick={() => {
-                      setItemToDeleteId(appointment.id);
+                      setItemToDeleteId(parseInt(appointment.id));
                       setOpenModal(true);
                     }}
                   >
@@ -168,10 +209,10 @@ const AppointmentManagementTable = ({
       <DeleteItemModal
         openModal={openModal}
         setOpenModal={setOpenModal}
-        handleDelete={() => handleDelete(itemToDeleteId)}
+        deleteFn={() => handleDeleteItem()}
         modalTitle="Delete Appointment"
         modalDescription="Are you sure you want to delete this appointment?"
-        toastMessage="Appointment has been deleted successfully"
+        pending={pending}
       />
     </section>
   );

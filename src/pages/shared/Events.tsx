@@ -11,6 +11,9 @@ import MyEvents from "@/pages/shared/MyEvents";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { toast } from "react-toastify";
 
 type EventsItemType = (typeof events)[number];
 
@@ -26,6 +29,18 @@ const dropdownItemsTwo = [
 
 const Events = () => {
   const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    isLoading,
+    refetch: refetchEvents,
+  } = useFetch<any>({
+    queryKey: "events",
+    url: "/events",
+    enabled: true,
+  });
+
   const [selectedItem, setSelectedItem] = useState("Event Type");
   const [selectedItem2, setSelectedItem2] = useState("Activity");
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,12 +64,35 @@ const Events = () => {
     }
   };
 
-  // handle delete item
-  const handleDelete = (id: string) => {
-    const filtered = filteredEvents.filter((item) => item.id.toString() !== id);
-    setFilteredEvents(filtered);
+  const {
+    mutateAsync,
+    isPending: pending,
+    error,
+  } = useMutateData<null, any>({
+    url: `/events/${itemToBeDeleteId}`,
+    config: {
+      method: "DELETE",
+      token: auth?.user.token,
+      queryKey: "events",
+    },
+  });
 
-    setOpenModal(false);
+  // handle delete item
+  const handleDeleteItem = async () => {
+    await mutateAsync(null, {
+      onError: () => {
+        toast.error("Something went wrong");
+        console.log({ error });
+      },
+    });
+
+    toast.success("Event deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["events", "/events"],
+    });
+
+    refetchEvents();
   };
 
   return (
@@ -189,7 +227,7 @@ const Events = () => {
               adminFilteredEvents={filteredEvents.filter(
                 (item) => item.isUser === true
               )}
-              handleAdminEventDelete={handleDelete}
+              handleAdminEventDelete={handleDeleteItem}
             />
           </TabsContent>
         </Tabs>
@@ -211,10 +249,10 @@ const Events = () => {
       <DeleteItemModal
         openModal={openModal}
         setOpenModal={setOpenModal}
-        handleDelete={() => handleDelete(itemToBeDeleteId.toString())}
+        deleteFn={() => handleDeleteItem()}
         modalTitle="Delete Event"
         modalDescription="Are you sure you want to delete this event?"
-        toastMessage="Event has been deleted successfully"
+        pending={pending}
       />
     </div>
   );

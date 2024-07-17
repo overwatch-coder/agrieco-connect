@@ -2,24 +2,65 @@ import AddAppointmentAvailability from "@/components/AddAppointmentAvailability"
 import DeleteItemModal from "@/components/DeleteItemModal";
 import EditAppointmentAvailability from "@/components/EditAppointmentAvailability";
 import { appointments } from "@/constants";
+import { useAuth } from "@/hooks/useAuth";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { FaRegStar, FaStar } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export type AppointmentsItemType = (typeof appointments)[number];
 
 const MyAppointments = () => {
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    isLoading,
+    refetch: refetchAppointments,
+  } = useFetch<AppointmentsItemType[]>({
+    queryKey: "appointments",
+    url: "/appointments",
+    enabled: true,
+  });
+
   const [filteredAppointments, setFilteredAppointments] = useState(
     appointments.filter((item) => item.isUser === true)
   );
+  const [itemToDeleteId, setItemToDeleteId] = useState<number>(0);
 
-  const handleDeleteItem = (id: string) => {
-    const newAppointments = filteredAppointments.filter(
-      (item) => item.id.toString() !== id
-    );
-    setFilteredAppointments(newAppointments);
+  const {
+    mutateAsync,
+    isPending: pending,
+    error,
+  } = useMutateData<null, AppointmentsItemType>({
+    url: `/appointments/${itemToDeleteId}`,
+    config: {
+      method: "DELETE",
+      token: auth?.user.token,
+      queryKey: "appointments",
+    },
+  });
+
+  const handleDeleteItem = async () => {
+    await mutateAsync(null, {
+      onError: () => {
+        toast.error("Something went wrong");
+        console.log({ error });
+      },
+    });
+
+    toast.success("Appointment deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["appointments", "/appointments"],
+    });
+
+    refetchAppointments();
   };
 
   return (
@@ -59,6 +100,8 @@ const MyAppointments = () => {
               key={item.id}
               item={item}
               handleDeleteItem={handleDeleteItem}
+              setItemToDeleteId={setItemToDeleteId}
+              pending={pending}
             />
           ))}
         </section>
@@ -71,10 +114,17 @@ export default MyAppointments;
 
 type AppointmentItemProps = {
   item: AppointmentsItemType;
-  handleDeleteItem: (id: string) => void;
+  handleDeleteItem: (id?: string) => Promise<void>;
+  setItemToDeleteId: (id: number) => void;
+  pending?: boolean;
 };
 
-const AppointmentItem = ({ item, handleDeleteItem }: AppointmentItemProps) => {
+const AppointmentItem = ({
+  item,
+  handleDeleteItem,
+  setItemToDeleteId,
+  pending,
+}: AppointmentItemProps) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
@@ -123,7 +173,12 @@ const AppointmentItem = ({ item, handleDeleteItem }: AppointmentItemProps) => {
               <Edit size={20} className="text-green-500" />
             </button>
 
-            <button onClick={() => setOpenDeleteModal(true)}>
+            <button
+              onClick={() => {
+                setItemToDeleteId(item.id);
+                setOpenDeleteModal(true);
+              }}
+            >
               <Trash2 size={20} className="text-red-500" />
             </button>
           </div>
@@ -150,8 +205,8 @@ const AppointmentItem = ({ item, handleDeleteItem }: AppointmentItemProps) => {
         setOpenModal={setOpenDeleteModal}
         modalTitle="Delete Appointment"
         modalDescription="Are you sure you want to delete this appointment?"
-        handleDelete={() => handleDeleteItem(item.id.toString())}
-        toastMessage="Appointment has been deleted successfully"
+        deleteFn={() => handleDeleteItem()}
+        pending={pending}
       />
     </>
   );

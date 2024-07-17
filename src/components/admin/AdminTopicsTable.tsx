@@ -11,16 +11,33 @@ import { Search, Trash2 } from "lucide-react";
 import { Topics } from "@/pages/admin/AdminTopics";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import EditTopic from "@/components/admin/EditTopic";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { toast } from "react-toastify";
+import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AdminTopicsTableProps = {
   topics: Topics[];
 };
 
 const AdminTopicsTable = ({ topics }: AdminTopicsTableProps) => {
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    isLoading,
+    refetch: refetchTopics,
+  } = useFetch<ITopic[]>({
+    queryKey: "topics",
+    url: "/topics",
+    enabled: true,
+  });
+
   const [filteredTopics, setFilteredTopics] = useState(topics);
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [itemToDeleteId, setItemToDeleteId] = useState<string>("0");
+  const [itemToDeleteId, setItemToDeleteId] = useState<number>(0);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -35,10 +52,35 @@ const AdminTopicsTable = ({ topics }: AdminTopicsTableProps) => {
     }
   };
 
-  // handle delete topic
-  const handleDelete = (id: string) => {
-    const filtered = filteredTopics.filter((topic) => topic.id !== id);
-    setFilteredTopics(filtered);
+  // handle delete item
+  const {
+    mutateAsync,
+    isPending: pending,
+    error,
+  } = useMutateData<null, ITopic>({
+    url: `/topics/${itemToDeleteId}`,
+    config: {
+      method: "DELETE",
+      token: auth?.user.token,
+      queryKey: "topics",
+    },
+  });
+
+  const handleDeleteItem = async () => {
+    await mutateAsync(null, {
+      onError: () => {
+        toast.error("Something went wrong");
+        console.log({ error });
+      },
+    });
+
+    toast.success("Topic deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["topics", "/topics"],
+    });
+
+    refetchTopics();
 
     setOpenModal(false);
   };
@@ -85,7 +127,7 @@ const AdminTopicsTable = ({ topics }: AdminTopicsTableProps) => {
 
                   <button
                     onClick={() => {
-                      setItemToDeleteId(topic.id);
+                      setItemToDeleteId(parseInt(topic.id));
                       setOpenModal(true);
                     }}
                   >
@@ -106,10 +148,10 @@ const AdminTopicsTable = ({ topics }: AdminTopicsTableProps) => {
       <DeleteItemModal
         openModal={openModal}
         setOpenModal={setOpenModal}
-        handleDelete={() => handleDelete(itemToDeleteId)}
+        deleteFn={() => handleDeleteItem()}
         modalTitle="Delete Topic"
         modalDescription="Are you sure you want to delete this topic?"
-        toastMessage="Topic has been deleted successfully"
+        pending={pending}
       />
     </section>
   );

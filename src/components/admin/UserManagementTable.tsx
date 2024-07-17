@@ -11,6 +11,10 @@ import { UserManagement } from "@/pages/admin/Dashboard";
 import { useState } from "react";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
+import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { toast } from "react-toastify";
 
 type UserManagementTableProps = {
   users: UserManagement[];
@@ -19,16 +23,53 @@ type UserManagementTableProps = {
 const UserManagementTable = ({ users }: UserManagementTableProps) => {
   const pathname = useLocation().pathname;
   const isDashboard = pathname.includes("dashboard");
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    isLoading,
+    refetch: refetchUsers,
+  } = useFetch<IAuthUser[]>({
+    queryKey: "users",
+    url: "/users",
+    enabled: true,
+  });
 
   const [filteredUsers, setFilteredUsers] = useState(users);
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [itemToDeleteId, setItemToDeleteId] = useState<string>("0");
+  const [itemToDeleteId, setItemToDeleteId] = useState<number>(0);
 
-  const handleDelete = (id: string) => {
-    const filtered = filteredUsers.filter((user) => user.id !== id);
-    setFilteredUsers(filtered);
+  // handle delete item
+  const {
+    mutateAsync,
+    isPending: pending,
+    error,
+  } = useMutateData<null, IAuthUser>({
+    url: `/users/${itemToDeleteId}`,
+    config: {
+      method: "DELETE",
+      token: auth?.user.token,
+      queryKey: "users",
+    },
+  });
 
+  const handleDeleteItem = async () => {
+    await mutateAsync(null, {
+      onError: () => {
+        toast.error("Something went wrong");
+        console.log({ error });
+      },
+    });
+
+    toast.success("User deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["users", "/users"],
+    });
+
+    refetchUsers();
     setOpenModal(false);
   };
 
@@ -119,7 +160,7 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
                   <TableCell className="flex items-center gap-3">
                     <button
                       onClick={() => {
-                        setItemToDeleteId(user.id);
+                        setItemToDeleteId(parseInt(user.id));
                         setOpenModal(true);
                       }}
                     >
@@ -141,10 +182,10 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
       <DeleteItemModal
         openModal={openModal}
         setOpenModal={setOpenModal}
-        handleDelete={() => handleDelete(itemToDeleteId)}
+        deleteFn={() => handleDeleteItem()}
         modalTitle="Delete User"
         modalDescription="Are you sure you want to delete this user?"
-        toastMessage="User has been deleted successfully"
+        pending={pending}
       />
     </section>
   );

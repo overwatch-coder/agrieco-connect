@@ -7,12 +7,16 @@ import { slugifyData, UrlPath } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import MarketPlaceEditEvent from "@/components/MarketPlaceEditEvent";
 import AddEvent from "@/components/AddEvent";
+import { useAuth } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { useMutateData } from "@/hooks/useFetch";
 
 export type MarketPlaceEventType = (typeof marketplaceEvents)[number];
 
 type MyEventsProps = {
   adminFilteredEvents?: MarketPlaceEventType[];
-  handleAdminEventDelete?: (id: string) => void;
+  handleAdminEventDelete?: (id?: string) => Promise<void>;
 };
 
 const MyEvents = ({
@@ -22,12 +26,39 @@ const MyEvents = ({
   const [filteredEvents, setFilteredEvents] = useState(
     marketplaceEvents.filter((item) => item.isUser === true)
   );
+  const [itemToBeDeleteId, setItemToBeDeleteId] = useState<number>(0);
 
-  const handleDeleteItem = (id: string) => {
-    const newEvents = filteredEvents.filter(
-      (item) => item.id.toString() !== id
-    );
-    setFilteredEvents(newEvents);
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
+  const {
+    mutateAsync,
+    isPending: pending,
+    error,
+  } = useMutateData<null, any>({
+    url: `/events/${itemToBeDeleteId}`,
+    config: {
+      method: "DELETE",
+      token: auth?.user.token,
+      queryKey: "events",
+    },
+  });
+
+  const handleDeleteItem = async () => {
+    await mutateAsync(null, {
+      onError: () => {
+        toast.error("Something went wrong");
+        console.log({ error });
+      },
+    });
+
+    toast.success("Event deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["events", "/events/my-events"],
+    });
+
+    // refetchEvents();
   };
 
   return (
@@ -95,6 +126,7 @@ const MyEvents = ({
                 key={item.id}
                 item={item}
                 handleDeleteItem={handleDeleteItem}
+                setItemToBeDeleteId={setItemToBeDeleteId}
               />
             ))
           )}
@@ -108,12 +140,16 @@ export default MyEvents;
 
 type MarketPlaceEventItemProps = {
   item: MarketPlaceEventType;
-  handleDeleteItem: (id: string) => void;
+  handleDeleteItem: (id?: string) => Promise<void>;
+  setItemToBeDeleteId?: (id: number) => void;
+  pending?: boolean;
 };
 
 const MarketPlaceEventItem = ({
   item,
   handleDeleteItem,
+  setItemToBeDeleteId,
+  pending,
 }: MarketPlaceEventItemProps) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -154,7 +190,15 @@ const MarketPlaceEventItem = ({
               <Edit size={20} className="text-green-500" />
             </button>
 
-            <button onClick={() => setOpenDeleteModal(true)}>
+            <button
+              onClick={() => {
+                if (setItemToBeDeleteId) {
+                  setItemToBeDeleteId(item.id);
+                }
+
+                setOpenDeleteModal(true);
+              }}
+            >
               <Trash2 size={20} className="text-red-500" />
             </button>
           </div>
@@ -172,8 +216,8 @@ const MarketPlaceEventItem = ({
         setOpenModal={setOpenDeleteModal}
         modalTitle="Delete Event"
         modalDescription="Are you sure you want to delete this event?"
-        handleDelete={() => handleDeleteItem(item.id.toString())}
-        toastMessage="Event has been deleted successfully"
+        deleteFn={() => handleDeleteItem()}
+        pending={pending}
       />
     </div>
   );

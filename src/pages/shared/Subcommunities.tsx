@@ -12,10 +12,27 @@ import SubcommunityAnalytics from "@/components/admin/SubcommunityAnalytics";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import LoginModal from "@/components/shared/LoginModal";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { toast } from "react-toastify";
 
 export type SubcommunitiesItemType = (typeof subcommunitiesData)[number];
 
 const Subcommunities = () => {
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    isLoading,
+    refetch: refetchSubcommunities,
+  } = useFetch<SubcommunitiesItemType[]>({
+    queryKey: "subcommunities",
+    url: "/subcommunities",
+    enabled: true,
+  });
+
   const [subcommunities, setSubcommunities] = useState<
     SubcommunitiesItemType[]
   >(subcommunitiesData.slice(0, 2));
@@ -80,12 +97,35 @@ const Subcommunities = () => {
     );
   };
 
-  // handle delete subcommunity
-  const handleDelete = (id: number) => {
-    const filtered = subcommunities.filter((sub) => sub.id !== id);
-    setSubcommunities(filtered);
+  const {
+    mutateAsync,
+    isPending: pending,
+    error,
+  } = useMutateData<null, SubcommunitiesItemType>({
+    url: `/subcommunities/${itemToDeleteId}`,
+    config: {
+      method: "DELETE",
+      token: auth?.user.token,
+      queryKey: "subcommunities",
+    },
+  });
 
-    setOpenModal(false);
+  // handle delete subcommunity
+  const handleDeleteItem = async () => {
+    await mutateAsync(null, {
+      onError: () => {
+        toast.error("Something went wrong");
+        console.log({ error });
+      },
+    });
+
+    toast.success("Subcommunity deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["subcommunities", "/subcommunities"],
+    });
+
+    refetchSubcommunities();
   };
 
   return (
@@ -193,9 +233,9 @@ const Subcommunities = () => {
                   }
                   className="gap-7 flex flex-col w-full"
                 >
-                  {subcommunities.map((sub) => (
+                  {subcommunities.map((sub, index) => (
                     <SubcommunitiesItem
-                      key={sub.id}
+                      key={index}
                       item={sub}
                       type="all"
                       handleJoinSubcommunity={handleJoinSubcommunity}
@@ -237,10 +277,10 @@ const Subcommunities = () => {
           <DeleteItemModal
             openModal={openModal}
             setOpenModal={setOpenModal}
-            handleDelete={() => handleDelete(itemToDeleteId)}
+            deleteFn={() => handleDeleteItem()}
             modalTitle="Delete Subcommunity"
             modalDescription="Are you sure you want to delete this community?"
-            toastMessage="Subcommunity has been deleted successfully"
+            pending={pending}
           />
         </section>
       </div>
