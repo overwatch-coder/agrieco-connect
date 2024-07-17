@@ -15,10 +15,26 @@ import BookAppointment from "@/pages/user/BookAppointment";
 import Subcommunities from "@/pages/shared/Subcommunities";
 import AgriculturalTrends from "@/pages/user/AgriculturalTrends";
 import ViewSubcommunity from "@/pages/shared/ViewSubcommunity";
+import { useFetch } from "@/hooks/useFetch";
+import { useEffect, useState } from "react";
 
 const UserRoutes = () => {
   const [auth] = useAuth();
   const isAdmin = auth?.user.role === "admin";
+
+  const { data: events, refetch: refetchEvents } = useFetch<IEvent[]>({
+    queryKey: "events",
+    url: "/events",
+    enabled: true,
+  });
+
+  const [allEvents, setAllEvents] = useState<IEvent[]>([]);
+
+  useEffect(() => {
+    if (events) {
+      setAllEvents(events);
+    }
+  }, [events]);
 
   return (
     <>
@@ -53,7 +69,7 @@ const UserRoutes = () => {
           path="events/my-events"
           element={
             auth ? (
-              <MyEvents />
+              <MyEvents events={allEvents} refetchEvents={refetchEvents} />
             ) : (
               <Navigate to={`/login?redirect=/user/events/my-events`} />
             )
