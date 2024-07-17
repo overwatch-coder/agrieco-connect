@@ -130,7 +130,9 @@ const FeedItem = ({ images, content, id }: IFeed) => {
       </div>
 
       {/* Description */}
-      <p className="text-black/80 text-sm font-normal">{content}</p>
+      <p className="text-black/80 text-wrap overflow-hidden text-sm font-normal">
+        {content}
+      </p>
       {/* Featured Images */}
       <div className="md:grid-cols-3 border-b-secondary-gray grid grid-cols-1 gap-5 pb-5 border-b">
         {/* Large Image */}
