@@ -1,40 +1,35 @@
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { toast } from "react-toastify";
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ClipLoader from "react-spinners/ClipLoader";
 
-type DeleteItemModalProps = {
+type DeleteItemModalProps<T> = {
   openModal: boolean;
   setOpenModal: (openModal: boolean) => void;
-  handleDelete: (id?: string) => void;
+  deleteFn: (
+    id?: T | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => Promise<void>;
   modalTitle: string;
   modalDescription: string;
-  toastMessage?: string;
+  pending?: boolean;
 };
 
-const DeleteItemModal = ({
+const DeleteItemModal = <T,>({
   openModal,
   setOpenModal,
-  handleDelete,
+  deleteFn,
   modalTitle,
   modalDescription,
-  toastMessage,
-}: DeleteItemModalProps) => {
-  // handle delete item
-  const handleDeleteItem = async () => {
-    handleDelete();
-    toast.success(toastMessage ?? "Item has been deleted successfully");
-  };
-
+  pending,
+}: DeleteItemModalProps<T>) => {
   return (
     <AlertDialog open={openModal} onOpenChange={setOpenModal}>
       <AlertDialogContent
@@ -61,15 +56,26 @@ const DeleteItemModal = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter>
+        <form
+          method="post"
+          className="ms-auto md:w-1/2 flex items-center justify-end w-full gap-3"
+        >
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={handleDeleteItem}
+
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              deleteFn();
+            }}
             className="bg-primary-green md:px-10 md:w-fit w-full py-3 text-white"
           >
-            Confirm
-          </AlertDialogAction>
-        </AlertDialogFooter>
+            {pending ? (
+              <ClipLoader size={20} loading={pending} color="white" />
+            ) : (
+              "Confirm"
+            )}
+          </Button>
+        </form>
       </AlertDialogContent>
     </AlertDialog>
   );

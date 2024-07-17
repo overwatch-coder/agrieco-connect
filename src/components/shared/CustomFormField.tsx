@@ -17,6 +17,7 @@ type CustomFormFieldProps<FormData extends FieldValues> = {
     | "select"
     | "textarea"
     | "time"
+    | "number"
     | "datetime-local"
     | "hidden";
   value?: string;
@@ -52,31 +53,9 @@ const CustomFormField = <FormData extends FieldValues>({
         <input type="hidden" {...register(inputName)} defaultValue={value} />
       )}
 
-      {inputType === "date" && (
+      {!["textarea", "select"].includes(inputType) && (
         <input
-          type="date"
-          className="bg-primary-lightBlue placeholder:text-secondary-gray text-primary-gray/70 focus:outline-none ring-0 placeholder:text-xs w-full p-3 text-sm border-none rounded outline-none"
-          {...register(inputName)}
-          placeholder={placeholderText}
-          defaultValue={value}
-          disabled={disabled}
-        />
-      )}
-
-      {inputType === "datetime-local" && (
-        <input
-          type="datetime-local"
-          className="bg-primary-lightBlue placeholder:text-secondary-gray text-primary-gray/70 focus:outline-none ring-0 placeholder:text-xs w-full p-3 text-sm border-none rounded outline-none"
-          {...register(inputName)}
-          placeholder={placeholderText}
-          defaultValue={value}
-          disabled={disabled}
-        />
-      )}
-
-      {inputType === "time" && (
-        <input
-          type="time"
+          type={isInputPassword ? "password" : inputType}
           className="bg-primary-lightBlue placeholder:text-secondary-gray text-primary-gray/70 focus:outline-none ring-0 placeholder:text-xs w-full p-3 text-sm border-none rounded outline-none"
           {...register(inputName)}
           placeholder={placeholderText}
@@ -104,17 +83,6 @@ const CustomFormField = <FormData extends FieldValues>({
               </option>
             ))}
         </select>
-      )}
-
-      {inputType === "text" && (
-        <input
-          type={isInputPassword ? "password" : "text"}
-          className="bg-primary-lightBlue placeholder:text-secondary-gray text-primary-gray/70 focus:outline-none ring-0 placeholder:text-xs w-full p-3 text-sm border-none rounded outline-none"
-          {...register(inputName)}
-          placeholder={placeholderText}
-          defaultValue={value}
-          disabled={disabled}
-        />
       )}
 
       {inputType === "textarea" && (

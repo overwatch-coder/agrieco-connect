@@ -18,8 +18,6 @@ export const useFetch = <TData,>({
   queryKey,
   enabled = true,
 }: IUseFetch): UseQueryResult<TData, Error> => {
-  const queryClient = useQueryClient();
-
   const query = useQuery({
     queryKey: [queryKey, url],
     queryFn: async () => {
@@ -91,12 +89,12 @@ export const useMutateData = <TData, TResponse = Record<string, unknown>>({
 
       return data;
     },
-    onError: (err) => {
-      console.log({ err, in: "useMutateData error" });
-
-      if (config.reset) {
-        config.reset(config.resetValues || {});
-      }
+    onError: (err: any) => {
+      console.log({
+        err,
+        data: err?.response?.data,
+        in: "useMutateData error",
+      });
     },
   });
 

@@ -1,6 +1,5 @@
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
-import { marketplaceProducts } from "@/constants";
 import MarketPlaceAddItem from "@/components/MarketPlaceAddItem";
 import CustomDropdown from "@/components/CustomDropdown";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -13,13 +12,16 @@ import { Search, Trash2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import LoginModal from "@/components/shared/LoginModal";
 import ResponsiveArticle from "react-content-loader";
-import { useFetch } from "@/hooks/useFetch";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { faker } from "@faker-js/faker";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 const dropDownItems = ["Popular", "New", "Sale", "All"];
 
 const MarketPlace = () => {
   const [auth] = useAuth();
+  const queryClient = useQueryClient();
 
   const {
     data: marketplaceProducts,
@@ -35,6 +37,7 @@ const MarketPlace = () => {
   const [openModal, setOpenModal] = useState(false);
   const [itemToBeDeleteId, setItemToBeDeleteId] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [openAddItemModal, setOpenAddItemModal] = useState(false);
 
   const [filteredItems, setFilteredItems] = useState<IMarketPlace[]>([]);
   const location = useLocation();
@@ -45,7 +48,25 @@ const MarketPlace = () => {
 
   useEffect(() => {
     if (marketplaceProducts) {
-      setFilteredItems(marketplaceProducts);
+      const sortedItems = marketplaceProducts.slice().sort((a, b) => {
+        return (
+          new Date(
+            b.created_at
+              .split(" ")[0]
+              .concat("T")
+              .concat(b.created_at.split(" ")[1])
+          ).getTime() -
+          new Date(
+            a.created_at
+              .split(" ")[0]
+              .concat("T")
+              .concat(a.created_at.split(" ")[1])
+          ).getTime()
+        );
+      });
+      setFilteredItems(sortedItems);
+
+      setOpenAddItemModal(false);
     }
   }, [marketplaceProducts]);
 
@@ -94,9 +115,35 @@ const MarketPlace = () => {
   }, [filterItems, marketplaceProducts, searchParams]);
 
   // handle delete item
-  const handleDelete = (id: number) => {
-    const filtered = filteredItems.filter((item) => item.id !== id);
-    setFilteredItems(filtered);
+  const {
+    mutateAsync,
+    isPending: pending,
+    isError,
+    error,
+  } = useMutateData<null, IMarketPlace>({
+    url: `/marketplaces/items/${itemToBeDeleteId}`,
+    config: {
+      method: "DELETE",
+      token: auth?.user.token,
+      queryKey: "marketplace",
+    },
+  });
+
+  const handleDeleteItem = async () => {
+    await mutateAsync(null, {
+      onError: () => {
+        toast.error("Something went wrong");
+        console.log({ error });
+      },
+    });
+
+    toast.success("Item deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["marketplace", "/marketplaces/items"],
+    });
+
+    refetchMarketplaceProducts();
 
     setOpenModal(false);
   };
@@ -136,7 +183,11 @@ const MarketPlace = () => {
                 Market Place
               </h2>
 
-              <MarketPlaceAddItem refetch={refetchMarketplaceProducts} />
+              <MarketPlaceAddItem
+                refetch={refetchMarketplaceProducts}
+                open={openAddItemModal}
+                setOpen={setOpenAddItemModal}
+              />
             </section>
 
             <section className="md:flex-row md:items-center md:justify-between md:gap-5 flex flex-col w-full gap-3">
@@ -212,10 +263,10 @@ const MarketPlace = () => {
       <DeleteItemModal
         openModal={openModal}
         setOpenModal={setOpenModal}
-        handleDelete={() => handleDelete(itemToBeDeleteId)}
+        deleteFn={() => handleDeleteItem()}
         modalTitle="Delete Item"
         modalDescription="Are you sure you want to delete this item?"
-        toastMessage="Item has been deleted successfully"
+        pending={pending}
       />
     </div>
   );
@@ -248,7 +299,7 @@ const MarketPlaceItem = ({
         />
         <p className="flex items-center gap-1 text-base">
           <span className="text-primary-brown font-normal">Price:</span>
-          <span className="text-secondary-gray">{item.price}</span>
+          <span className="text-secondary-gray">₦{item.price}</span>
         </p>
       </div>
 

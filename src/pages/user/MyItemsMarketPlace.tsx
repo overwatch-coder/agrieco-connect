@@ -6,15 +6,18 @@ import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import MarketPlaceEditItem from "@/components/MarketPlaceEditItem";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import { Link } from "react-router-dom";
-import { useFetch } from "@/hooks/useFetch";
+import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { useAuth } from "@/hooks/useAuth";
 import ResponsiveArticle from "react-content-loader";
 import { faker } from "@faker-js/faker";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type MarketPlaceItemType = (typeof marketplaceProducts)[number];
 
 const MyItemsMarketPlace = () => {
   const [auth] = useAuth();
+  const [openAddItemModal, setOpenAddItemModal] = useState(false);
   const {
     data: marketplaceProducts,
     isLoading,
@@ -29,16 +32,27 @@ const MyItemsMarketPlace = () => {
 
   useEffect(() => {
     if (marketplaceProducts) {
+      const sortedItems = marketplaceProducts.slice().sort((a, b) => {
+        return (
+          new Date(
+            b.created_at
+              .split(" ")[0]
+              .concat("T")
+              .concat(b.created_at.split(" ")[1])
+          ).getTime() -
+          new Date(
+            a.created_at
+              .split(" ")[0]
+              .concat("T")
+              .concat(a.created_at.split(" ")[1])
+          ).getTime()
+        );
+      });
       setFilteredItems(
-        marketplaceProducts.filter((item) => item.user_id === auth?.user.id)
+        sortedItems.filter((item) => item.user_id === auth?.user.id)
       );
     }
   }, [auth?.user.id, marketplaceProducts]);
-
-  const handleDeleteItem = (id: string) => {
-    const newItems = filteredItems.filter((item) => item.id.toString() !== id);
-    setFilteredItems(newItems);
-  };
 
   if (isLoading) {
     return (
@@ -70,7 +84,11 @@ const MyItemsMarketPlace = () => {
             My Items
           </h2>
 
-          <MarketPlaceAddItem />
+          <MarketPlaceAddItem
+            open={openAddItemModal}
+            setOpen={setOpenAddItemModal}
+            refetch={refetchMarketplaceProducts}
+          />
         </section>
 
         {filteredItems.length > 0 ? (
@@ -79,7 +97,7 @@ const MyItemsMarketPlace = () => {
               <MarketPlaceItem
                 key={item.id}
                 item={item}
-                handleDeleteItem={handleDeleteItem}
+                refetch={refetchMarketplaceProducts}
               />
             ))}
           </section>
@@ -100,12 +118,41 @@ export default MyItemsMarketPlace;
 
 type MarketPlaceItemProps = {
   item: IMarketPlace;
-  handleDeleteItem: (id: string) => void;
+  refetch?: () => void;
 };
 
-const MarketPlaceItem = ({ item, handleDeleteItem }: MarketPlaceItemProps) => {
+const MarketPlaceItem = ({ item, refetch }: MarketPlaceItemProps) => {
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const { mutateAsync, isPending: pending } = useMutateData<null, IMarketPlace>(
+    {
+      url: `/marketplaces/items/${item.id}`,
+      config: {
+        method: "DELETE",
+        token: auth?.user.token,
+        queryKey: "marketplace",
+      },
+    }
+  );
+
+  const handleDeleteItem = async () => {
+    await mutateAsync(null);
+
+    toast.success("Item deleted successfully");
+
+    queryClient.invalidateQueries({
+      queryKey: ["marketplace", "/marketplaces/items"],
+    });
+
+    if (refetch) {
+      refetch();
+    }
+
+    setOpenDeleteModal(false);
+  };
 
   return (
     <div className="rounded-xl relative flex flex-col w-full col-span-1 gap-5 p-4 bg-white shadow">
@@ -150,17 +197,17 @@ const MarketPlaceItem = ({ item, handleDeleteItem }: MarketPlaceItemProps) => {
 
       <MarketPlaceEditItem
         item={item}
-        openEditModal={openEditModal}
-        setOpenEditModal={setOpenEditModal}
+        open={openEditModal}
+        setOpen={setOpenEditModal}
       />
 
       <DeleteItemModal
         openModal={openDeleteModal}
         setOpenModal={setOpenDeleteModal}
-        modalTitle={`Delete ${item.name}`}
+        modalTitle={`Delete "${item.name}"`}
         modalDescription="Are you sure you want to delete this item?"
-        handleDelete={() => handleDeleteItem(item.id.toString())}
-        toastMessage={`The item has been deleted successfully`}
+        deleteFn={() => handleDeleteItem()}
+        pending={pending}
       />
     </div>
   );
