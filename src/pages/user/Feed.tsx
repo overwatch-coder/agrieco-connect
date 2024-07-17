@@ -10,7 +10,11 @@ import { useFetch } from "@/hooks/useFetch";
 import ResponsiveArticle from "react-content-loader";
 
 const Feed = () => {
-  const { data: userFeeds, isLoading } = useFetch<IFeed[]>({
+  const {
+    data: userFeeds,
+    isLoading,
+    refetch: refetchFeeds,
+  } = useFetch<IFeed[]>({
     url: "/feeds",
     queryKey: "feeds",
   });
@@ -69,6 +73,7 @@ const Feed = () => {
             <CreateFeedPost
               setOpen={setOpenCreateFeedPost}
               open={openCreateFeedPost}
+              refetchFeeds={refetchFeeds}
             />
           </div>
 

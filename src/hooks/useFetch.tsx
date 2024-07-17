@@ -65,7 +65,12 @@ export const useMutateData = <TData, TResponse = Record<string, unknown>>({
         url,
         method: config.method ? config.method : "POST",
         data: data ? data : {},
-        headers,
+        headers: {
+          ...headers,
+          Accept: ["application/json", "multipart/form-data", "*/*"],
+        },
+        maxContentLength: 10000000,
+        maxBodyLength: 10000000,
       });
 
       return res.data;

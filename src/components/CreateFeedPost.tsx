@@ -20,18 +20,23 @@ import LoginModal from "@/components/shared/LoginModal";
 import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { MultiSelect } from "@/components/ui/multi-select";
 import CustomError from "@/components/shared/CustomError";
-import { useNavigate } from "react-router-dom";
 import React from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 type CreateFeedPostProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  refetchFeeds?: () => void;
 };
 
-const CreateFeedPost = ({ open, setOpen }: CreateFeedPostProps) => {
+const CreateFeedPost = ({
+  open,
+  setOpen,
+  refetchFeeds,
+}: CreateFeedPostProps) => {
   const [auth] = useAuth();
-  const navigate = useNavigate();
-  const { data: topics } = useFetch<ITopic[]>({
+  const queryClient = useQueryClient();
+  const { data: topics, ...query } = useFetch<ITopic[]>({
     url: "/topics",
     queryKey: "topics",
   });
@@ -70,20 +75,25 @@ const CreateFeedPost = ({ open, setOpen }: CreateFeedPostProps) => {
     formData.append("content", data.content);
 
     data.photo.forEach((photo) => {
-      formData.append("photo", photo);
+      formData.append("photo", photo as any);
     });
 
     formData.append("topics", parsedTopics.join(","));
 
-    console.log({
-      parsedFormData: Object.fromEntries(formData),
-    });
-
-    const res = await mutateAsync(formData);
-    console.log({ res });
+    await mutateAsync(formData);
 
     toast.success("Feed added successfully");
+
     reset();
+
+    // Invalidate the feeds query to refetch the data
+    queryClient.invalidateQueries({
+      queryKey: ["feeds", "/feeds"],
+    });
+
+    if (refetchFeeds) {
+      refetchFeeds();
+    }
 
     setOpen(false);
   };
