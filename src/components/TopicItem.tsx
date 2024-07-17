@@ -8,19 +8,16 @@ import LoginModal from "@/components/shared/LoginModal";
 import { Button } from "@/components/ui/button";
 import { userFeeds } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
-import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 
-type UserFeedsType = (typeof userFeeds)[0];
-
-const TopicItem = ({
-  authorName,
-  datePosted,
-  description,
-  numberOfComments,
-  numberOfLikes,
-  numberOfShares,
-}: UserFeedsType) => {
+const TopicItem = ({ id, description, name }: ITopic) => {
+  const {
+    authorName,
+    datePosted,
+    numberOfComments,
+    numberOfLikes,
+    numberOfShares,
+  } = userFeeds[Math.floor(Math.random() * userFeeds.length)];
   const [auth] = useAuth();
   const [comment, setComment] = useState("");
 
@@ -59,11 +56,11 @@ const TopicItem = ({
       {/* Description */}
       <div className="flex flex-col gap-2">
         <p className="text-primary-brown md:text-xl text-lg font-semibold">
-          {description}
+          {description ?? name}
         </p>
         <p className="text-black/90 text-sm">
           {
-            "Etiam tincidunt magna non nibh eleifend, egestas laoreet nisi lacinia. Donec sed interdum dui. Proin porta eu nibh sit amet fringilla. Proin efficitur nulla ut tortor ornare cursus. Nullam quis rhoncus elit. Sed eu rhoncus tortor. Etiam tincidunt magna non nibh eleifend, egestas laoreet nisi lacinia. Donec sed interdum dui. Proin porta eu nibh sit amet fringilla. Proin efficitur nulla ut tortor ornare cursus. Nullam quis rhoncus elit. Sed eu rhoncus tortor."
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu rhoncus tortor. Etiam tincidunt magna non nibh eleifend, egestas laoreet nisi lacinia. Donec sed interdum dui. Proin porta eu nibh sit amet fringilla. Proin efficitur nulla ut tortor ornare cursus. Nullam quis rhoncus elit. Sed eu rhoncus tortor. Etiam tincidunt magna non nibh eleifend, egestas laoreet nisi lacinia. Donec sed interdum dui. Proin porta eu nibh sit amet fringilla. Proin efficitur nulla ut tortor ornare cursus. Nullam quis rhoncus elit. Sed eu rhoncus tortor."
           }
         </p>
       </div>

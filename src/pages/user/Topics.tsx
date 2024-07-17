@@ -8,6 +8,8 @@ import CustomDropdown from "@/components/CustomDropdown";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useFetch } from "@/hooks/useFetch";
+import ResponsiveArticle from "react-content-loader";
 
 const topicDropdownItems = [
   "Activity",
@@ -16,8 +18,6 @@ const topicDropdownItems = [
   "Cash Crops",
   "Poultry",
 ];
-
-type Topic = (typeof userTopics)[number];
 
 const Topics = () => {
   const navigate = useNavigate();
@@ -28,12 +28,32 @@ const Topics = () => {
   );
   const [selectedItem, setSelectedItem] = useState("Activity");
 
-  const [topics, setTopics] = useState<Topic[]>(userTopics.slice(0, 2));
+  const { data: userTopics, isLoading } = useFetch<ITopic[]>({
+    queryKey: "topics",
+    url: "/topics",
+    enabled: true,
+  });
+
+  const [topics, setTopics] = useState<ITopic[]>(userTopics?.slice(0, 2) ?? []);
   const [hasMore, setHasMore] = useState(true);
+  const [searchTopic, setSearchTopic] = useState("");
+  const [subscribedTopics, setSubscribedTopics] = useState<string[]>(["All"]);
+
+  useEffect(() => {
+    if (!userTopics) return;
+
+    setTopics(userTopics.slice(0, 2));
+    setSubscribedTopics((prev) => [
+      ...prev,
+      ...userTopics.map((topic) => topic.name),
+    ]);
+  }, [userTopics]);
 
   // fetch more topics when user scrolls to the bottom
   const fetchMoreTopics = (): void => {
-    if (topics.length >= userTopics.length) {
+    if (!userTopics) return;
+
+    if (userTopics?.length <= topics.length) {
       setHasMore(false);
       return;
     }
@@ -45,36 +65,39 @@ const Topics = () => {
     }, 500);
   };
 
-  const [searchTopic, setSearchTopic] = useState("");
-  const [subscribedTopics, setSubscribedTopics] = useState<string[]>([
-    "All",
-    "Poultry",
-    "Cash Crop Farming",
-    "Forestry",
-    "Fisheries",
-  ]);
-
   const filterTopics = useCallback(() => {
     const search = searchParams.get("search");
 
+    if (!userTopics) return;
+
     if (search) {
       setTopics(
-        userTopics.filter((topic) =>
-          topic.description.toLowerCase().includes(search.toLowerCase())
+        userTopics.filter(
+          (topic) =>
+            topic.name.toLowerCase().includes(search.toLowerCase()) ||
+            topic?.description?.toLowerCase().includes(search.toLowerCase())
         )
       );
     } else {
       setTopics(userTopics);
     }
-  }, [searchParams]);
+  }, [searchParams, userTopics]);
 
   useEffect(() => {
     filterTopics();
 
     return () => {
-      setTopics(userTopics);
+      setTopics(userTopics ?? []);
     };
-  }, [filterTopics, searchTopic]);
+  }, [filterTopics, searchTopic, userTopics]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
+        <ResponsiveArticle width={500} height={500} backgroundColor="#dddddd" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
