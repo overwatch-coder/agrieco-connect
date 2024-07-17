@@ -1,13 +1,13 @@
 import { Helmet } from "react-helmet-async";
 
 import FeedItem from "@/components/FeedItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FeedTopicsSidebar from "@/components/FeedTopicsSidebar";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
 import CreateFeedPost from "@/components/CreateFeedPost";
 import { useFetch } from "@/hooks/useFetch";
-import ResponsiveArticle from "react-content-loader";
+import RenderContentLoading from "@/components/shared/RenderContentLoading";
 
 const Feed = () => {
   const {
@@ -19,16 +19,18 @@ const Feed = () => {
     queryKey: "feeds",
   });
 
-  const [feeds, setFeeds] = useState<IFeed[]>(userFeeds?.slice(0, 2) ?? []);
+  const [feeds, setFeeds] = useState<IFeed[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [openCreateFeedPost, setOpenCreateFeedPost] = useState(false);
 
+  useEffect(() => {
+    if (userFeeds) {
+      setFeeds(userFeeds.length > 5 ? userFeeds.slice(0, 2) : userFeeds);
+    }
+  }, [userFeeds]);
+
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
-        <ResponsiveArticle width={500} height={500} backgroundColor="#dddddd" />
-      </div>
-    );
+    return <RenderContentLoading />;
   }
 
   if (!userFeeds) {
@@ -90,9 +92,11 @@ const Feed = () => {
               }
               className="flex flex-col w-full gap-5"
             >
-              {feeds.map((feed) => (
-                <FeedItem key={feed.id} {...feed} />
-              ))}
+              {feeds
+                .filter((feed) => feed.id !== null)
+                .map((feed) => (
+                  <FeedItem key={feed.id} {...feed} />
+                ))}
             </InfiniteScroll>
           </div>
         </main>

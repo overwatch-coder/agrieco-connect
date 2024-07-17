@@ -5,11 +5,10 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/utils";
 import { MarketplaceEventsSchema } from "@/schema/marketplace.schema";
 import { MarketplaceEvents } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -19,9 +18,16 @@ import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
 import LoginModal from "@/components/shared/LoginModal";
 import { useAuth } from "@/hooks/useAuth";
+import { useMutateData } from "@/hooks/useFetch";
+import CustomError from "@/components/shared/CustomError";
 
-const AddEvent = () => {
+type AddEventProps = {
+  refetchEvents?: () => void;
+};
+
+const AddEvent = ({ refetchEvents }: AddEventProps) => {
   const [auth] = useAuth();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -35,21 +41,67 @@ const AddEvent = () => {
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: MarketplaceEvents) => {
-      const res = await axiosInstance.post("/users", data);
-
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Item added successfully");
-      reset();
+  const { mutateAsync, isPending, error, isError } = useMutateData<
+    FormData,
+    IEvent
+  >({
+    url: "/events",
+    config: {
+      method: "POST",
+      token: auth?.user.token,
+      contentType: "multipart/form-data",
+      queryKey: "events",
+      reset: () =>
+        reset({
+          title: "",
+          location: "",
+          start_time: "",
+          end_time: "",
+          price: 0,
+          date: "",
+          description: "",
+          image: null,
+        }),
+      resetValues: {
+        title: "",
+        location: "",
+        start_time: "",
+        end_time: "",
+        date: "",
+        price: 0,
+        description: "",
+        image: null,
+      },
     },
   });
 
   const handleSubmitForm = async (data: MarketplaceEvents) => {
     console.log(data);
-    await mutateAsync({ ...data });
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("location", data.location);
+    formData.append("date", data.date);
+    formData.append("start_time", data.start_time);
+    formData.append("end_time", data.end_time);
+    formData.append("description", data.description);
+    formData.append("price", data.price.toString());
+    formData.append("image", data.image[0] as File);
+
+    const res = await mutateAsync(formData);
+
+    console.log({ res });
+
+    queryClient.invalidateQueries({
+      queryKey: ["events", "/events"],
+    });
+
+    if (refetchEvents) {
+      refetchEvents();
+    }
+
+    reset();
+
+    toast.success("Event added successfully");
   };
 
   return (
@@ -94,11 +146,7 @@ const AddEvent = () => {
           className="flex flex-col gap-5"
           encType="multipart/form-data"
         >
-          {isError && (
-            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
-              <p className="text-xs text-red-500">{error.message}</p>
-            </div>
-          )}
+          <CustomError isError={isError} error={error} />
 
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
             <CustomFormField
@@ -111,9 +159,9 @@ const AddEvent = () => {
             />
 
             <CustomFormField
-              labelName="Venue"
-              inputName="venue"
-              placeholderText="Enter venue"
+              labelName="Venue/Location"
+              inputName="location"
+              placeholderText="Enter venue/location"
               errors={errors}
               register={register}
               inputType="text"
@@ -125,29 +173,11 @@ const AddEvent = () => {
               placeholderText="Enter price"
               errors={errors}
               register={register}
-              inputType="text"
+              inputType="number"
             />
           </div>
 
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
-            <CustomFormField
-              labelName="Start Time"
-              inputName="startTime"
-              placeholderText="Enter start Time"
-              errors={errors}
-              register={register}
-              inputType="time"
-            />
-
-            <CustomFormField
-              labelName="End Time"
-              inputName="endTime"
-              placeholderText="Enter end Time"
-              errors={errors}
-              register={register}
-              inputType="time"
-            />
-
             <CustomFormField
               labelName="Date"
               inputName="date"
@@ -155,6 +185,22 @@ const AddEvent = () => {
               errors={errors}
               register={register}
               inputType="date"
+            />
+
+            <CustomFormField
+              labelName="Start Time"
+              inputName="start_time"
+              errors={errors}
+              register={register}
+              inputType="time"
+            />
+
+            <CustomFormField
+              labelName="End Time"
+              inputName="end_time"
+              errors={errors}
+              register={register}
+              inputType="time"
             />
           </div>
 
@@ -170,10 +216,10 @@ const AddEvent = () => {
 
             <CustomFileUpload
               title="Add Attachment"
-              itemName="attachments"
+              itemName="image"
               setValue={setValue}
               watch={watch}
-              allowMultiple={true}
+              allowMultiple={false}
             />
 
             {/* Submit Button */}

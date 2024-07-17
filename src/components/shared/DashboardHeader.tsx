@@ -33,8 +33,10 @@ const DashboardHeader = () => {
   return (
     <header
       className={`${
-        isUser ? "border-b-secondary-gray" : "border-b-primary-brown"
-      }  z-50 w-full px-4 py-3 bg-white border-b-2 fixed top-0 left-0 right-0`}
+        UrlPath() === "user"
+          ? "border-b-secondary-gray fixed top-0 left-0 right-0"
+          : "border-b-primary-brown"
+      }  z-50 w-full px-4 py-3 bg-white border-b-2`}
     >
       <div className="relative flex items-center justify-between">
         {/* MobileNav */}

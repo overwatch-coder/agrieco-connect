@@ -2,13 +2,13 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/utils";
 import { MarketplaceEventsSchema } from "@/schema/marketplace.schema";
 import { MarketplaceEvents } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -16,10 +16,14 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
-import { MarketPlaceEventType } from "@/pages/shared/MyEvents";
+import LoginModal from "@/components/shared/LoginModal";
+import { useAuth } from "@/hooks/useAuth";
+import { useMutateData } from "@/hooks/useFetch";
+import CustomError from "@/components/shared/CustomError";
+import ImagePreview from "@/components/shared/ImagePreview";
 
 type MarketPlaceEditEventProps = {
-  item: MarketPlaceEventType;
+  item: IEvent;
   openEditModal: boolean;
   setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -29,40 +33,90 @@ const MarketPlaceEditEvent = ({
   openEditModal,
   setOpenEditModal,
 }: MarketPlaceEditEventProps) => {
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
     reset,
-    watch,
     setValue,
+    watch,
     formState: { errors },
-  } = useForm<Partial<MarketplaceEvents>>({
-    resolver: zodResolver(MarketplaceEventsSchema.partial()),
+  } = useForm<MarketplaceEvents>({
+    resolver: zodResolver(MarketplaceEventsSchema),
     defaultValues: {
       title: item.title,
-      startTime: new Date().toLocaleTimeString().split(" ")[0],
-      endTime: new Date().toLocaleTimeString().split(" ")[0],
-      date: new Date().toISOString().split("T")[0],
+      start_time: new Date(`${item.date}T${item.start_time}`).toTimeString(),
+      end_time: new Date(`${item.date}T${item.end_time}`).toTimeString(),
+      date: new Date(item.date).toISOString().split("T")[0],
       description: item.title,
+      price: item.price,
+      location: item.location,
     },
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: Partial<MarketplaceEvents>) => {
-      const res = await axiosInstance.post("/users", data);
-
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Item updated successfully");
-      reset();
+  const { mutateAsync, isPending, error, isError } = useMutateData<
+    FormData,
+    IEvent
+  >({
+    url: `/events/${item.id}`,
+    config: {
+      method: "PUT",
+      token: auth?.user.token,
+      contentType: "multipart/form-data",
+      queryKey: "events",
+      reset: () =>
+        reset({
+          title: "",
+          location: "",
+          start_time: "",
+          end_time: "",
+          price: 0,
+          date: "",
+          description: "",
+          image: null,
+        }),
+      resetValues: {
+        title: "",
+        location: "",
+        start_time: "",
+        end_time: "",
+        date: "",
+        price: 0,
+        description: "",
+        image: null,
+      },
     },
   });
 
-  const handleSubmitForm = async (data: Partial<MarketplaceEvents>) => {
+  const handleSubmitForm = async (data: MarketplaceEvents) => {
     console.log(data);
-    await mutateAsync({ ...data });
+
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("location", data.location);
+    formData.append("date", data.date);
+    formData.append("start_time", data.start_time);
+    formData.append("end_time", data.end_time);
+    formData.append("description", data.description);
+    formData.append("price", data.price.toString());
+    formData.append("image", data.image[0] as File);
+
+    const res = await mutateAsync(formData);
+
+    console.log({ res });
+
+    queryClient.invalidateQueries({
+      queryKey: ["events", `/events/${item.id}`],
+    });
+
+    reset();
+
+    toast.success("Event updated successfully");
+
+    setOpenEditModal(false);
   };
 
   return (
@@ -75,32 +129,26 @@ const MarketPlaceEditEvent = ({
               Edit Event
             </span>
             <span className="text-secondary-gray text-sm font-normal">
-              Make an edit of the event you created
+              Edit your existing event
             </span>
           </DialogTitle>
 
           <DialogClose
-            onClick={() => {
-              reset();
-            }}
+            onClick={() => reset()}
             className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full"
           >
             <X size={20} className="text-red-500" />
           </DialogClose>
         </div>
 
-        {/* form */}
+        {/* Edit an Event Form */}
         <form
           method="post"
           onSubmit={handleSubmit(handleSubmitForm)}
           className="flex flex-col gap-5"
           encType="multipart/form-data"
         >
-          {isError && (
-            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
-              <p className="text-xs text-red-500">{error.message}</p>
-            </div>
-          )}
+          <CustomError isError={isError} error={error} />
 
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
             <CustomFormField
@@ -113,9 +161,9 @@ const MarketPlaceEditEvent = ({
             />
 
             <CustomFormField
-              labelName="Venue"
-              inputName="venue"
-              placeholderText="Enter venue"
+              labelName="Venue/Location"
+              inputName="location"
+              placeholderText="Enter venue/location"
               errors={errors}
               register={register}
               inputType="text"
@@ -127,29 +175,11 @@ const MarketPlaceEditEvent = ({
               placeholderText="Enter price"
               errors={errors}
               register={register}
-              inputType="text"
+              inputType="number"
             />
           </div>
 
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
-            <CustomFormField
-              labelName="Start Time"
-              inputName="startTime"
-              placeholderText="Enter start Time"
-              errors={errors}
-              register={register}
-              inputType="time"
-            />
-
-            <CustomFormField
-              labelName="End Time"
-              inputName="endTime"
-              placeholderText="Enter end Time"
-              errors={errors}
-              register={register}
-              inputType="time"
-            />
-
             <CustomFormField
               labelName="Date"
               inputName="date"
@@ -157,6 +187,22 @@ const MarketPlaceEditEvent = ({
               errors={errors}
               register={register}
               inputType="date"
+            />
+
+            <CustomFormField
+              labelName="Start Time"
+              inputName="start_time"
+              errors={errors}
+              register={register}
+              inputType="time"
+            />
+
+            <CustomFormField
+              labelName="End Time"
+              inputName="end_time"
+              errors={errors}
+              register={register}
+              inputType="time"
             />
           </div>
 
@@ -172,11 +218,17 @@ const MarketPlaceEditEvent = ({
 
             <CustomFileUpload
               title="Add Attachment"
-              itemName="attachments"
+              itemName="image"
               setValue={setValue}
               watch={watch}
-              allowMultiple={true}
+              allowMultiple={false}
             />
+
+            {!watch("image") &&
+              item.image &&
+              item.image.includes("res.cloudinary.com") && (
+                <ImagePreview image={item.image} />
+              )}
 
             {/* Submit Button */}
             <div className="flex items-center justify-end w-full">
@@ -194,12 +246,12 @@ const MarketPlaceEditEvent = ({
 
                 <Button
                   disabled={isPending}
-                  className="bg-primary-green hover:bg-primary-green px-7 w-full py-2 text-white rounded-none"
+                  className="bg-primary-green hover:bg-primary-green w-full px-10 py-2 text-white rounded-none"
                 >
                   {isPending ? (
                     <ClipLoader size={28} loading={isPending} color="white" />
                   ) : (
-                    "Update"
+                    "Update Event"
                   )}
                 </Button>
               </div>

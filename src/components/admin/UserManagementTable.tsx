@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { UserManagement } from "@/pages/admin/Dashboard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,16 +30,23 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
     data,
     isLoading,
     refetch: refetchUsers,
-  } = useFetch<IAuthUser[]>({
+  } = useFetch<IFeedUser[]>({
     queryKey: "users",
     url: "/users",
     enabled: true,
   });
 
   const [filteredUsers, setFilteredUsers] = useState(users);
+  const [usersData, setUsersData] = useState<IFeedUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [itemToDeleteId, setItemToDeleteId] = useState<number>(0);
+
+  useEffect(() => {
+    if (data) {
+      setUsersData(data);
+    }
+  }, [data]);
 
   // handle delete item
   const {
@@ -132,7 +139,7 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
         </TableHeader>
         <TableBody>
           {filteredUsers.length > 0 &&
-            filteredUsers.map((user) => (
+            filteredUsers.slice(0, usersData.length).map((user, index) => (
               <TableRow key={user.id}>
                 <TableCell className="flex items-center gap-3 text-sm font-normal text-black capitalize">
                   <img
@@ -140,13 +147,13 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
                     alt="avatar"
                     className="object-cover w-10 h-10 rounded-full"
                   />
-                  <span>{user.username}</span>
+                  <span>{usersData[index].username}</span>
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
-                  {user.fullName}
+                  {usersData[index].fullname}
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
-                  {user.email}
+                  {usersData[index].email}
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
                   {user.occupation}

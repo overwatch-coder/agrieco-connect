@@ -19,7 +19,7 @@ type LoginType = Pick<Auth, "username" | "password" | "rememberMe">;
 const Login = () => {
   const [_, setAuth] = useAuth();
 
-  //  usestate
+  //  use state
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -62,6 +62,8 @@ const Login = () => {
           ? "/admin/dashboard"
           : "/user/feed"
     );
+
+    reset();
   };
 
   return (

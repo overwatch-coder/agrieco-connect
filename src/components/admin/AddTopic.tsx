@@ -5,45 +5,79 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
-import { AppointmentsSchema } from "@/schema/appointments.schema";
-import { TopicsType } from "@/types";
-import { TopicsSchema } from "@/schema/topics.schema";
+import { useMutateData } from "@/hooks/useFetch";
+import { useAuth } from "@/hooks/useAuth";
+import { z } from "zod";
+import CustomError from "@/components/shared/CustomError";
 
-const AddTopic = () => {
+export const CreateTopicSchema = z.object({
+  name: z.string().trim().min(1, "Name is required"),
+  description: z.string().trim().min(1, "Description is required"),
+  id: z.string().optional(),
+});
+
+export type TopicsType = z.infer<typeof CreateTopicSchema>;
+
+const AddTopic = ({ refetchTopics }: { refetchTopics?: () => void }) => {
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<TopicsType>({
-    resolver: zodResolver(TopicsSchema),
+    resolver: zodResolver(CreateTopicSchema),
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: TopicsType) => {
-      const res = await axiosInstance.post("/users", data);
-
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Topic added successfully");
-      reset();
+  const { mutateAsync, isPending, error, isError } = useMutateData<
+    TopicsType,
+    ITopic
+  >({
+    url: "/topics",
+    config: {
+      method: "POST",
+      token: auth?.user.token,
+      contentType: "application/json",
+      queryKey: "topics",
+      reset: () =>
+        reset({
+          name: "",
+          id: "",
+          description: "",
+        }),
+      resetValues: {
+        name: "",
+        id: "",
+        description: "",
+      },
     },
   });
 
   const handleSubmitForm = async (data: TopicsType) => {
-    console.log(data);
     await mutateAsync({ ...data });
+
+    queryClient.invalidateQueries({
+      queryKey: ["topics", "/topics"],
+    });
+
+    if (refetchTopics) {
+      refetchTopics();
+    }
+
+    reset();
+
+    toast.success("Topic added successfully");
   };
 
   return (
@@ -75,26 +109,13 @@ const AddTopic = () => {
           onSubmit={handleSubmit(handleSubmitForm)}
           className="flex flex-col gap-5"
         >
-          {isError && (
-            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
-              <p className="text-xs text-red-500">{error.message}</p>
-            </div>
-          )}
+          <CustomError isError={isError} error={error} />
 
           <div className="grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Topic"
-              inputName="topic"
-              placeholderText="Enter topic"
-              errors={errors}
-              register={register}
-              inputType="text"
-            />
-
-            <CustomFormField
-              labelName="Category"
-              inputName="category"
-              placeholderText="Enter category"
+              inputName="name"
+              placeholderText="Enter topic name"
               errors={errors}
               register={register}
               inputType="text"
@@ -106,7 +127,16 @@ const AddTopic = () => {
               placeholderText="Enter description"
               errors={errors}
               register={register}
-              inputType="textarea"
+              inputType="text"
+            />
+
+            <CustomFormField
+              labelName="ID"
+              inputName="id"
+              placeholderText="Enter ID"
+              errors={errors}
+              register={register}
+              inputType="hidden"
             />
           </div>
 

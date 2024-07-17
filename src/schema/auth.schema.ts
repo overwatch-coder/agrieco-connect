@@ -7,11 +7,11 @@ export const AuthSchema = z.object({
   password: z
     .string()
     .min(1, "Password is required")
-    .min(8, "Password must be at least 8 characters"),
+    .min(6, "Password must be at least 6 characters"),
   confirmPassword: z
     .string()
     .min(1, "Confirm Password is required")
-    .min(8, "Password must be at least 8 characters"),
+    .min(6, "Password must be at least 6 characters"),
   rememberMe: z.boolean().default(false),
   username: z.string().min(1, "Username is required"),
 });

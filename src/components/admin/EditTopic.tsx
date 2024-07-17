@@ -7,50 +7,79 @@ import {
 } from "@/components/ui/dialog";
 import { axiosInstance } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Edit, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
-import { TopicsType } from "@/types";
-import { TopicsSchema } from "@/schema/topics.schema";
+import { useAuth } from "@/hooks/useAuth";
+import { CreateTopicSchema, TopicsType } from "@/components/admin/AddTopic";
+import { useMutateData } from "@/hooks/useFetch";
+import CustomError from "@/components/shared/CustomError";
 
 type EditTopicProps = {
-  topic: TopicsType;
+  topic: ITopic;
+  refetchTopics?: () => void;
 };
 
-const EditTopic = ({ topic }: EditTopicProps) => {
+const EditTopic = ({ topic, refetchTopics }: EditTopicProps) => {
+  const [auth] = useAuth();
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<TopicsType>({
-    resolver: zodResolver(TopicsSchema),
+    resolver: zodResolver(CreateTopicSchema),
     defaultValues: {
-      ...topic,
-      id: topic.id,
+      name: topic.name,
+      description: topic.description as string,
+      id: topic.id.toString(),
     },
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: TopicsType) => {
-      const res = await axiosInstance.post("/users", data);
-
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Topic added successfully");
-      reset();
+  const { mutateAsync, isPending, error, isError } = useMutateData<
+    TopicsType,
+    ITopic
+  >({
+    url: `/topics/${topic.id}`,
+    config: {
+      method: "PUT",
+      token: auth?.user.token,
+      contentType: "application/json",
+      queryKey: "topics",
+      reset: () =>
+        reset({
+          name: "",
+          id: "",
+          description: "",
+        }),
+      resetValues: {
+        name: "",
+        id: "",
+        description: "",
+      },
     },
   });
 
   const handleSubmitForm = async (data: TopicsType) => {
-    console.log(data);
     await mutateAsync({ ...data });
+
+    queryClient.invalidateQueries({
+      queryKey: ["topics", "/topics", `/topics/${topic.id}`],
+    });
+
+    if (refetchTopics) {
+      refetchTopics();
+    }
+
+    reset();
+
+    toast.success("Topic updated successfully");
   };
 
   return (
@@ -82,26 +111,13 @@ const EditTopic = ({ topic }: EditTopicProps) => {
           onSubmit={handleSubmit(handleSubmitForm)}
           className="flex flex-col gap-5"
         >
-          {isError && (
-            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
-              <p className="text-xs text-red-500">{error.message}</p>
-            </div>
-          )}
+          <CustomError isError={isError} error={error} />
 
           <div className="grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Topic"
-              inputName="topic"
-              placeholderText="Enter topic"
-              errors={errors}
-              register={register}
-              inputType="text"
-            />
-
-            <CustomFormField
-              labelName="Category"
-              inputName="category"
-              placeholderText="Enter category"
+              inputName="name"
+              placeholderText="Enter topic name"
               errors={errors}
               register={register}
               inputType="text"
@@ -113,12 +129,13 @@ const EditTopic = ({ topic }: EditTopicProps) => {
               placeholderText="Enter description"
               errors={errors}
               register={register}
-              inputType="textarea"
+              inputType="text"
             />
 
             <CustomFormField
-              labelName="Topic ID"
+              labelName="ID"
               inputName="id"
+              placeholderText="Enter ID"
               errors={errors}
               register={register}
               inputType="hidden"

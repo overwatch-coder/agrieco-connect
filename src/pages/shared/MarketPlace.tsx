@@ -16,6 +16,7 @@ import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { faker } from "@faker-js/faker";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import RenderContentLoading from "@/components/shared/RenderContentLoading";
 
 const dropDownItems = ["Popular", "New", "Sale", "All"];
 
@@ -149,10 +150,16 @@ const MarketPlace = () => {
   };
 
   if (isLoading) {
+    return <RenderContentLoading />;
+  }
+
+  if (!marketplaceProducts) {
     return (
-      <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
-        <ResponsiveArticle width={500} height={500} backgroundColor="#dddddd" />
-      </div>
+      <RenderContentLoading>
+        <p className="text-primary-brown text-base">
+          Sorry, we couldn't find any items. Please try again later.
+        </p>
+      </RenderContentLoading>
     );
   }
 
@@ -174,7 +181,7 @@ const MarketPlace = () => {
       </Helmet>
 
       <div className="md:gap-6 flex flex-col w-full gap-10 p-5">
-        {UrlPath() === "admin" && <MarketplaceAnalytics />}
+        {UrlPath() === "admin" && <MarketplaceAnalytics marketplaceProducts={marketplaceProducts!} />}
 
         {UrlPath() !== "admin" && (
           <>

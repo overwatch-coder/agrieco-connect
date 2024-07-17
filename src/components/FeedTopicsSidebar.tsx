@@ -1,16 +1,67 @@
-import {
-  agriculturalTrends,
-  subcommunities,
-  marketplaceProducts,
-} from "@/constants";
+import { marketplaceProducts } from "@/constants";
+import { useFetch } from "@/hooks/useFetch";
 import { slugifyData } from "@/lib/utils";
+import { faker } from "@faker-js/faker";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const agriculturalTrendHashtags = Array.from(
-  new Set(agriculturalTrends.map((trend) => trend.category))
-).slice(0, 5);
+interface Trend {
+  name: string;
+  value: number;
+}
 
 const FeedTopicsSidebar = () => {
+  // === Data Fetching === //
+  const { data: trends } = useFetch<{ [key: string]: number }>({
+    queryKey: "trends",
+    url: "/feeds/trending-keywords",
+    enabled: true,
+  });
+
+  const { data: subcommunitiesData } = useFetch<ICommunity[]>({
+    queryKey: "communities",
+    url: "/communities",
+    enabled: true,
+  });
+
+  const { data: marketplaceData } = useFetch<IMarketPlace[]>({
+    queryKey: "marketplace",
+    url: "/marketplaces/items",
+    enabled: true,
+  });
+
+  // === States === //
+  const [allTrends, setAllTrends] = useState<Trend[]>([]);
+  const [subcommunities, setSubcommunities] = useState<ICommunity[]>([]);
+  const [marketplace, setMarketplace] = useState<IMarketPlace[]>([]);
+
+  useEffect(() => {
+    if (trends) {
+      const trendsObject = Object.keys(trends).map((key) => ({
+        name: key,
+        value: trends[key],
+      }));
+
+      setAllTrends(trendsObject);
+    }
+
+    if (subcommunitiesData) {
+      setSubcommunities(
+        subcommunitiesData.length > 4
+          ? subcommunitiesData.slice(0, 4)
+          : subcommunitiesData
+      );
+    }
+
+    if (marketplaceData) {
+      setMarketplace(
+        marketplaceData.length > 4
+          ? marketplaceData.slice(0, 4)
+          : marketplaceData
+      );
+    }
+  }, [marketplaceData, subcommunitiesData, trends]);
+
   return (
     <aside className="scrollbar-hide w-72 md:flex fixed top-0 right-0 flex-col hidden h-screen col-span-1 gap-5 px-5 mt-16 overflow-y-scroll bg-white">
       <div className="text-start flex flex-col w-full h-full min-h-full pt-10 pb-16">
@@ -21,13 +72,13 @@ const FeedTopicsSidebar = () => {
               Trends
             </h2>
             <div className="flex flex-col gap-3">
-              {agriculturalTrendHashtags.map((trend, index) => (
+              {allTrends.map((trend, index) => (
                 <Link
                   key={index}
                   className="text-black/80 text-sm"
-                  to={`/user/agriculture-trends?trend=${trend}`}
+                  to={`/user/agriculture-trends?trend=${trend.name}`}
                 >
-                  #{trend}
+                  #{trend.name}
                 </Link>
               ))}
             </div>
@@ -40,33 +91,39 @@ const FeedTopicsSidebar = () => {
             </h2>
 
             <div className="flex flex-col gap-5">
-              {subcommunities.slice(0, 4).map((sub, index) => (
+              {subcommunities.map((sub, index) => (
                 <Link
                   key={index}
                   className="text-black/80 flex items-center gap-2 text-sm"
-                  to={`/user/subcommunities/${slugifyData(sub.title)}`}
+                  to={`/user/subcommunities/${slugifyData(sub.name)}`}
                 >
-                  <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white rounded-full">
-                    {sub.title.split(" ")[0][0] + sub.title.split(" ")[1][0]}
+                  <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white uppercase rounded-full">
+                    {sub.name.split(" ")[0][0] + sub.name.split(" ")[1][0]}
                   </span>
-                  <span>{sub.title}</span>
+                  <span>{sub.name}</span>
                 </Link>
               ))}
             </div>
           </section>
 
           {/* Marketplace */}
-          <section className="flex flex-col gap-5">
-            <h2 className="text-primary-brown/50 text-lg font-medium">
-              Marketplace
-            </h2>
+          {
+            <section className="flex flex-col gap-5">
+              <h2 className="text-primary-brown/50 text-lg font-medium">
+                Marketplace
+              </h2>
 
-            <div className="flex flex-col gap-6">
-              {marketplaceProducts.slice(0, 4).map((item) => (
-                <MarketplaceItem key={item.id} item={item} />
-              ))}
-            </div>
-          </section>
+              <div className="flex flex-col gap-6">
+                {marketplace.length > 0 ? (
+                  marketplace.map((item) => (
+                    <MarketplaceItem key={item.id} item={item} />
+                  ))
+                ) : (
+                  <p>No products in the marketplace</p>
+                )}
+              </div>
+            </section>
+          }
         </div>
       </div>
     </aside>
@@ -75,11 +132,9 @@ const FeedTopicsSidebar = () => {
 
 export default FeedTopicsSidebar;
 
-const MarketplaceItem = ({
-  item,
-}: {
-  item: (typeof marketplaceProducts)[number];
-}) => {
+const MarketplaceItem = ({ item }: { item: IMarketPlace }) => {
+  faker.seed(123);
+
   return (
     <div className="flex flex-col gap-3">
       <Link
@@ -87,16 +142,16 @@ const MarketplaceItem = ({
         to={`/user/marketplace?product=${item.name.toLowerCase()}`}
       >
         <img
-          src="/icons/plant.svg"
+          src={item.image || "/icons/plant.svg"}
           alt="plant"
+          onError={(e) => (e.currentTarget.src = "/icons/plant.svg")}
           className="object-contain w-10 h-10 rounded-full"
         />
         <span className="text-primary-green">{item.name}</span>
       </Link>
 
       <p className="text-secondary-gray/50 text-sm">
-        <span className="text-primary-brown">Price: </span>
-        {item.price}
+        <span className="text-primary-brown">Price: </span>₦{item.price}
       </p>
       <p className="text-secondary-gray/50 text-sm">
         <span className="text-primary-brown">Description: </span>
@@ -104,11 +159,11 @@ const MarketplaceItem = ({
       </p>
       <p className="text-secondary-gray/50 text-sm">
         <span className="text-primary-brown">Seller: </span>
-        {item.seller}
+        {faker.company.name()}
       </p>
       <p className="text-secondary-gray/50 text-sm">
         <span className="text-primary-brown">Contact: </span>
-        {item.contact}
+        {faker.phone.number()}
       </p>
     </div>
   );

@@ -62,3 +62,33 @@ declare interface IMarketPlace {
   updated_at: string;
   is_active: boolean;
 }
+
+// === EVENTS ===
+declare interface IEvent {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  price: number;
+  location: string;
+  image: string;
+  user_id: number;
+  created_at: string;
+  updated_at: string;
+  is_active: boolean;
+}
+
+// === COMMUNITY ===
+declare interface ICommunity {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  location: string;
+  created_at: string;
+  updated_at: string;
+  is_active: boolean;
+  owner: IFeedUser;
+}

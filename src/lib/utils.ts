@@ -13,7 +13,7 @@ export function cn(...inputs: ClassValue[]) {
 export const axiosInstance = axios.create({
   baseURL:
     import.meta.env.VITE_API_URL ||
-    "http://ec2-34-239-105-167.compute-1.amazonaws.com/api",
+    "https://ec2-34-239-105-167.compute-1.amazonaws.com/api",
 });
 
 export const slugifyData = (data: string) => {

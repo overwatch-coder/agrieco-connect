@@ -6,45 +6,48 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Trash2 } from "lucide-react";
-import { Topics } from "@/pages/admin/AdminTopics";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import EditTopic from "@/components/admin/EditTopic";
-import { useFetch, useMutateData } from "@/hooks/useFetch";
+import { useMutateData } from "@/hooks/useFetch";
 import { toast } from "react-toastify";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
+import RenderContentLoading from "@/components/shared/RenderContentLoading";
+import ClipLoader from "react-spinners/ClipLoader";
 
 type AdminTopicsTableProps = {
-  topics: Topics[];
+  topics: ITopic[];
+  refetchTopics: () => void;
+  isLoading: boolean;
 };
 
-const AdminTopicsTable = ({ topics }: AdminTopicsTableProps) => {
+const AdminTopicsTable = ({
+  topics,
+  refetchTopics,
+  isLoading,
+}: AdminTopicsTableProps) => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
 
-  const {
-    data,
-    isLoading,
-    refetch: refetchTopics,
-  } = useFetch<ITopic[]>({
-    queryKey: "topics",
-    url: "/topics",
-    enabled: true,
-  });
-
-  const [filteredTopics, setFilteredTopics] = useState(topics);
+  const [filteredTopics, setFilteredTopics] = useState<ITopic[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [itemToDeleteId, setItemToDeleteId] = useState<number>(0);
+
+  useEffect(() => {
+    if (topics) {
+      setFilteredTopics(topics);
+    }
+  }, [topics]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
 
     if (e.target.value.length > 0) {
       const filtered = filteredTopics.filter((topic) =>
-        topic.topic.toLowerCase().includes(e.target.value.toLowerCase())
+        topic.name.toLowerCase().includes(e.target.value.toLowerCase())
       );
       setFilteredTopics(filtered);
     } else {
@@ -85,6 +88,14 @@ const AdminTopicsTable = ({ topics }: AdminTopicsTableProps) => {
     setOpenModal(false);
   };
 
+  if (isLoading) {
+    return (
+      <RenderContentLoading>
+        <ClipLoader size={30} color="#795548" loading={isLoading} />
+      </RenderContentLoading>
+    );
+  }
+
   return (
     <section className="flex flex-col w-full h-full gap-5 px-3">
       <div className="bg-secondary-gray/20 md:w-1/2 flex items-center justify-between w-full gap-3 px-3 py-1 rounded-full">
@@ -105,7 +116,7 @@ const AdminTopicsTable = ({ topics }: AdminTopicsTableProps) => {
               Topic
             </TableHead>
             <TableHead className="text-primary-brown text-sm font-medium">
-              Category
+              Description
             </TableHead>
             <TableHead className="text-primary-brown text-sm font-medium">
               Action
@@ -117,17 +128,17 @@ const AdminTopicsTable = ({ topics }: AdminTopicsTableProps) => {
             filteredTopics.map((topic) => (
               <TableRow key={topic.id}>
                 <TableCell className="flex items-center gap-3 text-sm font-normal text-black capitalize">
-                  {topic.topic}
+                  {topic.name}
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
-                  {topic.category}
+                  {topic.description}
                 </TableCell>
                 <TableCell className="flex items-center gap-4">
-                  <EditTopic topic={topic} />
+                  <EditTopic topic={topic} refetchTopics={refetchTopics} />
 
                   <button
                     onClick={() => {
-                      setItemToDeleteId(parseInt(topic.id));
+                      setItemToDeleteId(topic.id);
                       setOpenModal(true);
                     }}
                   >

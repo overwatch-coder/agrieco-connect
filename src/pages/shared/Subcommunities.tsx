@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { subcommunities as subcommunitiesData } from "@/constants";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { toast } from "react-toastify";
+import RenderContentLoading from "@/components/shared/RenderContentLoading";
+import moment from "moment-timezone";
 
 export type SubcommunitiesItemType = (typeof subcommunitiesData)[number];
 
@@ -24,45 +26,51 @@ const Subcommunities = () => {
   const queryClient = useQueryClient();
 
   const {
-    data,
+    data: communities,
     isLoading,
     refetch: refetchSubcommunities,
-  } = useFetch<SubcommunitiesItemType[]>({
-    queryKey: "subcommunities",
-    url: "/subcommunities",
+  } = useFetch<ICommunity[]>({
+    queryKey: "communities",
+    url: "/communities",
     enabled: true,
   });
 
-  const [subcommunities, setSubcommunities] = useState<
-    SubcommunitiesItemType[]
-  >(subcommunitiesData.slice(0, 2));
+  const [subcommunities, setSubcommunities] = useState<ICommunity[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [itemToDeleteId, setItemToDeleteId] = useState<number>(0);
 
+  useEffect(() => {
+    if (communities) {
+      setSubcommunities(
+        communities.length > 4 ? communities.slice(0, 2) : communities
+      );
+    }
+  }, [communities]);
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!communities) return;
+
     setSearchTerm(e.target.value);
 
     if (e.target.value.length > 0) {
-      const filtered = subcommunitiesData.filter(
-        (subcommunities) =>
-          subcommunities.title
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase()) ||
-          subcommunities.description
-            .toLowerCase()
-            .includes(e.target.value.toLowerCase())
+      const filtered = communities.filter(
+        (com) =>
+          com.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+          com.description.toLowerCase().includes(e.target.value.toLowerCase())
       );
       setSubcommunities(filtered);
     } else {
-      setSubcommunities(subcommunitiesData);
+      setSubcommunities(communities);
     }
   };
 
   // fetch more subcommunities when user scrolls to the bottom
   const fetchMore = (): void => {
-    if (subcommunities.length >= subcommunitiesData.length) {
+    if (!communities) return;
+
+    if (subcommunities.length >= communities.length) {
       setHasMore(false);
       return;
     }
@@ -70,10 +78,7 @@ const Subcommunities = () => {
     setTimeout(() => {
       setSubcommunities(
         subcommunities.concat(
-          subcommunitiesData.slice(
-            subcommunities.length,
-            subcommunities.length + 2
-          )
+          communities.slice(subcommunities.length, subcommunities.length + 2)
         )
       );
     }, 500);
@@ -101,12 +106,12 @@ const Subcommunities = () => {
     mutateAsync,
     isPending: pending,
     error,
-  } = useMutateData<null, SubcommunitiesItemType>({
-    url: `/subcommunities/${itemToDeleteId}`,
+  } = useMutateData<null, ICommunity>({
+    url: `/communities/${itemToDeleteId}`,
     config: {
       method: "DELETE",
       token: auth?.user.token,
-      queryKey: "subcommunities",
+      queryKey: "communities",
     },
   });
 
@@ -122,11 +127,27 @@ const Subcommunities = () => {
     toast.success("Subcommunity deleted successfully");
 
     queryClient.invalidateQueries({
-      queryKey: ["subcommunities", "/subcommunities"],
+      queryKey: ["communities", "/communities"],
     });
 
     refetchSubcommunities();
   };
+
+  if (isLoading) {
+    return <RenderContentLoading />;
+  }
+
+  if (!communities) {
+    return (
+      <RenderContentLoading>
+        <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
+          <p className="text-primary-brown text-base">
+            Sorry, we couldn't find any communities. Please try again later.
+          </p>
+        </div>
+      </RenderContentLoading>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -150,7 +171,9 @@ const Subcommunities = () => {
       <div
         className={`md:gap-6 ${UrlPath() === "admin" ? "w-full" : "xl:max-w-4xl"} flex flex-col w-full gap-10 p-5 mx-auto`}
       >
-        {UrlPath() === "admin" && <SubcommunityAnalytics />}
+        {UrlPath() === "admin" && (
+          <SubcommunityAnalytics subcommunities={communities!} />
+        )}
 
         {UrlPath() !== "admin" && (
           <>
@@ -250,14 +273,14 @@ const Subcommunities = () => {
 
             <TabsContent value="subcommunities">
               <section className="gap-7 flex flex-col w-full">
-                {subcommunities.filter((sub) => sub.joined === true).length ===
-                0 ? (
+                {subcommunities.filter((sub) => sub.owner.id === auth?.user.id)
+                  .length === 0 ? (
                   <p className="text-black">
                     You haven't joined any subcommunities yet.
                   </p>
                 ) : (
                   subcommunities
-                    .filter((sub) => sub.joined === true)
+                    .filter((sub) => sub.owner.id === auth?.user.id)
                     .map((sub) => (
                       <SubcommunitiesItem
                         key={sub.id}
@@ -291,7 +314,7 @@ const Subcommunities = () => {
 export default Subcommunities;
 
 type SubcommunitiesItemProps = {
-  item: SubcommunitiesItemType;
+  item: ICommunity;
   type: "all" | "subcommunities";
   handleJoinSubcommunity: (id: number) => void;
   handleLeaveSubcommunity: (id: number) => void;
@@ -306,6 +329,7 @@ const SubcommunitiesItem = ({
   setOpenModal,
   setItemToDeleteId,
 }: SubcommunitiesItemProps) => {
+  const [auth] = useAuth();
   const viewSubcommunityPath =
     UrlPath() === "admin"
       ? "/admin/subcommunity-management"
@@ -316,13 +340,13 @@ const SubcommunitiesItem = ({
       <section className="flex items-center justify-between gap-2">
         <div className="text-black/80 flex items-center gap-2 text-sm">
           <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white uppercase rounded-full">
-            {item.title.split(" ")[0][0] + item.title.split(" ")[1][0]}
+            {item.name.split(" ")[0][0] + item.name.split(" ")[1][0]}
           </span>
-          <span>{item.title}</span>
+          <span>{item.name}</span>
         </div>
 
         {UrlPath() === "admin" && (
-          <Link to={`${viewSubcommunityPath}/${slugifyData(item.title)}`}>
+          <Link to={`${viewSubcommunityPath}/${slugifyData(item.name)}`}>
             <Button className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none">
               View Activity
             </Button>
@@ -341,12 +365,14 @@ const SubcommunitiesItem = ({
           </span>
           <span className="w-[1px] h-5 bg-primary-brown" />
           <span className="text-primary-brown/80 font-semibold">
-            {item.members.length} Members
+            {Math.floor(Math.random() * 100)} Members
           </span>
         </section>
 
         <section className="md:flex-row md:items-center md:justify-between flex flex-col gap-4 mt-auto">
-          <p className="text-sm text-black">Active {item.lastActive}</p>
+          <p className="text-sm text-black">
+            Active {moment(new Date(item.updated_at)).fromNow()}
+          </p>
 
           {/* Delete Subcommunity Button */}
           {UrlPath() === "admin" && (
@@ -363,7 +389,7 @@ const SubcommunitiesItem = ({
           {UrlPath() !== "admin" && (
             <div className="flex items-center gap-3">
               {type === "all" && IsAuth() ? (
-                item.joined ? (
+                item.owner.id === auth?.user.id ? (
                   <Button
                     onClick={() => handleLeaveSubcommunity(item.id)}
                     className="bg-primary-green py-2 text-white rounded-none"
@@ -387,7 +413,7 @@ const SubcommunitiesItem = ({
               )}
 
               <Link
-                to={`/${UrlPath()}/subcommunities/${slugifyData(item.title)}`}
+                to={`/${UrlPath()}/subcommunities/${slugifyData(item.name)}`}
               >
                 <Button className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none">
                   View Activity

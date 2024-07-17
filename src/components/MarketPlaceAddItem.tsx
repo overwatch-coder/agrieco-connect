@@ -67,7 +67,7 @@ const MarketPlaceAddItem = ({
       contentType: "multipart/form-data",
       queryKey: "marketplace",
       reset: () => reset({ description: "", name: "", price: 0, image: null }),
-      resetValues: { description: "", name: "", price: "", image: null },
+      resetValues: { description: "", name: "", price: 0, image: null },
     },
   });
 
@@ -79,6 +79,8 @@ const MarketPlaceAddItem = ({
     formData.append("image", data.image[0] as File);
 
     const res = await mutateAsync(formData);
+
+    console.log({ res });
 
     toast.success("Market product added successfully");
     reset();

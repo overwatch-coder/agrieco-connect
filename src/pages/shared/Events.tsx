@@ -1,10 +1,9 @@
 import { Helmet } from "react-helmet-async";
-import { marketplaceEvents as events } from "@/constants";
 import CustomDropdown from "@/components/CustomDropdown";
 import { Link } from "react-router-dom";
 import { slugifyData, UrlPath } from "@/lib/utils";
 import AddEvent from "@/components/AddEvent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EventManagementAnalytics from "@/components/admin/EventManagementAnalytics";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MyEvents from "@/pages/shared/MyEvents";
@@ -14,8 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { toast } from "react-toastify";
-
-type EventsItemType = (typeof events)[number];
+import RenderContentLoading from "@/components/shared/RenderContentLoading";
 
 const dropdownItemsOne = ["Event Type", "New", "Sale", "All"];
 
@@ -32,10 +30,10 @@ const Events = () => {
   const queryClient = useQueryClient();
 
   const {
-    data,
+    data: events,
     isLoading,
     refetch: refetchEvents,
-  } = useFetch<any>({
+  } = useFetch<IEvent[]>({
     queryKey: "events",
     url: "/events",
     enabled: true,
@@ -44,19 +42,27 @@ const Events = () => {
   const [selectedItem, setSelectedItem] = useState("Event Type");
   const [selectedItem2, setSelectedItem2] = useState("Activity");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredEvents, setFilteredEvents] = useState(events);
+  const [filteredEvents, setFilteredEvents] = useState<IEvent[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [itemToBeDeleteId, setItemToBeDeleteId] = useState<number>(0);
 
+  useEffect(() => {
+    if (events) {
+      setFilteredEvents(events);
+    }
+  }, [events]);
+
   // handle search
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!events) return;
+
     setSearchTerm(e.target.value);
 
     if (e.target.value.length > 0) {
       const filtered = filteredEvents.filter(
         (item) =>
           item.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          item.eventType.toLowerCase().includes(e.target.value.toLowerCase())
+          item.description.toLowerCase().includes(e.target.value.toLowerCase())
       );
       setFilteredEvents(filtered);
     } else {
@@ -95,6 +101,20 @@ const Events = () => {
     refetchEvents();
   };
 
+  if (isLoading) {
+    return <RenderContentLoading />;
+  }
+
+  if (!events) {
+    return (
+      <RenderContentLoading>
+        <p className="text-primary-brown text-base">
+          Sorry, we couldn't find any events. Please try again later.
+        </p>
+      </RenderContentLoading>
+    );
+  }
+
   return (
     <div className="w-full">
       {/* Title */}
@@ -111,7 +131,7 @@ const Events = () => {
       </Helmet>
 
       <div className="md:gap-6 flex flex-col w-full gap-10 p-5">
-        {UrlPath() === "admin" && <EventManagementAnalytics />}
+        {UrlPath() === "admin" && <EventManagementAnalytics events={events!} />}
 
         {UrlPath() !== "admin" && (
           <>
@@ -120,7 +140,7 @@ const Events = () => {
                 All Events
               </h2>
 
-              <AddEvent />
+              <AddEvent refetchEvents={refetchEvents} />
             </section>
 
             <section className="md:flex-row md:items-center md:justify-between md:gap-5 flex flex-col w-full gap-3">
@@ -134,6 +154,7 @@ const Events = () => {
                   selectedItem={selectedItem}
                   setSelectedItem={setSelectedItem}
                 />
+
                 <CustomDropdown
                   items={dropdownItemsTwo}
                   selectedItem={selectedItem2}
@@ -225,9 +246,11 @@ const Events = () => {
           <TabsContent value="my-events">
             <MyEvents
               adminFilteredEvents={filteredEvents.filter(
-                (item) => item.isUser === true
+                (item) => item.user_id === auth?.user.id
               )}
+              events={events!}
               handleAdminEventDelete={handleDeleteItem}
+              refetchEvents={refetchEvents}
             />
           </TabsContent>
         </Tabs>
@@ -261,7 +284,7 @@ const Events = () => {
 export default Events;
 
 type EventsItemProps = {
-  item: EventsItemType;
+  item: IEvent;
   setOpenModal: (open: boolean) => void;
   setItemToBeDeleteId: (id: number) => void;
 };
@@ -272,11 +295,12 @@ const EventsItem = ({
 }: EventsItemProps) => {
   return (
     <div className="rounded-xl relative flex flex-col w-full h-full col-span-1 gap-3 p-4 bg-white shadow">
-      {item.isFree && (
-        <p className="top-5 left-5 text-primary-green absolute z-30 px-3 py-1 text-sm uppercase bg-white rounded-md">
-          Free
-        </p>
-      )}
+      {item.price === null ||
+        (item.price === 0 && (
+          <p className="top-5 left-5 text-primary-green absolute z-30 px-3 py-1 text-sm uppercase bg-white rounded-md">
+            Free
+          </p>
+        ))}
 
       <div className="rounded-md group w-full h-full md:h-[250px] xl:h-[300px] overflow-hidden">
         <img
@@ -293,12 +317,16 @@ const EventsItem = ({
         >
           {item.title}
         </Link>
-        <p className="text-primary-brown text-sm">{item.date}</p>
+        <p className="text-primary-brown text-sm">
+          {item.date}, {item.start_time} - {item.end_time}
+        </p>
 
         <div className="flex items-center justify-between gap-4">
           <p className="text-secondary-gray text-sm uppercase">
-            {item.eventType === "online" ? "Online Event" : "In-person"} -{" "}
-            <span className="capitalize">{item.location}</span>
+            {item.location.toLowerCase() === "online"
+              ? "Online Event"
+              : "In-person"}{" "}
+            - <span className="capitalize">{item.location}</span>
           </p>
 
           {UrlPath() === "admin" && (

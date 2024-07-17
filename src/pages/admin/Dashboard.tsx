@@ -5,10 +5,51 @@ import { GoPeople } from "react-icons/go";
 import { userManagement } from "@/constants";
 import DashboardEventCategoriesChart from "@/components/admin/DashboardEventCategoriesChart";
 import DashboardUserAnalyticsChart from "@/components/admin/DashboardUserAnalyticsChart";
+import { useFetch } from "@/hooks/useFetch";
+import { useEffect, useState } from "react";
 
 export type UserManagement = (typeof userManagement)[number];
 
 const Dashboard = () => {
+  // === fetch data ===
+  const { data: events } = useFetch<IEvent[]>({
+    queryKey: "events",
+    url: "/events",
+    enabled: true,
+  });
+
+  const { data: users } = useFetch<IFeedUser[]>({
+    queryKey: "users",
+    url: "/users",
+    enabled: true,
+  });
+
+  const { data: communities } = useFetch<ICommunity[]>({
+    queryKey: "communities",
+    url: "/communities",
+    enabled: true,
+  });
+
+  // use state for data
+  const [eventsData, setEventsData] = useState<IEvent[]>([]);
+  const [usersData, setUsersData] = useState<IFeedUser[]>([]);
+  const [communitiesData, setCommunitiesData] = useState<ICommunity[]>([]);
+
+  // use effect to fetch data
+  useEffect(() => {
+    if (events) {
+      setEventsData(events);
+    }
+
+    if (users) {
+      setUsersData(users);
+    }
+
+    if (communities) {
+      setCommunitiesData(communities);
+    }
+  }, [events, users, communities]);
+
   return (
     <div className="flex flex-col gap-5 py-6">
       {/* Title */}
@@ -36,7 +77,7 @@ const Dashboard = () => {
       <section className="sm:grid-cols-2 lg:grid-cols-4 grid grid-cols-1 gap-10">
         <div className="rounded-xl 2xl:p-10 flex items-center justify-between col-span-1 gap-2 p-5 bg-white">
           <div className="flex flex-col gap-3">
-            <p className="text-2xl font-bold text-black">{100}</p>
+            <p className="text-2xl font-bold text-black">{usersData.length}</p>
             <p className="text-primary-brown text-sm font-medium">
               Total Users
             </p>
@@ -46,7 +87,9 @@ const Dashboard = () => {
 
         <div className="rounded-xl 2xl:p-10 flex items-center justify-between col-span-1 gap-2 p-5 bg-white">
           <div className="flex flex-col gap-3">
-            <p className="text-2xl font-bold text-black">{200}</p>
+            <p className="text-2xl font-bold text-black">
+              {communitiesData.length}
+            </p>
             <p className="text-primary-brown text-sm font-medium">
               Sub Communities
             </p>
@@ -56,7 +99,7 @@ const Dashboard = () => {
 
         <div className="rounded-xl 2xl:p-10 flex items-center justify-between col-span-1 gap-2 p-5 bg-white">
           <div className="flex flex-col gap-3">
-            <p className="text-2xl font-bold text-black">{250}</p>
+            <p className="text-2xl font-bold text-black">{eventsData.length}</p>
             <p className="text-primary-brown text-sm font-medium">Events</p>
           </div>
           <CalendarRange size={30} className="text-primary-green" />
@@ -64,7 +107,9 @@ const Dashboard = () => {
 
         <div className="rounded-xl bg-primary-brown 2xl:p-10 flex items-center justify-between col-span-1 gap-2 p-5">
           <div className="flex flex-col gap-3">
-            <p className="text-2xl font-bold text-white">{150}</p>
+            <p className="text-2xl font-bold text-white">
+              {Math.floor(Math.random() * usersData.length)}
+            </p>
             <p className="text-sm font-medium text-white">Total Experts</p>
           </div>
           <UserRoundCheck size={30} className="text-primary-green" />

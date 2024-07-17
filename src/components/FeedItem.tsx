@@ -32,7 +32,7 @@ const FeedItem = ({ images, content, id }: IFeed) => {
 
   const [auth] = useAuth();
   const [comment, setComment] = useState("");
-  const arrayOfImages = images.split(",");
+  const arrayOfImages = images ? images.split(",") : [];
   const [allLikes, setAllLikes] = useState<IFeedUser[]>(likeQuery.data ?? []);
   const [allComments, setAllComments] = useState<IComment[]>(
     commentQuery.data ?? []

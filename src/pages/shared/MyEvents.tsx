@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import { marketplaceEvents } from "@/constants";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import { useState } from "react";
@@ -12,24 +11,25 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useMutateData } from "@/hooks/useFetch";
 
-export type MarketPlaceEventType = (typeof marketplaceEvents)[number];
-
 type MyEventsProps = {
-  adminFilteredEvents?: MarketPlaceEventType[];
+  adminFilteredEvents?: IEvent[];
   handleAdminEventDelete?: (id?: string) => Promise<void>;
+  refetchEvents: () => void;
+  events: IEvent[];
 };
 
 const MyEvents = ({
   adminFilteredEvents,
   handleAdminEventDelete,
+  refetchEvents,
+  events,
 }: MyEventsProps) => {
-  const [filteredEvents, setFilteredEvents] = useState(
-    marketplaceEvents.filter((item) => item.isUser === true)
-  );
-  const [itemToBeDeleteId, setItemToBeDeleteId] = useState<number>(0);
-
   const [auth] = useAuth();
   const queryClient = useQueryClient();
+  const [filteredEvents, setFilteredEvents] = useState(
+    events.filter((item) => item.user_id === auth?.user.id)
+  );
+  const [itemToBeDeleteId, setItemToBeDeleteId] = useState<number>(0);
 
   const {
     mutateAsync,
@@ -58,7 +58,7 @@ const MyEvents = ({
       queryKey: ["events", "/events/my-events"],
     });
 
-    // refetchEvents();
+    refetchEvents();
   };
 
   return (
@@ -127,6 +127,7 @@ const MyEvents = ({
                 item={item}
                 handleDeleteItem={handleDeleteItem}
                 setItemToBeDeleteId={setItemToBeDeleteId}
+                pending={pending}
               />
             ))
           )}
@@ -139,7 +140,7 @@ const MyEvents = ({
 export default MyEvents;
 
 type MarketPlaceEventItemProps = {
-  item: MarketPlaceEventType;
+  item: IEvent;
   handleDeleteItem: (id?: string) => Promise<void>;
   setItemToBeDeleteId?: (id: number) => void;
   pending?: boolean;
@@ -156,7 +157,7 @@ const MarketPlaceEventItem = ({
 
   return (
     <div className="rounded-xl relative flex flex-col w-full h-full col-span-1 gap-3 p-4 bg-white shadow">
-      {item.isFree && (
+      {item.price === 0 && (
         <p className="top-5 left-5 text-primary-green absolute z-50 px-3 py-1 text-sm uppercase bg-white rounded-md">
           Free
         </p>
@@ -181,7 +182,7 @@ const MarketPlaceEventItem = ({
 
         <div className="md:flex-row md:justify-between md:items-center flex flex-col gap-2">
           <p className="text-secondary-gray text-xs uppercase">
-            {item.eventType === "online" ? "Online Event" : "In-person"} -{" "}
+            {item.location === "online" ? "Online Event" : "In-person"} -{" "}
             <span className="capitalize">{item.location}</span>
           </p>
 
