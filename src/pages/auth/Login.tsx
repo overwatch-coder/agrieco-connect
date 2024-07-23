@@ -55,13 +55,9 @@ const Login = () => {
     setAuth(res);
 
     toast.success("Login Successful");
-    navigate(
-      redirect
-        ? redirect
-        : res.user.role === "admin"
-          ? "/admin/dashboard"
-          : "/user/feed"
-    );
+    const redirectUrl =
+      res.user.role === "admin" ? "/admin/dashboard" : "/user/feed";
+    navigate(redirectUrl, { replace: true });
 
     reset();
   };
