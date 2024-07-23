@@ -11,8 +11,8 @@ import { useFetch } from "@/hooks/useFetch";
 import ResponsiveArticle from "react-content-loader";
 
 const topicDropdownItems = [
+  "All",
   "Activity",
-  "Search",
   "New Post",
   "Cash Crops",
   "Poultry",
@@ -25,7 +25,7 @@ const Topics = () => {
     () => new URLSearchParams(location.search),
     [location.search]
   );
-  const [selectedItem, setSelectedItem] = useState("Activity");
+  const [selectedItem, setSelectedItem] = useState("All");
 
   const { data: userTopics, isLoading } = useFetch<ITopic[]>({
     queryKey: "topics",
@@ -33,11 +33,19 @@ const Topics = () => {
     enabled: true,
   });
 
-  const [topics, setTopics] = useState<ITopic[]>(userTopics?.slice(0, 2) ?? []);
+  const [topics, setTopics] = useState<ITopic[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [searchTopic, setSearchTopic] = useState("");
   const [subscribedTopics, setSubscribedTopics] = useState<string[]>(["All"]);
 
+  // === Set topics ===
+  useEffect(() => {
+    if (userTopics) {
+      setTopics(userTopics.length > 2 ? userTopics.slice(0, 2) : userTopics);
+    }
+  }, [userTopics]);
+
+  // === Set subscribed topics ===
   useEffect(() => {
     if (!userTopics) return;
 
@@ -48,7 +56,7 @@ const Topics = () => {
     ]);
   }, [userTopics]);
 
-  // fetch more topics when user scrolls to the bottom
+  // === Fetch more topics when user scrolls to the bottom ===
   const fetchMoreTopics = (): void => {
     if (!userTopics) return;
 
@@ -64,6 +72,7 @@ const Topics = () => {
     }, 500);
   };
 
+  // === Filter topics based on search ===
   const filterTopics = useCallback(() => {
     const search = searchParams.get("search");
 
@@ -82,6 +91,7 @@ const Topics = () => {
     }
   }, [searchParams, userTopics]);
 
+  // === Filter topics based on search ===
   useEffect(() => {
     filterTopics();
 
@@ -90,6 +100,21 @@ const Topics = () => {
     };
   }, [filterTopics, searchTopic, userTopics]);
 
+  // === Filer based on selected dropdown item ===
+  useEffect(() => {
+    if (!userTopics) return;
+
+    if (selectedItem.toLowerCase() === "all") {
+      setSelectedItem("All");
+      navigate(`/user/topics`);
+    }
+
+    if (selectedItem.toLowerCase() !== "all") {
+      navigate(`/user/topics?search=${selectedItem}`);
+    }
+  }, [navigate, selectedItem, userTopics]);
+
+  // === Loading spinner when topics are loading ===
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">

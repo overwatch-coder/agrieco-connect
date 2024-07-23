@@ -26,6 +26,7 @@ const TopicItem = ({ id, description, name }: ITopic) => {
     console.log(comment);
     setComment("");
   };
+
   return (
     <section className="rounded-2xl text-start flex flex-col w-full gap-5 p-4 bg-white">
       <div className="flex items-center justify-between gap-4">
@@ -58,11 +59,7 @@ const TopicItem = ({ id, description, name }: ITopic) => {
         <p className="text-primary-brown md:text-xl text-lg font-semibold">
           {description ?? name}
         </p>
-        <p className="text-black/90 text-sm">
-          {
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu rhoncus tortor. Etiam tincidunt magna non nibh eleifend, egestas laoreet nisi lacinia. Donec sed interdum dui. Proin porta eu nibh sit amet fringilla. Proin efficitur nulla ut tortor ornare cursus. Nullam quis rhoncus elit. Sed eu rhoncus tortor. Etiam tincidunt magna non nibh eleifend, egestas laoreet nisi lacinia. Donec sed interdum dui. Proin porta eu nibh sit amet fringilla. Proin efficitur nulla ut tortor ornare cursus. Nullam quis rhoncus elit. Sed eu rhoncus tortor."
-          }
-        </p>
+        <p className="text-black/90 text-sm">{description}</p>
       </div>
 
       <div className="border-b-secondary-gray text-start md:justify-between md:gap-4 border-t-secondary-gray flex flex-wrap items-center w-full gap-2 pt-3 pb-3 border-t border-b">
