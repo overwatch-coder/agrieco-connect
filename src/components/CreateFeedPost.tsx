@@ -36,7 +36,7 @@ const CreateFeedPost = ({
 }: CreateFeedPostProps) => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
-  const { data: topics, ...query } = useFetch<ITopic[]>({
+  const { data: topics } = useFetch<ITopic[]>({
     url: "/topics",
     queryKey: "topics",
   });

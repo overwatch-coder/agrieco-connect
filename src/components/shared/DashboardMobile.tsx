@@ -99,10 +99,10 @@ const DashboardMobile = () => {
             <UserProfile />
             <p className="flex flex-col gap-1 text-white">
               <span className="text-lg font-medium capitalize">
-                {"Josepine Ekhator"}
+                {auth?.user?.fullname}
               </span>
               <span className="text-white/70 text-base font-normal">
-                {UrlPath() === "user" ? "User" : "Admin"}
+                {auth?.user?.role}
               </span>
             </p>
           </div>

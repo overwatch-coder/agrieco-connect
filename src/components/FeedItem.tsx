@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -19,29 +19,74 @@ import moment from "moment-timezone";
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 moment.tz.setDefault(timezone);
 
-const FeedItem = ({ images, content, id }: IFeed) => {
+const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
+  // === Get Auth ===
+  const [auth] = useAuth();
+
+  // === Comments Query ===
   const commentQuery = useFetch<IComment[]>({
     queryKey: "comments",
     url: `/feeds/${id}/comments`,
   });
 
+  // === Likes Query ===
   const likeQuery = useFetch<Omit<IAuthUser, "token">[]>({
     queryKey: "likes",
     url: `/feeds/${id}/likes`,
   });
 
-  const [auth] = useAuth();
-  const [comment, setComment] = useState("");
-  const arrayOfImages = images ? images.split(",") : [];
-  const [allLikes, setAllLikes] = useState<IFeedUser[]>(likeQuery.data ?? []);
-  const [allComments, setAllComments] = useState<IComment[]>(
-    commentQuery.data ?? []
-  );
+  // === User Query ===
+  const userQuery = useFetch<IFeedUser>({
+    queryKey: "user",
+    url: `/users/${user_id}`,
+  });
 
+  // === Followers Query ===
+  const followersQuery = useFetch<IFeedUser[]>({
+    queryKey: "followers",
+    url: `/users/following`,
+    token: auth?.user?.token,
+  });
+
+  // === State ===
+  const [comment, setComment] = useState("");
+  const [allLikes, setAllLikes] = useState<IFeedUser[]>([]);
+  const [allComments, setAllComments] = useState<IComment[]>([]);
+  const [allFollowers, setAllFollowers] = useState<number[]>([]);
+  const [feedUser, setFeedUser] = useState<IFeedUser>({
+    id: 0,
+    fullname: "",
+    email: "",
+    username: "",
+  });
+
+  // === UseEffect ===
+  useEffect(() => {
+    if (likeQuery.data) {
+      setAllLikes(likeQuery.data);
+    }
+
+    if (commentQuery.data) {
+      setAllComments(commentQuery.data);
+    }
+
+    if (followersQuery.data) {
+      setAllFollowers(followersQuery.data.map((follower) => follower.id));
+    }
+
+    if (userQuery.data) {
+      setFeedUser(userQuery.data);
+    }
+  }, [commentQuery.data, followersQuery.data, likeQuery.data, userQuery.data]);
+
+  // === Get the right images ===
+  const arrayOfImages = images ? images.split(",") : [];
   const filteredImages = arrayOfImages.filter((image) =>
     image.includes("res.cloudinary.com")
   );
 
+  // === Mutations ===
+  // === Likes ===
   const { mutateAsync: mutateLikes } = useMutateData<any, IFeed>({
     url: `/feeds/${id}/likes`,
     config: {
@@ -64,6 +109,7 @@ const FeedItem = ({ images, content, id }: IFeed) => {
     setAllLikes(res.likes);
   };
 
+  // === Comments ===
   const { mutateAsync: mutateComments, isPending: isCommentPending } =
     useMutateData<{ content: string }, IComment>({
       url: `/feeds/${id}/comments`,
@@ -88,21 +134,49 @@ const FeedItem = ({ images, content, id }: IFeed) => {
     setAllComments((prev) => [...prev, res]);
   };
 
+  // === Following ===
+  const { mutateAsync: mutateFollows } = useMutateData<any, IFeedUser>({
+    url: `/users/${user_id}/follow`,
+    config: {
+      method: "PUT",
+      contentType: "application/json",
+      token: auth?.user?.token,
+      queryKey: "followers",
+    },
+  });
+
+  const handleFollowSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    await mutateFollows(null);
+
+    followersQuery.refetch();
+
+    setAllFollowers((prev) => [...prev, user_id]);
+  };
+
   return (
     <section className="rounded-2xl text-start flex flex-col w-full gap-5 p-4 bg-white">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <UserBio
             authorImage={faker.image.avatar()}
-            authorName={faker.person.fullName()}
+            authorName={feedUser.fullname}
             connections={faker.number.int({ min: 0, max: 1000 })}
             profession={faker.person.jobTitle()}
             bio={faker.person.bio()}
           />
+
           <div className="flex flex-col gap-1">
-            <p className="text-sm font-normal">{faker.person.fullName()}</p>
+            <p className="text-sm font-normal">{feedUser.fullname}</p>
             <p className="text-secondary-gray/50 text-xs">
-              {faker.date.recent().toLocaleString("en", {
+              {new Date(
+                created_at
+                  .split(" ")[0]
+                  .concat("T")
+                  .concat(created_at.split(" ")[1])
+                  .concat("Z")
+              ).toLocaleString("en", {
                 dateStyle: "medium",
                 timeStyle: "short",
               })}
@@ -111,12 +185,17 @@ const FeedItem = ({ images, content, id }: IFeed) => {
         </div>
 
         {auth ? (
-          <Button
-            variant={"link"}
-            className="text-primary-green hover:no-underline"
-          >
-            Following
-          </Button>
+          user_id !== auth?.user?.id && (
+            <Button
+              onClick={(e) => handleFollowSubmit(e)}
+              variant={"link"}
+              className="text-primary-green hover:no-underline"
+            >
+              {allFollowers.some((follower) => follower === user_id)
+                ? "Following"
+                : "Follow"}
+            </Button>
+          )
         ) : (
           <LoginModal hasChildren={true}>
             <Button

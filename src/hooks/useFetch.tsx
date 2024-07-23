@@ -10,18 +10,23 @@ interface IUseFetch {
   url: string;
   queryKey: string;
   token?: string;
-  enabled?: boolean; // Optional flag to enable/disable query fetching
+  enabled?: boolean;
 }
 
 export const useFetch = <TData,>({
   url,
   queryKey,
   enabled = true,
+  token,
 }: IUseFetch): UseQueryResult<TData, Error> => {
   const query = useQuery({
-    queryKey: [queryKey, url],
+    queryKey: [queryKey, url, token],
     queryFn: async () => {
-      const res = await axiosInstance.get(`${url}`);
+      const res = await axiosInstance.get(`${url}`, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      });
       return res.data;
     },
     enabled: enabled,

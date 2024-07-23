@@ -12,9 +12,9 @@ interface Trend {
 
 const FeedTopicsSidebar = () => {
   // === Data Fetching === //
-  const { data: trends } = useFetch<{ [key: string]: number }>({
-    queryKey: "trends",
-    url: "/feeds/trending-keywords",
+  const { data: trends } = useFetch<ITopic[]>({
+    queryKey: "topics",
+    url: "/topics",
     enabled: true,
   });
 
@@ -31,18 +31,13 @@ const FeedTopicsSidebar = () => {
   });
 
   // === States === //
-  const [allTrends, setAllTrends] = useState<Trend[]>([]);
+  const [allTrends, setAllTrends] = useState<ITopic[]>([]);
   const [subcommunities, setSubcommunities] = useState<ICommunity[]>([]);
   const [marketplace, setMarketplace] = useState<IMarketPlace[]>([]);
 
   useEffect(() => {
     if (trends) {
-      const trendsObject = Object.keys(trends).map((key) => ({
-        name: key,
-        value: trends[key],
-      }));
-
-      setAllTrends(trendsObject);
+      setAllTrends(trends.length > 4 ? trends.slice(0, 4) : trends);
     }
 
     if (subcommunitiesData) {

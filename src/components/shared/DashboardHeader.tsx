@@ -117,10 +117,10 @@ const DashboardHeader = () => {
                 {!isUser && (
                   <p className="text-primary-brown flex flex-col gap-1">
                     <span className="font-bold capitalize">
-                      {"Josepine Ekhator"}
+                      {auth?.user?.fullname}
                     </span>
-                    <span className="text-secondary-gray text-sm font-normal">
-                      {"Admin"}
+                    <span className="text-secondary-gray text-sm font-normal capitalize">
+                      {auth?.user?.role}
                     </span>
                   </p>
                 )}
