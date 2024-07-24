@@ -286,7 +286,7 @@ export const userDashboardLinks = [
     icon: FaUsers,
   },
   {
-    name: "Agriculture Trends",
+    name: "Agriculture Blogs",
     path: "/user/agriculture-trends",
     icon: TrendingUp,
   },

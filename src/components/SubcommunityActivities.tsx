@@ -71,7 +71,7 @@ const SubcommunityActivities = ({
 
         {/* Small Images */}
         <div className="md:flex-col md:justify-start flex flex-row items-center justify-center col-span-1 gap-5">
-          {images.slice(1).map((image, index) => (
+          {/* {images?.slice(1)?.map((image, index) => (
             <div
               key={index}
               className="group w-full h-full overflow-hidden rounded-lg"
@@ -82,7 +82,7 @@ const SubcommunityActivities = ({
                 className="group-hover:scale-110 object-cover w-full h-full transition"
               />
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
 

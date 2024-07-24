@@ -22,6 +22,7 @@ import { MultiSelect } from "@/components/ui/multi-select";
 import CustomError from "@/components/shared/CustomError";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 type CreateFeedPostProps = {
   open: boolean;
@@ -35,6 +36,9 @@ const CreateFeedPost = ({
   refetchFeeds,
 }: CreateFeedPostProps) => {
   const [auth] = useAuth();
+  const location = useLocation();
+  const id = location.state?.id || 0;
+
   const queryClient = useQueryClient();
   const { data: topics } = useFetch<ITopic[]>({
     url: "/topics",
@@ -79,6 +83,8 @@ const CreateFeedPost = ({
     });
 
     formData.append("topics", parsedTopics.join(","));
+
+    id && formData.append("community_id", id);
 
     await mutateAsync(formData);
 

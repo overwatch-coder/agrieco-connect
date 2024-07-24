@@ -25,6 +25,7 @@ declare interface IFeed {
   topics: ITopic[];
   likes: IFeedUser[];
   comments: IComment[];
+  community_id?: number;
 }
 
 declare interface IComment {

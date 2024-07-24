@@ -3,7 +3,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { slugifyData } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 interface Trend {
   name: string;
@@ -11,7 +11,13 @@ interface Trend {
 }
 
 const FeedTopicsSidebar = () => {
-  // === Data Fetching === //
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentTrend = searchParams.get("trend");
+
+  const handleSearchTrend = (trend: string) => {
+    setSearchParams({ trend });
+  }  
+    // === Data Fetching === //
   const { data: trends } = useFetch<ITrend>({
     queryKey: "trending-keywords",
     url: "/feeds/trending-keywords",
@@ -70,13 +76,16 @@ const FeedTopicsSidebar = () => {
             </h2>
             <div className="flex flex-col gap-3">
               {allTrends.map((trend, index) => (
-                <Link
-                  key={index}
-                  className="text-black/80 text-sm"
-                  to={`/user/agriculture-trends?trend=${trend}`}
-                >
+                // <Link
+                //   key={index}
+                //   className="text-black/80 text-sm"
+                //   to={`/user/agriculture-trends?trend=${trend}`}
+                // >
+                //   #{trend}
+                // </Link>
+                <span key={index} onClick={()=>handleSearchTrend(trend)} className={`${trend === currentTrend ? "text-green-600 font-bold" : "text-black/80"}  text-sm cursor-pointer`}>
                   #{trend}
-                </Link>
+                </span>
               ))}
             </div>
           </section>

@@ -80,14 +80,14 @@ const Settings = () => {
               </div>
 
               <div className="md:text-start flex flex-col gap-1 text-center">
-                <h3 className="text-primary-green">Adetokunbo Adebayo</h3>
+                <h3 className="text-primary-green">{auth?.user.fullname}o</h3>
                 <p className="text-primary-brown text-xs font-semibold">
-                  Veterinarian and Poultry Farm Owner
+                {auth?.user.username}
                 </p>
-                <p className="text-secondary-gray/50 text-xs">
+                {/* <p className="text-secondary-gray/50 text-xs">
                   Passionate poultry farmer with 20 years of experience in
                   sustainable farming practices.
-                </p>
+                </p> */}
               </div>
             </div>
           </div>

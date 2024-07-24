@@ -2,17 +2,17 @@ import CreateSubcommunity from "@/components/CreateSubcommunity";
 import { Helmet } from "react-helmet-async";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { subcommunities as subcommunitiesData } from "@/constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
-import { IsAuth, slugifyData, UrlPath } from "@/lib/utils";
+import { axiosInstance, IsAuth, slugifyData, UrlPath } from "@/lib/utils";
 import SubcommunityAnalytics from "@/components/admin/SubcommunityAnalytics";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import LoginModal from "@/components/shared/LoginModal";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { toast } from "react-toastify";
@@ -84,13 +84,24 @@ const Subcommunities = () => {
     }, 500);
   };
 
+  const { mutateAsync:mutateAsyncJoin, isPending, error:errorJoin, isError } = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await axiosInstance.put(`/communities/${id}/members`, {}, {
+        headers: {
+          Authorization: `Bearer ${auth?.user?.token}`,
+        },
+      });
+
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("You successfully joined the subcommunity");
+    },
+  });
+
   // handle join subcommunity
-  const handleJoinSubcommunity = (id: number) => {
-    setSubcommunities((prevSubcommunities) =>
-      prevSubcommunities.map((sub) =>
-        sub.id === id ? { ...sub, joined: true } : sub
-      )
-    );
+  const handleJoinSubcommunity = async (id: number) => {
+    await mutateAsyncJoin(id.toString());
   };
 
   // handle leave subcommunity
@@ -133,21 +144,21 @@ const Subcommunities = () => {
     refetchSubcommunities();
   };
 
-  if (isLoading) {
-    return <RenderContentLoading />;
-  }
+  // if (isLoading) {
+  //   return <RenderContentLoading />;
+  // }
 
-  if (!communities) {
-    return (
-      <RenderContentLoading>
-        <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
-          <p className="text-primary-brown text-base">
-            Sorry, we couldn't find any communities. Please try again later.
-          </p>
-        </div>
-      </RenderContentLoading>
-    );
-  }
+  // if (!communities) {
+  //   return (
+  //     <RenderContentLoading>
+  //       <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
+  //         <p className="text-primary-brown text-base">
+  //           Sorry, we couldn't find any communities. Please try again later.
+  //         </p>
+  //       </div>
+  //     </RenderContentLoading>
+  //   );
+  // }
 
   return (
     <div className="w-full">
@@ -335,6 +346,8 @@ const SubcommunitiesItem = ({
       ? "/admin/subcommunity-management"
       : "/user/subcommunities";
 
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col w-full h-full gap-3 p-4 bg-white rounded-md shadow-md">
       <section className="flex items-center justify-between gap-2">
@@ -412,13 +425,15 @@ const SubcommunitiesItem = ({
                 </LoginModal>
               )}
 
-              <Link
+              {/* <Link
                 to={`/${UrlPath()}/subcommunities/${slugifyData(item.name)}`}
-              >
-                <Button className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none">
+              > */}
+                <Button onClick={()=>navigate(`/user/subcommunities/${slugifyData(item.name)}`, {
+                  state: { id: item.id}
+                })} className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none">
                   View Activity
                 </Button>
-              </Link>
+              {/* </Link> */}
             </div>
           )}
         </section>

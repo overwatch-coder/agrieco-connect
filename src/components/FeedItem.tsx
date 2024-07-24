@@ -16,7 +16,8 @@ import { Form } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import moment from "moment-timezone";
 
-const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+// const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const timezone = "Etc/GMT-4"
 moment.tz.setDefault(timezone);
 
 const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
@@ -504,6 +505,20 @@ export const LeaveAComment: React.FC<LeaveACommentProps> = ({
 };
 
 export const CommentItem = ({ comment }: { comment: IComment }) => {
+  function addHoursToDate(dateString: string, hoursToAdd:number): string {
+    const date = new Date(dateString.replace(' ', 'T'));
+
+    date.setHours(date.getHours() + hoursToAdd);
+  
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
   return (
     <div className="flex items-start w-full gap-3">
       <div className="bg-secondary-gray flex items-center justify-center w-10 h-10 p-3 text-center text-white rounded-full">
@@ -518,7 +533,7 @@ export const CommentItem = ({ comment }: { comment: IComment }) => {
 
         <div className="md:gap-2 flex flex-wrap items-center">
           <p className="text-primary-brown flex items-center gap-1 text-sm font-normal">
-            {moment(new Date(comment.created_at)).fromNow()}
+            {moment(new Date(addHoursToDate(comment.created_at, 4))).fromNow()} 
           </p>
         </div>
       </div>

@@ -189,13 +189,13 @@ const AppointmentItem = ({
         openEditModal={openEditModal}
         setOpenEditModal={setOpenEditModal}
         item={{
-          companyName: item.fullname,
+          company_name: item.fullname,
           specialty: item.specialty,
           location: item.location,
-          experienceLevel: item.experienceLevel,
-          contactInfo: item.contactDetails,
-          availabilitySlotStart: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[0]}`,
-          availabilitySlotEnd: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[1]}`,
+          experience_level: item.experienceLevel,
+          contact_info: item.contactDetails,
+          availability_slot_start: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[0]}`,
+          availability_slot_end: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[1]}`,
           bio: item.bio,
         }}
       />

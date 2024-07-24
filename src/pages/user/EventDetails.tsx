@@ -155,7 +155,7 @@ const EventDetails = () => {
                     {auth && <AddToCalendarButton event={eventInfo} />}
 
                     <div className="flex flex-col w-full gap-4">
-                      <RegisterEvent />
+                      <RegisterEvent eventInfo={eventInfo}/>
 
                       <ContactUs />
                     </div>
@@ -226,14 +226,14 @@ const EventDetails = () => {
                   Event Location
                 </h2>
 
-                <iframe
+                {/* <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126093.84170376923!2d7.367464676956561!3d9.02424682048499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104e745f4cd62fd9%3A0x53bd17b4a20ea12b!2sKano%2C%20Federal%20Capital%20Territory%2C%20Nigeria!5e0!3m2!1sen!2sma!4v1719966333827!5m2!1sen!2sma"
                   className="w-full h-[300px]"
                   style={{ border: "0" }}
                   allowFullScreen={true}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
+                ></iframe> */}
               </div>
 
               {/* Event Country */}
@@ -299,8 +299,18 @@ const RegisterEventSchema = z.object({
 
 type RegisterEventSchemaType = z.infer<typeof RegisterEventSchema>;
 
-const RegisterEvent = () => {
+const RegisterEvent = ({eventInfo}:{
+  eventInfo: IEvent
+}) => {
   const [auth] = useAuth();
+
+  const { data: attendees } = useFetch<any[]>({
+    queryKey: "events",
+    url: `/events/${eventInfo.id}/attendees`,
+    enabled: true,
+  });
+
+
   const {
     register,
     handleSubmit,
@@ -312,30 +322,38 @@ const RegisterEvent = () => {
   });
 
   const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: RegisterEventSchemaType) => {
-      const res = await axiosInstance.post("/users", data);
+    mutationFn: async () => {
+      const res = await axiosInstance.put(`/events/${eventInfo.id}/attendees`, {}, {
+        headers: {
+          Authorization: `Bearer ${auth?.user?.token}`,
+        }
+      });
 
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Event registered successfully");
+      toast.success("You have successfully registered for this event");
       reset();
+      window.location.reload();
     },
   });
 
-  const handleSubmitForm = async (data: RegisterEventSchemaType) => {
-    console.log(data);
-    await mutateAsync({ ...data });
+  const handleSubmitForm = async () => {
+    await mutateAsync();
   };
+
+  const haveRegistered = attendees?.some((attendee) => attendee.email === auth?.user?.email);
 
   return (
     <Dialog>
       {auth ? (
-        <DialogTrigger asChild>
-          <Button className="bg-primary-brown w-full text-center text-white rounded">
+          haveRegistered ?
+            <span className="px-3 py-2 rounded-md bg-green-100 text-green-900">You have registered for this event</span>
+            :
+          <Button onClick={handleSubmitForm} className="bg-primary-brown w-full text-center text-white rounded">
             Register
           </Button>
-        </DialogTrigger>
+          
       ) : (
         <LoginModal hasChildren={true}>
           <Button className="bg-primary-brown w-full text-center text-white rounded">

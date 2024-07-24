@@ -80,20 +80,20 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("location", data.location);
-    formData.append("date", data.date);
+    formData.append("date", new Date(data.date)?.toISOString());
     formData.append(
       "start_time",
       new Date(`${data.date}T${data.start_time}:00Z`).toLocaleTimeString(
         "en-US",
         { timeStyle: "short", timeZone: "UTC" }
-      )
+      )?.toString().replace(/\s/g, '')
     );
     formData.append(
       "end_time",
       new Date(`${data.date}T${data.end_time}:00Z`).toLocaleTimeString(
         "en-US",
         { timeStyle: "short", timeZone: "UTC" }
-      )
+      )?.toString().replace(/\s/g, '')
     );
     formData.append("description", data.description);
     formData.append("image", data.image[0] as File);
