@@ -33,7 +33,7 @@ export const useFetch = <TData,>({
     refetchOnWindowFocus: "always",
     refetchInterval: 1000 * 60 * 1, // 1 minute
   });
-
+  
   return query;
 };
 

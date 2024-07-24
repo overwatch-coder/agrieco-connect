@@ -50,6 +50,10 @@ declare interface ITopic {
   description: null | string;
 }
 
+declare interface ITrend {
+  [key:string] : number
+}
+
 // === MARKETPLACE ===
 declare interface IMarketPlace {
   id: number;

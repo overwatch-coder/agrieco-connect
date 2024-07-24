@@ -12,9 +12,9 @@ interface Trend {
 
 const FeedTopicsSidebar = () => {
   // === Data Fetching === //
-  const { data: trends } = useFetch<ITopic[]>({
-    queryKey: "topics",
-    url: "/topics",
+  const { data: trends } = useFetch<ITrend>({
+    queryKey: "trending-keywords",
+    url: "/feeds/trending-keywords",
     enabled: true,
   });
 
@@ -31,13 +31,15 @@ const FeedTopicsSidebar = () => {
   });
 
   // === States === //
-  const [allTrends, setAllTrends] = useState<ITopic[]>([]);
+  const [allTrends, setAllTrends] = useState<string[]>([]);
   const [subcommunities, setSubcommunities] = useState<ICommunity[]>([]);
   const [marketplace, setMarketplace] = useState<IMarketPlace[]>([]);
 
   useEffect(() => {
     if (trends) {
-      setAllTrends(trends.length > 4 ? trends.slice(0, 4) : trends);
+      const trendKeys = Object.keys(trends);
+      setAllTrends(trendKeys)
+      // setAllTrends(trends.length > 4 ? trends.slice(0, 4) : trends);
     }
 
     if (subcommunitiesData) {
@@ -71,9 +73,9 @@ const FeedTopicsSidebar = () => {
                 <Link
                   key={index}
                   className="text-black/80 text-sm"
-                  to={`/user/agriculture-trends?trend=${trend.name}`}
+                  to={`/user/agriculture-trends?trend=${trend}`}
                 >
-                  #{trend.name}
+                  #{trend}
                 </Link>
               ))}
             </div>

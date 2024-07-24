@@ -222,7 +222,7 @@ const CreateFeedPostTrigger = () => {
   return (
     <>
       <img
-        src="/images/avatar.png"
+        src="/images/avatar.jpg"
         alt="User Icon"
         className="w-10 h-10 rounded-full"
       />

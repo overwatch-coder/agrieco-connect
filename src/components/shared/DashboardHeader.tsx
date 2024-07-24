@@ -148,7 +148,7 @@ export const UserProfile = () => {
           aria-label="User Profile"
         >
           <img
-            src={"/images/avatar.png"}
+            src={"/images/avatar.jpg"}
             alt="avatar"
             className="object-contain w-10 h-10 overflow-hidden rounded-full"
             loading="lazy"

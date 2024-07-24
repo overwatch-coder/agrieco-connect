@@ -17,8 +17,11 @@ import CustomFormField from "@/components/shared/CustomFormField";
 import { Subcommunity } from "@/types";
 import { SubcommunitySchema } from "@/schema/subcommunity.schema";
 import LoginModal from "@/components/shared/LoginModal";
+import { useAuth } from "@/hooks/useAuth";
 
 const CreateSubcommunity = () => {
+  const [auth] = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -31,12 +34,16 @@ const CreateSubcommunity = () => {
 
   const { mutateAsync, isPending, error, isError } = useMutation({
     mutationFn: async (data: Subcommunity) => {
-      const res = await axiosInstance.post("/users", data);
+      const res = await axiosInstance.post("/communities", data, {
+        headers: {
+          Authorization: `Bearer ${auth?.user?.token}`,
+        },
+      });
 
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Appointment added successfully");
+      toast.success("Community added successfully");
       reset();
     },
   });
@@ -97,7 +104,7 @@ const CreateSubcommunity = () => {
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Community Name"
-              inputName="communityName"
+              inputName="name"
               placeholderText="Enter community name"
               errors={errors}
               register={register}

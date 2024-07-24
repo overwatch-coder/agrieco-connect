@@ -17,8 +17,10 @@ import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import { AppointmentsAvailabilitySchema } from "@/schema/appointments.schema";
 import LoginModal from "@/components/shared/LoginModal";
+import { useAuth } from "@/hooks/useAuth";
 
 const AddAppointmentAvailability = () => {
+  const [auth] = useAuth();
   const {
     register,
     handleSubmit,
@@ -31,7 +33,11 @@ const AddAppointmentAvailability = () => {
 
   const { mutateAsync, isPending, error, isError } = useMutation({
     mutationFn: async (data: AppointmentsAvailability) => {
-      const res = await axiosInstance.post("/users", data);
+      const res = await axiosInstance.post("/appointments", data, {
+        headers: {
+          Authorization: `Bearer ${auth?.user?.token}`,
+        }}
+      );
 
       return res.data;
     },
@@ -96,7 +102,7 @@ const AddAppointmentAvailability = () => {
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Company Name"
-              inputName="companyName"
+              inputName="company_name"
               placeholderText="Enter company Name"
               errors={errors}
               register={register}
@@ -125,7 +131,7 @@ const AddAppointmentAvailability = () => {
           <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Experience Level"
-              inputName="experienceLevel"
+              inputName="experience_level"
               placeholderText="eg. 4.5"
               errors={errors}
               register={register}
@@ -134,7 +140,7 @@ const AddAppointmentAvailability = () => {
 
             <CustomFormField
               labelName="Contact Information"
-              inputName="contactInfo"
+              inputName="contact_info"
               placeholderText="Enter contact Information"
               errors={errors}
               register={register}
@@ -145,7 +151,7 @@ const AddAppointmentAvailability = () => {
           <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Availability Start Slot (with date and time)"
-              inputName="availabilitySlotStart"
+              inputName="availability_slot_start"
               placeholderText="Enter availability slot"
               errors={errors}
               register={register}
@@ -154,7 +160,7 @@ const AddAppointmentAvailability = () => {
 
             <CustomFormField
               labelName="Availability End Slot (with date and time)"
-              inputName="availabilitySlotEnd"
+              inputName="availability_slot_end"
               placeholderText="Enter availability slot"
               errors={errors}
               register={register}

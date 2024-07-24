@@ -71,10 +71,12 @@ const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
     }
 
     if (followersQuery.data) {
+      console.log("Followers=====", followersQuery.data);
       setAllFollowers(followersQuery.data.map((follower) => follower.id));
     }
 
     if (userQuery.data) {
+      console.log("User=====", userQuery.data);
       setFeedUser(userQuery.data);
     }
   }, [commentQuery.data, followersQuery.data, likeQuery.data, userQuery.data]);
@@ -479,7 +481,7 @@ export const LeaveAComment: React.FC<LeaveACommentProps> = ({
       className="flex items-center gap-3 py-3"
     >
       <img
-        src={image ?? "/images/avatar.png"}
+        src={image ?? "/images/avatar.jpg"}
         alt={"avatar"}
         className="w-10 h-10 rounded-full"
       />
