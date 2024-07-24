@@ -59,6 +59,8 @@ const MyEvents = ({
     });
 
     refetchEvents();
+
+    setItemToBeDeleteId(0);
   };
 
   return (
@@ -126,8 +128,9 @@ const MyEvents = ({
               <MarketPlaceEventItem
                 key={item.id}
                 item={item}
-                handleDeleteItem={handleAdminEventDelete!}
+                handleDeleteItem={handleDeleteItem!}
                 refetchEvents={refetchEvents}
+                pending={pending}
               />
             ))
           ) : (
@@ -177,7 +180,7 @@ const MarketPlaceEventItem = ({
 
       <div className="rounded-md group w-full h-full md:h-[250px] xl:h-[300px] overflow-hidden">
         <img
-          src={item.image}
+          src={item.image ?? "https://placehold.co/400"}
           alt-={item.title}
           className="rounded-xl group-hover:scale-105 object-cover object-center w-full h-full transition-transform"
         />

@@ -1,13 +1,12 @@
 import "add-to-calendar-button";
 import { getEndTime } from "@/lib/utils";
-import { EventType } from "@/pages/user/EventDetails";
 import { useAuth } from "@/hooks/useAuth";
 
 const getTime = (time: string) => {
   return time.split(" ")[0];
 };
 
-const AddToCalendarButton = ({ event }: { event: EventType }) => {
+const AddToCalendarButton = ({ event }: { event: IEvent }) => {
   const [auth] = useAuth();
 
   const name = `[Reminder] Add ${event.title} to Calendar`;
@@ -15,7 +14,7 @@ const AddToCalendarButton = ({ event }: { event: EventType }) => {
   const startTime = new Date(event.date).toLocaleTimeString();
   const endTime = getEndTime(startTime);
   const attendee = `${auth?.user.fullname}|${auth?.user.email}`;
-  const organizer = `${event.organizer}|events@gmail.com`;
+  const organizer = `${event.user.fullname}|${event.user.email}`;
 
   return (
     <>

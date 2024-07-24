@@ -11,10 +11,12 @@ import {
 } from "@/components/ui/dialog";
 import { marketplaceEvents as events } from "@/constants";
 import { useAuth } from "@/hooks/useAuth";
+import { useFetch } from "@/hooks/useFetch";
 import { axiosInstance, slugifyData } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { ChevronLeft, MapPin, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { FaLinkedin, FaFacebook, FaWhatsapp, FaTwitter } from "react-icons/fa6";
@@ -53,10 +55,22 @@ const socialIcons = [
 export type EventType = (typeof events)[number];
 
 const EventDetails = () => {
+  const { data: events } = useFetch<IEvent[]>({
+    queryKey: "events",
+    url: "/events",
+    enabled: true,
+  });
+
   const [auth] = useAuth();
   const navigate = useNavigate();
   const { slug } = useParams();
-  const eventInfo = events.find((event) => slugifyData(event.title) === slug);
+  const [eventInfo, setEventInfo] = useState<IEvent>();
+
+  useEffect(() => {
+    if (events) {
+      setEventInfo(events.find((event) => slugifyData(event.title) === slug));
+    }
+  }, [events, slug]);
 
   if (!eventInfo) {
     navigate("/user/events");
@@ -77,7 +91,7 @@ const EventDetails = () => {
       <div className="md:gap-6 2xl:p-10 flex flex-col w-full gap-5 p-5 mx-auto -mt-5">
         <section className="flex items-center justify-between w-full gap-5">
           <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown capitalize">
-            {eventInfo.organizer}
+            {eventInfo.title}
           </h2>
         </section>
 
@@ -87,7 +101,7 @@ const EventDetails = () => {
             <div className="bg-black/50 absolute flex items-center justify-center w-full h-full" />
 
             <img
-              src={eventInfo.image}
+              src={eventInfo.image ?? "https://placehold.co/400"}
               alt-={eventInfo.title}
               className="object-cover object-center w-full h-full"
             />
@@ -108,17 +122,7 @@ const EventDetails = () => {
                     {eventInfo.title}
                   </h2>
                   <p className="text-xl text-white capitalize">
-                    {
-                      [
-                        "Nigeria",
-                        "Ghana",
-                        "Egypt",
-                        "Kenya",
-                        "Tanzania",
-                        "Uganda",
-                        "South Africa",
-                      ][Math.floor(Math.random() * 8)]
-                    }
+                    {eventInfo.location}
                   </p>
 
                   <p className="max-w-xl text-sm leading-loose text-white">
@@ -140,7 +144,12 @@ const EventDetails = () => {
                       Date & Time
                     </h2>
                     <p className="text-primary-gray/60 text-lg">
-                      {eventInfo.date}
+                      {new Date(
+                        `${eventInfo.date}T${eventInfo.start_time.slice(0, 5)}:00`
+                      ).toLocaleString("en-US", {
+                        dateStyle: "full",
+                        timeStyle: "short",
+                      })}
                     </p>
 
                     {auth && <AddToCalendarButton event={eventInfo} />}
@@ -171,9 +180,7 @@ const EventDetails = () => {
                 <h2 className="text-2xl font-bold text-black">Description</h2>
 
                 <p className="text-secondary-gray text-sm leading-loose">
-                  {
-                    "Lorem amet, consectetur adipiscing elit. Nullam id viverra odio. Pellentesque cursus neque aliquet arcu varius laoreet. Cras nunc mauris, vestibulum id nunc quis, ultricies tempus ligula. Maecenas ultricies porta aliquet. Nullam vulputate gravida eros, in pharetra magna tincidunt non. In interdum velit sapien, ac malesuada nisi ultrices eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id viverra odio. Pellentesque cursus neque aliquet arcu varius laoreet. Cras nunc mauris, vestibulum id nunc quis, ultricies tempus ligula. Maecenas ultricies porta aliquet. Nullam vulputate gravida eros, in pharetra magna tincidunt non. In interdum velit sapien, ac malesuada nisi ultrices eget."
-                  }
+                  {eventInfo.description}
                 </p>
               </div>
 
@@ -185,13 +192,13 @@ const EventDetails = () => {
                   <p className="text-secondary-gray text-sm">
                     Weekday hours:{" "}
                     <span className="text-primary-brown text-base font-semibold">
-                      5PM - 10PM
+                      {eventInfo.start_time} - {eventInfo.end_time}
                     </span>
                   </p>
                   <p className="text-secondary-gray text-sm">
                     Weekend hours:{" "}
                     <span className="text-primary-brown text-base font-semibold">
-                      7PM - 9PM
+                      {eventInfo.start_time} - {eventInfo.end_time}
                     </span>
                   </p>
                 </div>
@@ -232,17 +239,7 @@ const EventDetails = () => {
               {/* Event Country */}
               <div className="flex flex-col gap-3">
                 <h2 className="text-2xl font-medium text-black capitalize">
-                  {
-                    [
-                      "Nigeria",
-                      "Ghana",
-                      "Egypt",
-                      "Kenya",
-                      "Tanzania",
-                      "Uganda",
-                      "South Africa",
-                    ][Math.floor(Math.random() * 8)]
-                  }
+                  {eventInfo.location}
                 </h2>
 
                 <p className="text-primary-gray/60 text-sm">
