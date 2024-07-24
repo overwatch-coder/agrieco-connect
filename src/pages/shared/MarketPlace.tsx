@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import MarketPlaceAddItem from "@/components/MarketPlaceAddItem";
 import CustomDropdown from "@/components/CustomDropdown";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SellerInformation from "@/components/SellerInformation";
 import DeleteItemModal from "@/components/DeleteItemModal";
 import { UrlPath } from "@/lib/utils";
@@ -11,7 +11,6 @@ import MarketplaceAnalytics from "@/components/admin/MarketplaceAnalytics";
 import { Search, Trash2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import LoginModal from "@/components/shared/LoginModal";
-import ResponsiveArticle from "react-content-loader";
 import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { faker } from "@faker-js/faker";
 import { toast } from "react-toastify";
@@ -23,6 +22,7 @@ const dropDownItems = ["Popular", "New", "Sale", "All"];
 const MarketPlace = () => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const {
     data: marketplaceProducts,
@@ -34,7 +34,7 @@ const MarketPlace = () => {
     enabled: true,
   });
 
-  const [selectedItem, setSelectedItem] = useState("Popular");
+  const [selectedItem, setSelectedItem] = useState("All");
   const [openModal, setOpenModal] = useState(false);
   const [itemToBeDeleteId, setItemToBeDeleteId] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -89,6 +89,7 @@ const MarketPlace = () => {
     }
   };
 
+  // filter items based on search
   const filterItems = useCallback(() => {
     if (!marketplaceProducts) return;
 
@@ -105,6 +106,7 @@ const MarketPlace = () => {
     }
   }, [marketplaceProducts, searchParams]);
 
+  // filter items based on search
   useEffect(() => {
     if (!marketplaceProducts) return;
 
@@ -114,6 +116,20 @@ const MarketPlace = () => {
       setFilteredItems(marketplaceProducts);
     };
   }, [filterItems, marketplaceProducts, searchParams]);
+
+  // filter items based on selected dropdown item
+  useEffect(() => {
+    if (!marketplaceProducts) return;
+
+    if (selectedItem.toLowerCase() === "all") {
+      setSelectedItem("All");
+      navigate(`/user/marketplace`);
+    }
+
+    if (selectedItem.toLowerCase() !== "all") {
+      navigate(`/user/marketplace?product=${selectedItem}`);
+    }
+  }, [navigate, selectedItem, marketplaceProducts]);
 
   // handle delete item
   const {
@@ -181,7 +197,9 @@ const MarketPlace = () => {
       </Helmet>
 
       <div className="md:gap-6 flex flex-col w-full gap-10 p-5">
-        {UrlPath() === "admin" && <MarketplaceAnalytics marketplaceProducts={marketplaceProducts!} />}
+        {UrlPath() === "admin" && (
+          <MarketplaceAnalytics marketplaceProducts={marketplaceProducts!} />
+        )}
 
         {UrlPath() !== "admin" && (
           <>

@@ -66,8 +66,19 @@ const MarketPlaceAddItem = ({
       token: auth?.user.token,
       contentType: "multipart/form-data",
       queryKey: "marketplace",
-      reset: () => reset({ description: "", name: "", price: 0, image: null }),
-      resetValues: { description: "", name: "", price: 0, image: null },
+      reset: () =>
+        reset({
+          description: "",
+          name: "",
+          price: 0,
+          image: null,
+        }),
+      resetValues: {
+        description: "",
+        name: "",
+        price: 0,
+        image: null,
+      },
     },
   });
 

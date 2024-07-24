@@ -20,6 +20,7 @@ import LoginModal from "@/components/shared/LoginModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutateData } from "@/hooks/useFetch";
 import CustomError from "@/components/shared/CustomError";
+import { useState } from "react";
 
 type AddEventProps = {
   refetchEvents?: () => void;
@@ -28,6 +29,7 @@ type AddEventProps = {
 const AddEvent = ({ refetchEvents }: AddEventProps) => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
+  const [openModal, setOpenModal] = useState(false);
 
   const {
     register,
@@ -57,8 +59,7 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
           location: "",
           start_time: "",
           end_time: "",
-          price: 0,
-          date: "",
+          // price: 0,
           description: "",
           image: null,
         }),
@@ -67,8 +68,8 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
         location: "",
         start_time: "",
         end_time: "",
+        // price: 0,
         date: "",
-        price: 0,
         description: "",
         image: null,
       },
@@ -76,15 +77,25 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
   });
 
   const handleSubmitForm = async (data: MarketplaceEvents) => {
-    console.log(data);
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("location", data.location);
     formData.append("date", data.date);
-    formData.append("start_time", data.start_time);
-    formData.append("end_time", data.end_time);
+    formData.append(
+      "start_time",
+      new Date(`${data.date}T${data.start_time}:00Z`).toLocaleTimeString(
+        "en-US",
+        { timeStyle: "short", timeZone: "UTC" }
+      )
+    );
+    formData.append(
+      "end_time",
+      new Date(`${data.date}T${data.end_time}:00Z`).toLocaleTimeString(
+        "en-US",
+        { timeStyle: "short", timeZone: "UTC" }
+      )
+    );
     formData.append("description", data.description);
-    formData.append("price", data.price.toString());
     formData.append("image", data.image[0] as File);
 
     const res = await mutateAsync(formData);
@@ -102,12 +113,17 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
     reset();
 
     toast.success("Event added successfully");
+
+    setOpenModal(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={openModal} onOpenChange={setOpenModal}>
       {auth ? (
-        <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
+        <DialogTrigger
+          className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none"
+          onClick={() => setOpenModal(true)}
+        >
           {"Add Event"}
         </DialogTrigger>
       ) : (
@@ -132,7 +148,10 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
           </DialogTitle>
 
           <DialogClose
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+              setOpenModal(false);
+            }}
             className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full"
           >
             <X size={20} className="text-red-500" />
@@ -148,7 +167,7 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
         >
           <CustomError isError={isError} error={error} />
 
-          <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
+          <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Event Title"
               inputName="title"
@@ -166,27 +185,9 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
               register={register}
               inputType="text"
             />
-
-            <CustomFormField
-              labelName="Price"
-              inputName="price"
-              placeholderText="Enter price"
-              errors={errors}
-              register={register}
-              inputType="number"
-            />
           </div>
 
-          <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
-            <CustomFormField
-              labelName="Date"
-              inputName="date"
-              placeholderText="Enter date"
-              errors={errors}
-              register={register}
-              inputType="date"
-            />
-
+          <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Start Time"
               inputName="start_time"
@@ -202,6 +203,25 @@ const AddEvent = ({ refetchEvents }: AddEventProps) => {
               register={register}
               inputType="time"
             />
+          </div>
+
+          <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
+            <CustomFormField
+              labelName="Date"
+              inputName="date"
+              placeholderText="Enter date"
+              errors={errors}
+              register={register}
+              inputType="date"
+            />
+
+            {/* <CustomFormField
+              labelName="Price"
+              inputName="price"
+              errors={errors}
+              register={register}
+              inputType="number"
+            /> */}
           </div>
 
           <div className="flex flex-col w-full gap-5">

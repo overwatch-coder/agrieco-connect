@@ -176,8 +176,8 @@ const Events = () => {
           </>
         )}
 
-        <Tabs defaultValue="all-events">
-          {UrlPath() === "admin" && (
+        {UrlPath() === "admin" && (
+          <Tabs defaultValue="all-events">
             <TabsList className="flex items-center justify-between gap-2 bg-transparent">
               <div className="flex items-center gap-3">
                 <TabsTrigger
@@ -197,9 +197,7 @@ const Events = () => {
 
               <AddEvent />
             </TabsList>
-          )}
 
-          {UrlPath() === "admin" && (
             <div className="flex flex-col w-full gap-5 pt-5 pb-5">
               <div className="bg-black/50 h-[1px] w-full" />
 
@@ -214,46 +212,46 @@ const Events = () => {
                 <Search size={20} className="me-3 text-black" />
               </div>
             </div>
-          )}
 
-          <TabsContent value="all-events">
-            <section className="flex flex-col w-full gap-5">
-              {filteredEvents.length > 0 ? (
-                <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-                  {filteredEvents.map((item) => (
-                    <EventsItem
-                      key={item.id}
-                      item={item}
-                      setOpenModal={setOpenModal}
-                      setItemToBeDeleteId={setItemToBeDeleteId}
-                    />
-                  ))}
-                </section>
-              ) : (
-                <div className="flex flex-col items-center justify-center w-full gap-5 mx-auto text-center">
-                  <h2 className="text-primary-brown text-lg font-bold">
-                    No Events Found
-                  </h2>
+            <TabsContent value="all-events">
+              <section className="flex flex-col w-full gap-5">
+                {filteredEvents.length > 0 ? (
+                  <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
+                    {filteredEvents.map((item) => (
+                      <EventsItem
+                        key={item.id}
+                        item={item}
+                        setOpenModal={setOpenModal}
+                        setItemToBeDeleteId={setItemToBeDeleteId}
+                      />
+                    ))}
+                  </section>
+                ) : (
+                  <div className="flex flex-col items-center justify-center w-full gap-5 mx-auto text-center">
+                    <h2 className="text-primary-brown text-lg font-bold">
+                      No Events Found
+                    </h2>
 
-                  <p className="text-secondary-gray text-sm">
-                    Try changing the search term or filter
-                  </p>
-                </div>
-              )}
-            </section>
-          </TabsContent>
+                    <p className="text-secondary-gray text-sm">
+                      Try changing the search term or filter
+                    </p>
+                  </div>
+                )}
+              </section>
+            </TabsContent>
 
-          <TabsContent value="my-events">
-            <MyEvents
-              adminFilteredEvents={filteredEvents.filter(
-                (item) => item.user_id === auth?.user.id
-              )}
-              events={events!}
-              handleAdminEventDelete={handleDeleteItem}
-              refetchEvents={refetchEvents}
-            />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="my-events">
+              <MyEvents
+                adminFilteredEvents={filteredEvents.filter(
+                  (item) => item.user.id === auth?.user.id
+                )}
+                events={events!}
+                handleAdminEventDelete={handleDeleteItem}
+                refetchEvents={refetchEvents}
+              />
+            </TabsContent>
+          </Tabs>
+        )}
 
         {UrlPath() !== "admin" && (
           <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
@@ -304,7 +302,7 @@ const EventsItem = ({
 
       <div className="rounded-md group w-full h-full md:h-[250px] xl:h-[300px] overflow-hidden">
         <img
-          src={item.image}
+          src={item.image ?? "https://placehold.co/400"}
           alt-={item.title}
           className="rounded-xl group-hover:scale-105 object-cover object-center w-full h-full transition-transform"
         />

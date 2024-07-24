@@ -12,7 +12,7 @@ export const MarketplaceProductsSchema = z.object({
 export const MarketplaceEventsSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
   location: z.string().trim().min(1, "Venue/Location is required"),
-  price: z.coerce.number().min(1, "Price is required"),
+  // price: z.coerce.number().optional(),
   date: z.string().trim().min(1, "Date is required"),
   start_time: z.string().trim().min(1, "Start time is required"),
   end_time: z.string().trim().min(1, "End time is required"),

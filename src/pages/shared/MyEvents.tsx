@@ -27,7 +27,7 @@ const MyEvents = ({
   const [auth] = useAuth();
   const queryClient = useQueryClient();
   const [filteredEvents, setFilteredEvents] = useState(
-    events.filter((item) => item.user_id === auth?.user.id)
+    events.filter((item) => item.user.id === auth?.user.id)
   );
   const [itemToBeDeleteId, setItemToBeDeleteId] = useState<number>(0);
 
@@ -107,6 +107,7 @@ const MyEvents = ({
                   key={item.id}
                   item={item}
                   handleDeleteItem={handleAdminEventDelete!}
+                  refetchEvents={refetchEvents}
                 />
               ))
             ) : (
@@ -120,16 +121,25 @@ const MyEvents = ({
                 </p>
               </div>
             )
-          ) : (
+          ) : filteredEvents.length > 0 ? (
             filteredEvents.map((item) => (
               <MarketPlaceEventItem
                 key={item.id}
                 item={item}
-                handleDeleteItem={handleDeleteItem}
-                setItemToBeDeleteId={setItemToBeDeleteId}
-                pending={pending}
+                handleDeleteItem={handleAdminEventDelete!}
+                refetchEvents={refetchEvents}
               />
             ))
+          ) : (
+            <div className="md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center col-span-1 gap-5 mx-auto text-center">
+              <h2 className="text-primary-brown text-lg font-bold">
+                You haven't added any events yet
+              </h2>
+
+              <p className="text-secondary-gray text-sm">
+                Add an event to your events list
+              </p>
+            </div>
           )}
         </section>
       </div>
@@ -144,6 +154,7 @@ type MarketPlaceEventItemProps = {
   handleDeleteItem: (id?: string) => Promise<void>;
   setItemToBeDeleteId?: (id: number) => void;
   pending?: boolean;
+  refetchEvents: () => void;
 };
 
 const MarketPlaceEventItem = ({
@@ -151,6 +162,7 @@ const MarketPlaceEventItem = ({
   handleDeleteItem,
   setItemToBeDeleteId,
   pending,
+  refetchEvents,
 }: MarketPlaceEventItemProps) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -210,6 +222,7 @@ const MarketPlaceEventItem = ({
         item={item}
         openEditModal={openEditModal}
         setOpenEditModal={setOpenEditModal}
+        refetchEvents={refetchEvents}
       />
 
       <DeleteItemModal

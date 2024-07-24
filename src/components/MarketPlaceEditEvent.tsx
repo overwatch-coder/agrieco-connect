@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
 import { MarketplaceEventsSchema } from "@/schema/marketplace.schema";
@@ -16,7 +15,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Button } from "@/components/ui/button";
 import CustomFormField from "@/components/shared/CustomFormField";
 import CustomFileUpload from "@/components/shared/CustomFileUpload";
-import LoginModal from "@/components/shared/LoginModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutateData } from "@/hooks/useFetch";
 import CustomError from "@/components/shared/CustomError";
@@ -25,6 +23,7 @@ import ImagePreview from "@/components/shared/ImagePreview";
 type MarketPlaceEditEventProps = {
   item: IEvent;
   openEditModal: boolean;
+  refetchEvents: () => void;
   setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -32,6 +31,7 @@ const MarketPlaceEditEvent = ({
   item,
   openEditModal,
   setOpenEditModal,
+  refetchEvents,
 }: MarketPlaceEditEventProps) => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
@@ -47,11 +47,10 @@ const MarketPlaceEditEvent = ({
     resolver: zodResolver(MarketplaceEventsSchema),
     defaultValues: {
       title: item.title,
-      start_time: new Date(`${item.date}T${item.start_time}`).toTimeString(),
-      end_time: new Date(`${item.date}T${item.end_time}`).toTimeString(),
+      start_time: item.start_time.slice(0, 5),
+      end_time: item.end_time.slice(0, 5),
       date: new Date(item.date).toISOString().split("T")[0],
       description: item.title,
-      price: item.price,
       location: item.location,
     },
     mode: "all",
@@ -73,7 +72,7 @@ const MarketPlaceEditEvent = ({
           location: "",
           start_time: "",
           end_time: "",
-          price: 0,
+          // price: 0,
           date: "",
           description: "",
           image: null,
@@ -84,7 +83,7 @@ const MarketPlaceEditEvent = ({
         start_time: "",
         end_time: "",
         date: "",
-        price: 0,
+        // price: 0,
         description: "",
         image: null,
       },
@@ -101,8 +100,8 @@ const MarketPlaceEditEvent = ({
     formData.append("start_time", data.start_time);
     formData.append("end_time", data.end_time);
     formData.append("description", data.description);
-    formData.append("price", data.price.toString());
-    formData.append("image", data.image[0] as File);
+    // formData.append("price", data.price.toString());
+    formData.append("image", data.image ? data.image[0] : item.image);
 
     const res = await mutateAsync(formData);
 
@@ -112,7 +111,7 @@ const MarketPlaceEditEvent = ({
       queryKey: ["events", `/events/${item.id}`],
     });
 
-    reset();
+    refetchEvents();
 
     toast.success("Event updated successfully");
 
@@ -150,7 +149,7 @@ const MarketPlaceEditEvent = ({
         >
           <CustomError isError={isError} error={error} />
 
-          <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
+          <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Event Title"
               inputName="title"
@@ -169,26 +168,17 @@ const MarketPlaceEditEvent = ({
               inputType="text"
             />
 
-            <CustomFormField
+            {/* <CustomFormField
               labelName="Price"
               inputName="price"
               placeholderText="Enter price"
               errors={errors}
               register={register}
               inputType="number"
-            />
+            /> */}
           </div>
 
-          <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
-            <CustomFormField
-              labelName="Date"
-              inputName="date"
-              placeholderText="Enter date"
-              errors={errors}
-              register={register}
-              inputType="date"
-            />
-
+          <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Start Time"
               inputName="start_time"
@@ -203,6 +193,17 @@ const MarketPlaceEditEvent = ({
               errors={errors}
               register={register}
               inputType="time"
+            />
+          </div>
+
+          <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
+            <CustomFormField
+              labelName="Date"
+              inputName="date"
+              placeholderText="Enter date"
+              errors={errors}
+              register={register}
+              inputType="date"
             />
           </div>
 

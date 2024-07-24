@@ -74,7 +74,7 @@ declare interface IEvent {
   price: number;
   location: string;
   image: string;
-  user_id: number;
+  user: IFeedUser;
   created_at: string;
   updated_at: string;
   is_active: boolean;
