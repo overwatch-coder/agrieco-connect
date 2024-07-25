@@ -18,6 +18,7 @@ import CustomFormField from "@/components/shared/CustomFormField";
 import { AppointmentsAvailabilitySchema } from "@/schema/appointments.schema";
 import LoginModal from "@/components/shared/LoginModal";
 import { useAuth } from "@/hooks/useAuth";
+import { useMutateData } from "@/hooks/useFetch";
 
 const AddAppointmentAvailability = () => {
   const [auth] = useAuth();
@@ -31,19 +32,15 @@ const AddAppointmentAvailability = () => {
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: AppointmentsAvailability) => {
-      const res = await axiosInstance.post("/appointments", data, {
-        headers: {
-          Authorization: `Bearer ${auth?.user?.token}`,
-        }}
-      );
-
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Appointment added successfully");
-      reset();
+  const { mutateAsync, isPending, error, isError } = useMutateData<
+    FormData
+  >({
+    url: "/appointments",
+    config: {
+      method: "POST",
+      token: auth?.user?.token,
+      contentType: "multipart/form-data",
+      queryKey: "appointments",      
     },
   });
 
@@ -54,7 +51,18 @@ const AddAppointmentAvailability = () => {
       availabilitySlotStart: new Date(values.availabilitySlotStart).toISOString(),
       availabilitySlotEnd: new Date(values.availabilitySlotEnd).toISOString(),
     }
-    await mutateAsync({ ...data });
+
+    const formData = new FormData();
+    formData.append("company_name", data.company_name);
+    formData.append("specialty", data.specialty);
+    formData.append("location", data.location);
+    formData.append("experience_level", data.experience_level);
+    formData.append("contact_info", data.contact_info);
+    formData.append("availabilitySlotStart", data.availabilitySlotStart);
+    formData.append("availabilitySlotEnd", data.availabilitySlotEnd);
+    formData.append("bio", data.bio);
+    
+    await mutateAsync(formData);
   };
 
   return (
