@@ -194,8 +194,8 @@ const AppointmentItem = ({
           location: item.location,
           experience_level: item.experienceLevel,
           contact_info: item.contactDetails,
-          availability_slot_start: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[0]}`,
-          availability_slot_end: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[1]}`,
+          availabilitySlotStart: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[0]}`,
+          availabilitySlotEnd: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[1]}`,
           bio: item.bio,
         }}
       />

@@ -4,6 +4,7 @@ import CustomDropdown from "@/components/CustomDropdown";
 import LoginModal from "@/components/shared/LoginModal";
 import { Button } from "@/components/ui/button";
 import { appointments } from "@/constants";
+import { useFetch } from "@/hooks/useFetch";
 import { IsAuth } from "@/lib/utils";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -16,8 +17,17 @@ const dropdownItems = ["Specialty", "Location", "Experience Level", "All"];
 
 const Appointments = () => {
   const [selectedItem, setSelectedItem] = useState("Specialty");
-  const [filteredAppointments, setFilteredAppointments] =
-    useState(appointments);
+  // const [filteredAppointments, setFilteredAppointments] =
+  //   useState(appointments);
+
+  
+  // const { data: appointments } = useFetch<any>({
+  //   queryKey: `appointments`,
+  //   url: `/appointments`,
+  //   enabled: true,
+  // });
+
+  const isAuth = IsAuth();
 
   return (
     <div className="w-full">
@@ -48,7 +58,7 @@ const Appointments = () => {
               setSelectedItem={setSelectedItem}
             />
 
-            {IsAuth() && (
+            {isAuth && (
               <Link
                 to="/user/appointments/my-appointments"
                 className="border-primary-brown w-fit px-7 flex items-center gap-2 py-2 font-medium text-center bg-white border"
@@ -67,7 +77,7 @@ const Appointments = () => {
         </p>
 
         <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {filteredAppointments.map((item) => (
+          {appointments?.map((item:any) => (
             <AppointmentItem key={item.id} item={item} />
           ))}
         </section>

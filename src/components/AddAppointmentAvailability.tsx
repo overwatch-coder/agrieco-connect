@@ -47,8 +47,13 @@ const AddAppointmentAvailability = () => {
     },
   });
 
-  const handleSubmitForm = async (data: AppointmentsAvailability) => {
-    console.log(data);
+  const handleSubmitForm = async (values: AppointmentsAvailability) => {
+    // console.log(data);
+    const data = {
+      ...values,
+      availabilitySlotStart: new Date(values.availabilitySlotStart).toISOString(),
+      availabilitySlotEnd: new Date(values.availabilitySlotEnd).toISOString(),
+    }
     await mutateAsync({ ...data });
   };
 
@@ -151,7 +156,7 @@ const AddAppointmentAvailability = () => {
           <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Availability Start Slot (with date and time)"
-              inputName="availability_slot_start"
+              inputName="availabilitySlotStart"
               placeholderText="Enter availability slot"
               errors={errors}
               register={register}
@@ -160,7 +165,7 @@ const AddAppointmentAvailability = () => {
 
             <CustomFormField
               labelName="Availability End Slot (with date and time)"
-              inputName="availability_slot_end"
+              inputName="availabilitySlotEnd"
               placeholderText="Enter availability slot"
               errors={errors}
               register={register}

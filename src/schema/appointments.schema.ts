@@ -5,11 +5,11 @@ export const AppointmentsAvailabilitySchema = z.object({
   specialty: z.string().trim().min(1, "Specialty is required"),
   location: z.string().trim().min(1, "Location is required"),
   experience_level: z.string().trim().min(1, "Experience Level is required"),
-  availability_slot_start: z
+  availabilitySlotStart: z
     .string()
     .trim()
     .min(1, "Availability Slot Start is required"),
-  availability_slot_end: z
+  availabilitySlotEnd: z
     .string()
     .trim()
     .min(1, "Availability Slot End is required"),
