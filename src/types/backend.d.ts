@@ -11,6 +11,7 @@ declare interface IAuthUser {
   role: "admin" | "user";
   interested_topics: ITopic[];
   token: string;
+  followers?: number;
 }
 
 // === FEEDS ===
@@ -43,6 +44,7 @@ declare interface IFeedUser {
   fullname: string;
   username: string;
   email: string;
+  followers: number
 }
 
 declare interface ITopic {
@@ -96,4 +98,6 @@ declare interface ICommunity {
   updated_at: string;
   is_active: boolean;
   owner: IFeedUser;
+  members_count?: number;
+  members_ids?: number[];
 }

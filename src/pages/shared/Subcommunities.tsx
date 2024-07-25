@@ -43,6 +43,7 @@ const Subcommunities = () => {
 
   useEffect(() => {
     if (communities) {
+      console.log("-C-CCCCCCCCCCC-C-C-C-C", communities);
       setSubcommunities(
         communities.length > 4 ? communities.slice(0, 2) : communities
       );
@@ -84,13 +85,22 @@ const Subcommunities = () => {
     }, 500);
   };
 
-  const { mutateAsync:mutateAsyncJoin, isPending, error:errorJoin, isError } = useMutation({
+  const {
+    mutateAsync: mutateAsyncJoin,
+    isPending,
+    error: errorJoin,
+    isError,
+  } = useMutation({
     mutationFn: async (id: string) => {
-      const res = await axiosInstance.put(`/communities/${id}/members`, {}, {
-        headers: {
-          Authorization: `Bearer ${auth?.user?.token}`,
-        },
-      });
+      const res = await axiosInstance.put(
+        `/communities/${id}/members`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.user?.token}`,
+          },
+        }
+      );
 
       return res.data;
     },
@@ -346,6 +356,24 @@ const SubcommunitiesItem = ({
       ? "/admin/subcommunity-management"
       : "/user/subcommunities";
 
+  const { data: subcommunityMembers, isLoading } = useFetch<any>({
+    queryKey: `communities-${item.id}-members`,
+    url: `/communities/${item.id}/members`,
+    enabled: true,
+  });
+
+  useEffect(() => {
+    console.log(
+      "MMMMMMMMMMMMMMMMMMMMM",
+      item?.members_ids,
+      item?.members_count
+    );
+  }, [subcommunityMembers]);
+
+  const joined = subcommunityMembers?.find(
+    (member: any) => member.id === auth?.user.id
+  );
+
   const navigate = useNavigate();
 
   return (
@@ -355,7 +383,10 @@ const SubcommunitiesItem = ({
           <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white uppercase rounded-full">
             {item.name.split(" ")[0][0] + item.name.split(" ")[1][0]}
           </span>
-          <span>{item.name}</span>
+          <div className="flex flex-col">
+            <span className="text-lg">{item.name}</span>
+            <span className="opacity-[70%]">By {item?.owner?.fullname}</span>
+          </div>
         </div>
 
         {UrlPath() === "admin" && (
@@ -378,7 +409,7 @@ const SubcommunitiesItem = ({
           </span>
           <span className="w-[1px] h-5 bg-primary-brown" />
           <span className="text-primary-brown/80 font-semibold">
-            {Math.floor(Math.random() * 100)} Members
+            {item?.members_count} Members
           </span>
         </section>
 
@@ -402,7 +433,7 @@ const SubcommunitiesItem = ({
           {UrlPath() !== "admin" && (
             <div className="flex items-center gap-3">
               {type === "all" && IsAuth() ? (
-                item.owner.id === auth?.user.id ? (
+                joined ? (
                   <Button
                     onClick={() => handleLeaveSubcommunity(item.id)}
                     className="bg-primary-green py-2 text-white rounded-none"
@@ -428,11 +459,16 @@ const SubcommunitiesItem = ({
               {/* <Link
                 to={`/${UrlPath()}/subcommunities/${slugifyData(item.name)}`}
               > */}
-                <Button onClick={()=>navigate(`/user/subcommunities/${slugifyData(item.name)}`, {
-                  state: { id: item.id}
-                })} className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none">
-                  View Activity
-                </Button>
+              <Button
+                onClick={() =>
+                  navigate(`/user/subcommunities/${slugifyData(item.name)}`, {
+                    state: { id: item.id },
+                  })
+                }
+                className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none"
+              >
+                View Activity
+              </Button>
               {/* </Link> */}
             </div>
           )}

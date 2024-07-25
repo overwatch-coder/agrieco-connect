@@ -133,9 +133,9 @@ const AppointmentItem = ({
       <div className="flex flex-col w-full h-full gap-3 p-4 bg-white rounded-md shadow-md">
         {/* Rating */}
         <div className="flex items-center gap-3">
-          <Rating experienceLevel={parseInt(item.experienceLevel)} />
+          <Rating experienceLevel={parseInt(item.experience_level)} />
           <p className="text-sm font-normal text-black">
-            ({item.experienceLevel}/5)
+            ({item.experience_level}/5)
           </p>
         </div>
 
@@ -163,9 +163,10 @@ const AppointmentItem = ({
           </p>
 
           <p className="mt-auto text-[10px] font-light text-black">
-            Next Available Slot: {item.availabilitySlotDate}
-            {", "}
-            {item.availabilitySlotTime}
+            {item.availability_slot_start?.split(" ")[0]} 
+          </p>
+          <p className="mt-auto text-[10px] font-light text-black">
+            Next Available Slot: {item.availability_slot_start?.split(" ")[0]} {item.availability_slot_start?.split(" ")[1]} - {item.availability_slot_end?.split(" ")[1]}
           </p>
 
           <div className="flex items-center gap-4">
@@ -192,10 +193,10 @@ const AppointmentItem = ({
           company_name: item.fullname,
           specialty: item.specialty,
           location: item.location,
-          experience_level: item.experienceLevel,
-          contact_info: item.contactDetails,
-          availabilitySlotStart: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[0]}`,
-          availabilitySlotEnd: `${item.availabilitySlotDate}, ${item.availabilitySlotTime.split("-")[1]}`,
+          experience_level: item.experience_level,
+          contact_information: item.contact_information,
+          availabilitySlotStart: `${item.availability_slot_start}`,
+          availabilitySlotEnd: `${item.availability_slot_end}`,
           bio: item.bio,
         }}
       />

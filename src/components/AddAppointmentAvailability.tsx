@@ -45,7 +45,6 @@ const AddAppointmentAvailability = () => {
   });
 
   const handleSubmitForm = async (values: AppointmentsAvailability) => {
-    // console.log(data);
     const data = {
       ...values,
       availabilitySlotStart: new Date(values.availabilitySlotStart).toISOString(),
@@ -57,12 +56,14 @@ const AddAppointmentAvailability = () => {
     formData.append("specialty", data.specialty);
     formData.append("location", data.location);
     formData.append("experience_level", data.experience_level);
-    formData.append("contact_info", data.contact_info);
+    formData.append("contact_information", data.contact_information);
     formData.append("availabilitySlotStart", data.availabilitySlotStart);
     formData.append("availabilitySlotEnd", data.availabilitySlotEnd);
     formData.append("bio", data.bio);
     
     await mutateAsync(formData);
+    toast.success("Availability added successfully");
+
   };
 
   return (
@@ -153,7 +154,7 @@ const AddAppointmentAvailability = () => {
 
             <CustomFormField
               labelName="Contact Information"
-              inputName="contact_info"
+              inputName="contact_information"
               placeholderText="Enter contact Information"
               errors={errors}
               register={register}

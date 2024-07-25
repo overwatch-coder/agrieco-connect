@@ -13,7 +13,7 @@ export const AppointmentsAvailabilitySchema = z.object({
     .string()
     .trim()
     .min(1, "Availability Slot End is required"),
-  contact_info: z.string().trim().min(1, "Contact Info is required"),
+    contact_information: z.string().trim().min(1, "Contact Info is required"),
   bio: z.string().trim().min(1, "Bio is required"),
 });
 

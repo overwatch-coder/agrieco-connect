@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { appointments } from "@/constants";
 import { useFetch } from "@/hooks/useFetch";
 import { IsAuth } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { FaRegStar, FaStar } from "react-icons/fa6";
 import { Link } from "react-router-dom";
@@ -21,11 +21,15 @@ const Appointments = () => {
   //   useState(appointments);
 
   
-  // const { data: appointments } = useFetch<any>({
-  //   queryKey: `appointments`,
-  //   url: `/appointments`,
-  //   enabled: true,
-  // });
+  const { data: appointments } = useFetch<any>({
+    queryKey: `appointments`,
+    url: `/appointments`,
+    enabled: true,
+  });
+  
+  useEffect(() => {
+    console.log("APPOINTMENTSXXXXXXXXXXXXXX", appointments);
+  }, [appointments]);
 
   const isAuth = IsAuth();
 
@@ -91,28 +95,29 @@ export default Appointments;
 const AppointmentItem = ({ item }: { item: AppointmentsItemType }) => {
   const [openModal, setOpenModal] = useState(false);
 
+  useEffect(()=>{console.log("FFFFFFFFFFFFFFFF", item)}, [item]);
   return (
     <>
       <div className="flex flex-col w-full h-full gap-3 p-4 bg-white rounded-md shadow-md">
         {/* Rating */}
         <div className="flex items-center gap-3">
-          <Rating experienceLevel={parseInt(item.experienceLevel)} />
+          <Rating experienceLevel={parseInt(item.experience_level)} />
           <p className="text-sm font-normal text-black">
-            ({item.experienceLevel}/5)
+            ({item.experience_level}/5)
           </p>
         </div>
 
         {/* Profile Header */}
         <div className="flex items-center gap-4">
           <img
-            src={item.image}
-            alt-={item.fullname}
+            src={item.image || '/images/avatar.jpg'}
+            alt-={item?.user?.fullname}
             className="object-cover w-16 h-16 rounded-full"
           />
 
           <div className="flex flex-col gap-1">
             <p className="text-primary-brown text-base font-medium">
-              {item.fullname}
+              {item?.user?.fullname}
             </p>
             <p className="text-sm font-normal text-black">{item.specialty}</p>
             <p className="text-xs text-black">{item.location}</p>
@@ -126,9 +131,10 @@ const AppointmentItem = ({ item }: { item: AppointmentsItemType }) => {
           </p>
 
           <p className="mt-auto text-[10px] font-light text-black">
-            Next Available Slot: {item.availabilitySlotDate}
-            {", "}
-            {item.availabilitySlotTime}
+            Next Available Slot: {item.availability_slot_start?.split(" ")[0]}
+          </p>
+          <p className="mt-auto text-[10px] font-light text-black">   
+            TIME: {item.availability_slot_start?.split(" ")[1]} - {item.availability_slot_end?.split(" ")[1]}
           </p>
 
           <div className="grid grid-cols-2 gap-3">

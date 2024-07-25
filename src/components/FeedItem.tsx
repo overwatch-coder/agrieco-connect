@@ -59,12 +59,13 @@ const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
     fullname: "",
     email: "",
     username: "",
+    followers: 0,
   });
 
   // === UseEffect ===
   useEffect(() => {
     if (likeQuery.data) {
-      setAllLikes(likeQuery.data);
+      setAllLikes(likeQuery.data as any);
     }
 
     if (commentQuery.data) {
@@ -77,7 +78,7 @@ const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
     }
 
     if (userQuery.data) {
-      console.log("User=====", userQuery.data);
+      console.log("UserXXXXXXXXXXXXXXXXXXXXXXX", userQuery.data);
       setFeedUser(userQuery.data);
     }
   }, [commentQuery.data, followersQuery.data, likeQuery.data, userQuery.data]);
@@ -165,8 +166,8 @@ const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
           <UserBio
             authorImage={faker.image.avatar()}
             authorName={feedUser.fullname}
-            connections={faker.number.int({ min: 0, max: 1000 })}
-            profession={faker.person.jobTitle()}
+            connections={feedUser.followers}
+            profession={feedUser.email}
             bio={faker.person.bio()}
           />
 
@@ -327,6 +328,7 @@ type UserBioProps = {
 };
 
 const UserBio = ({ ...userInfo }: UserBioProps) => {
+  console.log("IIIIIIIIIIIIIIIII", { userInfo });
   return (
     <TooltipProvider>
       <Tooltip>
@@ -340,12 +342,12 @@ const UserBio = ({ ...userInfo }: UserBioProps) => {
 
         <TooltipContent align="start" className="w-full p-3 bg-white rounded">
           <div className="flex flex-col gap-4">
-            <h2 className="text-primary-brown text-xl font-normal">Bio</h2>
-            <p className="text-sm font-normal text-black">{userInfo.bio}</p>
+            <h2 className="text-primary-brown text-xl font-normal">USER</h2>
+            <p className="text-sm font-normal text-black">{userInfo.authorName}</p>
 
             <div className="flex items-center gap-5 pt-2">
               <p className="text-primary-brown text-sm font-normal">
-                {userInfo.connections} connections
+                {userInfo.connections} followers
               </p>
               <span className="w-[1.5px] h-5 bg-primary-brown" />
               <p className="text-primary-brown text-sm font-normal">
