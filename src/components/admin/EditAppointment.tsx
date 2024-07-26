@@ -155,7 +155,7 @@ const EditAppointment = ({ appointment }: EditAppointmentProps) => {
           <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Experience Level"
-              inputName="experienceLevel"
+              inputName="experience_level"
               placeholderText="Enter experience level"
               errors={errors}
               register={register}

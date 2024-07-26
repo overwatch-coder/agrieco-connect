@@ -93,7 +93,7 @@ const EditAppointmentAvailability = ({
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Company Name"
-              inputName="companyName"
+              inputName="company_name"
               placeholderText="Enter company Name"
               errors={errors}
               register={register}
@@ -122,7 +122,7 @@ const EditAppointmentAvailability = ({
           <div className="md:grid-cols-2 grid w-full grid-cols-1 gap-5">
             <CustomFormField
               labelName="Experience Level"
-              inputName="experienceLevel"
+              inputName="experience_level"
               placeholderText="eg. 4.5"
               errors={errors}
               register={register}
@@ -131,7 +131,7 @@ const EditAppointmentAvailability = ({
 
             <CustomFormField
               labelName="Contact Information"
-              inputName="contactInfo"
+              inputName="contact_information"
               placeholderText="Enter contact Information"
               errors={errors}
               register={register}
