@@ -17,7 +17,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import moment from "moment-timezone";
 
 // const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const timezone = "Etc/GMT-4"
+const timezone = "Etc/GMT-4";
 moment.tz.setDefault(timezone);
 
 const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
@@ -217,7 +217,9 @@ const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
         {content}
       </p>
       {/* Featured Images */}
-      <div className="md:grid-cols-3 border-b-secondary-gray grid grid-cols-1 gap-5 pb-5 border-b">
+      <div
+        className={`${filteredImages.length > 1 ? "md:grid-cols-3" : "md:grid-cols-1"} border-b-secondary-gray grid grid-cols-1 gap-5 pb-5 border-b`}
+      >
         {/* Large Image */}
         {filteredImages.length > 0 && (
           <div className="group md:col-span-2 w-full h-full col-span-1 overflow-hidden rounded-lg">
@@ -228,7 +230,7 @@ const FeedItem = ({ images, content, id, user_id, created_at }: IFeed) => {
                   : faker.image.urlLoremFlickr()
               }
               alt="Image"
-              className="group-hover:scale-110 object-cover w-full h-full transition"
+              className="group-hover:scale-110 object-cover w-full h-[500px] transition"
             />
           </div>
         )}
@@ -343,7 +345,9 @@ const UserBio = ({ ...userInfo }: UserBioProps) => {
         <TooltipContent align="start" className="w-full p-3 bg-white rounded">
           <div className="flex flex-col gap-4">
             <h2 className="text-primary-brown text-xl font-normal">USER</h2>
-            <p className="text-sm font-normal text-black">{userInfo.authorName}</p>
+            <p className="text-sm font-normal text-black">
+              {userInfo.authorName}
+            </p>
 
             <div className="flex items-center gap-5 pt-2">
               <p className="text-primary-brown text-sm font-normal">
@@ -507,18 +511,18 @@ export const LeaveAComment: React.FC<LeaveACommentProps> = ({
 };
 
 export const CommentItem = ({ comment }: { comment: IComment }) => {
-  function addHoursToDate(dateString: string, hoursToAdd:number): string {
-    const date = new Date(dateString.replace(' ', 'T'));
+  function addHoursToDate(dateString: string, hoursToAdd: number): string {
+    const date = new Date(dateString.replace(" ", "T"));
 
     date.setHours(date.getHours() + hoursToAdd);
-  
+
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-  
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
   return (
@@ -535,7 +539,7 @@ export const CommentItem = ({ comment }: { comment: IComment }) => {
 
         <div className="md:gap-2 flex flex-wrap items-center">
           <p className="text-primary-brown flex items-center gap-1 text-sm font-normal">
-            {moment(new Date(addHoursToDate(comment.created_at, 4))).fromNow()} 
+            {moment(new Date(addHoursToDate(comment.created_at, 4))).fromNow()}
           </p>
         </div>
       </div>

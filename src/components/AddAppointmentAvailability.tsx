@@ -19,6 +19,7 @@ import { AppointmentsAvailabilitySchema } from "@/schema/appointments.schema";
 import LoginModal from "@/components/shared/LoginModal";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutateData } from "@/hooks/useFetch";
+import CustomError from "@/components/shared/CustomError";
 
 const AddAppointmentAvailability = () => {
   const [auth] = useAuth();
@@ -32,24 +33,24 @@ const AddAppointmentAvailability = () => {
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutateData<
-    FormData
-  >({
+  const { mutateAsync, isPending, error, isError } = useMutateData<FormData>({
     url: "/appointments",
     config: {
       method: "POST",
       token: auth?.user?.token,
-      contentType: "multipart/form-data",
-      queryKey: "appointments",      
+      contentType: "application/x-www-form-urlencoded",
+      queryKey: "appointments",
     },
   });
 
   const handleSubmitForm = async (values: AppointmentsAvailability) => {
     const data = {
       ...values,
-      availabilitySlotStart: new Date(values.availabilitySlotStart).toISOString(),
+      availabilitySlotStart: new Date(
+        values.availabilitySlotStart
+      ).toISOString(),
       availabilitySlotEnd: new Date(values.availabilitySlotEnd).toISOString(),
-    }
+    };
 
     const formData = new FormData();
     formData.append("company_name", data.company_name);
@@ -60,10 +61,9 @@ const AddAppointmentAvailability = () => {
     formData.append("availabilitySlotStart", data.availabilitySlotStart);
     formData.append("availabilitySlotEnd", data.availabilitySlotEnd);
     formData.append("bio", data.bio);
-    
+
     await mutateAsync(formData);
     toast.success("Availability added successfully");
-
   };
 
   return (
@@ -107,11 +107,7 @@ const AddAppointmentAvailability = () => {
           onSubmit={handleSubmit(handleSubmitForm)}
           className="flex flex-col gap-5"
         >
-          {isError && (
-            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
-              <p className="text-xs text-red-500">{error.message}</p>
-            </div>
-          )}
+          <CustomError error={error} isError={isError} />
 
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
             <CustomFormField

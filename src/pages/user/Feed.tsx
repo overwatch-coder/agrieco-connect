@@ -33,10 +33,11 @@ const Feed = () => {
     const _fact = userFeeds.find((feed) => !feed.id);
     setFact(_fact?.content?.split("Fact:").join(" ") || null);
 
-    let filteredFeeds = trend
-      ? userFeeds.filter((feed) => feed.topics.some((topic) => topic.name === trend))
+    const filteredFeeds = trend
+      ? userFeeds.filter((feed) =>
+          feed.topics.some((topic) => topic.name === trend)
+        )
       : userFeeds;
-    
 
     return filteredFeeds.sort((a, b) => {
       const aEngagement = a.likes.length + a.comments.length;
@@ -72,14 +73,12 @@ const Feed = () => {
     }
 
     setTimeout(() => {
-      setDisplayedFeeds(prevFeeds => [
+      setDisplayedFeeds((prevFeeds) => [
         ...prevFeeds,
-        ...filteredAndSortedFeeds.slice(prevFeeds.length, prevFeeds.length + 2)
+        ...filteredAndSortedFeeds.slice(prevFeeds.length, prevFeeds.length + 2),
       ]);
     }, 500);
   };
-
-
 
   return (
     <div>
@@ -114,14 +113,14 @@ const Feed = () => {
               }
               className="flex flex-col w-full gap-5"
             >
-              {
-                fact && (
-                  <div className="bg-white rounded-2xl px-4 py-8 shadow text-center relative">
-                    <p className="text-black/80 text-xl">{fact}</p>
-                    <span className="absolute bottom-2 right-2 bg-green-500 text-white px-2 py-1 text-sm rounded-md">FACT</span>
-                  </div>
-                )
-              }
+              {fact && (
+                <div className="rounded-2xl relative px-4 py-8 text-center bg-white shadow">
+                  <p className="text-black/80 text-xl">{fact}</p>
+                  <span className="bottom-2 right-2 absolute px-2 py-1 text-sm text-white bg-green-500 rounded-md">
+                    FACT
+                  </span>
+                </div>
+              )}
               {displayedFeeds
                 .filter((feed) => feed.id !== null)
                 .map((feed) => (

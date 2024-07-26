@@ -33,20 +33,7 @@ const MyItemsMarketPlace = () => {
   useEffect(() => {
     if (marketplaceProducts) {
       const sortedItems = marketplaceProducts.slice().sort((a, b) => {
-        return (
-          new Date(
-            b.created_at
-              .split(" ")[0]
-              .concat("T")
-              .concat(b.created_at.split(" ")[1])
-          ).getTime() -
-          new Date(
-            a.created_at
-              .split(" ")[0]
-              .concat("T")
-              .concat(a.created_at.split(" ")[1])
-          ).getTime()
-        );
+        return b.id - a.id;
       });
       setFilteredItems(
         sortedItems.filter((item) => item.user_id === auth?.user.id)
@@ -139,19 +126,24 @@ const MarketPlaceItem = ({ item, refetch }: MarketPlaceItemProps) => {
   );
 
   const handleDeleteItem = async () => {
-    await mutateAsync(null);
+    await mutateAsync(null, {
+      onSuccess: () => {
+        toast.success("Item deleted successfully");
 
-    toast.success("Item deleted successfully");
+        queryClient.invalidateQueries({
+          queryKey: ["marketplace", "/marketplaces/items"],
+        });
 
-    queryClient.invalidateQueries({
-      queryKey: ["marketplace", "/marketplaces/items"],
+        if (refetch) {
+          refetch();
+        }
+
+        setOpenDeleteModal(false);
+      },
+      onError: () => {
+        toast.error("Failed to delete item");
+      },
     });
-
-    if (refetch) {
-      refetch();
-    }
-
-    setOpenDeleteModal(false);
   };
 
   return (

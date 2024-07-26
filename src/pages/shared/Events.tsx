@@ -48,7 +48,7 @@ const Events = () => {
 
   useEffect(() => {
     if (events) {
-      setFilteredEvents(events);
+      setFilteredEvents(events.sort((a, b) => b.id - a.id));
     }
   }, [events]);
 
@@ -64,9 +64,9 @@ const Events = () => {
           item.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
           item.description.toLowerCase().includes(e.target.value.toLowerCase())
       );
-      setFilteredEvents(filtered);
+      setFilteredEvents(filtered.sort((a, b) => b.id - a.id));
     } else {
-      setFilteredEvents(events);
+      setFilteredEvents(events.sort((a, b) => b.id - a.id));
     }
   };
 

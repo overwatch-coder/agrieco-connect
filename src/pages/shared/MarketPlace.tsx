@@ -50,20 +50,7 @@ const MarketPlace = () => {
   useEffect(() => {
     if (marketplaceProducts) {
       const sortedItems = marketplaceProducts.slice().sort((a, b) => {
-        return (
-          new Date(
-            b.created_at
-              .split(" ")[0]
-              .concat("T")
-              .concat(b.created_at.split(" ")[1])
-          ).getTime() -
-          new Date(
-            a.created_at
-              .split(" ")[0]
-              .concat("T")
-              .concat(a.created_at.split(" ")[1])
-          ).getTime()
-        );
+        return b.id - a.id;
       });
       setFilteredItems(sortedItems);
 
@@ -83,9 +70,9 @@ const MarketPlace = () => {
           item.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
           item.description.toLowerCase().includes(e.target.value.toLowerCase())
       );
-      setFilteredItems(filtered);
+      setFilteredItems(filtered.sort((a, b) => b.id - a.id));
     } else {
-      setFilteredItems(marketplaceProducts);
+      setFilteredItems(marketplaceProducts.sort((a, b) => b.id - a.id));
     }
   };
 
@@ -97,12 +84,14 @@ const MarketPlace = () => {
 
     if (product) {
       setFilteredItems(
-        marketplaceProducts.filter((item) =>
-          item.name.toLowerCase().includes(product.toLowerCase())
-        )
+        marketplaceProducts
+          .filter((item) =>
+            item.name.toLowerCase().includes(product.toLowerCase())
+          )
+          .sort((a, b) => b.id - a.id)
       );
     } else {
-      setFilteredItems(marketplaceProducts);
+      setFilteredItems(marketplaceProducts.sort((a, b) => b.id - a.id));
     }
   }, [marketplaceProducts, searchParams]);
 
@@ -113,7 +102,7 @@ const MarketPlace = () => {
     filterItems();
 
     return () => {
-      setFilteredItems(marketplaceProducts);
+      setFilteredItems(marketplaceProducts.sort((a, b) => b.id - a.id));
     };
   }, [filterItems, marketplaceProducts, searchParams]);
 

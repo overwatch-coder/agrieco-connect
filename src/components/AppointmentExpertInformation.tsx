@@ -51,7 +51,7 @@ const AppointmentExpertInformation = ({
 
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
             <h3>Contact Details:</h3>
-            <p>{item.contactDetails}</p>
+            <p>{item.contact_information}</p>
           </div>
 
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
@@ -66,12 +66,21 @@ const AppointmentExpertInformation = ({
 
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
             <h3>Experience Level:</h3>
-            <p>{`${item.experienceLevel}/5`}</p>
+            <p>{`${item.experience_level}/5`}</p>
           </div>
 
           <div className="place-content-start place-items-start text-secondary-gray md:grid-cols-2 grid grid-cols-1 gap-5 text-sm">
             <h3>Availabilie Slot:</h3>
-            <p>{`${item.availabilitySlotDate}, ${item.availabilitySlotTime}`}</p>
+            <p>{`${new Date(item.availability_slot_start)
+              .toLocaleString("en-US", {
+                dateStyle: "long",
+                timeStyle: "short",
+              })
+              .replace("at", ",")} - ${new Date(
+              item.availability_slot_end
+            ).toLocaleTimeString("en-US", {
+              timeStyle: "short",
+            })}`}</p>
           </div>
         </div>
       </DialogContent>

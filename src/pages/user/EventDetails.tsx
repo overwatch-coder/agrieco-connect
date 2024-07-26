@@ -126,9 +126,7 @@ const EventDetails = () => {
                   </p>
 
                   <p className="max-w-xl text-sm leading-loose text-white">
-                    {
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id viverra odio. Pellentesque cursus neque aliquet arcu varius laoreet. Cras nunc mauris, vestibulum id nunc quis, ultricies tempus ligula. Maecenas ultricies porta aliquet."
-                    }
+                    {eventInfo.description}
                   </p>
 
                   <button className="flex items-center gap-2">
@@ -143,7 +141,7 @@ const EventDetails = () => {
                     <h2 className="text-2xl font-bold text-black">
                       Date & Time
                     </h2>
-                    <p className="text-primary-gray/60 text-lg">
+                    <p className="text-primary-gray/60">
                       {new Date(
                         `${eventInfo.date}T${eventInfo.start_time.slice(0, 5)}:00`
                       ).toLocaleString("en-US", {
@@ -155,7 +153,7 @@ const EventDetails = () => {
                     {auth && <AddToCalendarButton event={eventInfo} />}
 
                     <div className="flex flex-col w-full gap-4">
-                      <RegisterEvent eventInfo={eventInfo}/>
+                      <RegisterEvent eventInfo={eventInfo} />
 
                       <ContactUs />
                     </div>
@@ -243,8 +241,11 @@ const EventDetails = () => {
                 </h2>
 
                 <p className="text-primary-gray/60 text-sm">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam id viverra odio
+                  {eventInfo.title} is a great event organized by{" "}
+                  {eventInfo.user.fullname}. It is being held in{" "}
+                  {eventInfo.location} and the event will be held on{" "}
+                  {eventInfo.date} at {eventInfo.start_time} to{" "}
+                  {eventInfo.end_time}.
                 </p>
               </div>
 
@@ -299,9 +300,7 @@ const RegisterEventSchema = z.object({
 
 type RegisterEventSchemaType = z.infer<typeof RegisterEventSchema>;
 
-const RegisterEvent = ({eventInfo}:{
-  eventInfo: IEvent
-}) => {
+const RegisterEvent = ({ eventInfo }: { eventInfo: IEvent }) => {
   const [auth] = useAuth();
 
   const { data: attendees } = useFetch<any[]>({
@@ -309,7 +308,6 @@ const RegisterEvent = ({eventInfo}:{
     url: `/events/${eventInfo.id}/attendees`,
     enabled: true,
   });
-
 
   const {
     register,
@@ -323,11 +321,15 @@ const RegisterEvent = ({eventInfo}:{
 
   const { mutateAsync, isPending, error, isError } = useMutation({
     mutationFn: async () => {
-      const res = await axiosInstance.put(`/events/${eventInfo.id}/attendees`, {}, {
-        headers: {
-          Authorization: `Bearer ${auth?.user?.token}`,
+      const res = await axiosInstance.put(
+        `/events/${eventInfo.id}/attendees`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${auth?.user?.token}`,
+          },
         }
-      });
+      );
 
       return res.data;
     },
@@ -342,18 +344,25 @@ const RegisterEvent = ({eventInfo}:{
     await mutateAsync();
   };
 
-  const haveRegistered = attendees?.some((attendee) => attendee.email === auth?.user?.email);
+  const haveRegistered = attendees?.some(
+    (attendee) => attendee.email === auth?.user?.email
+  );
 
   return (
     <Dialog>
       {auth ? (
-          haveRegistered ?
-            <span className="px-3 py-2 rounded-md bg-green-100 text-green-900">You have registered for this event</span>
-            :
-          <Button onClick={handleSubmitForm} className="bg-primary-brown w-full text-center text-white rounded">
+        haveRegistered ? (
+          <span className="px-3 py-2 text-green-900 bg-green-100 rounded-md">
+            You have registered for this event
+          </span>
+        ) : (
+          <Button
+            onClick={handleSubmitForm}
+            className="bg-primary-brown w-full text-center text-white rounded"
+          >
             Register
           </Button>
-          
+        )
       ) : (
         <LoginModal hasChildren={true}>
           <Button className="bg-primary-brown w-full text-center text-white rounded">

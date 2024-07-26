@@ -20,13 +20,12 @@ const Appointments = () => {
   // const [filteredAppointments, setFilteredAppointments] =
   //   useState(appointments);
 
-  
   const { data: appointments } = useFetch<any>({
     queryKey: `appointments`,
     url: `/appointments`,
     enabled: true,
   });
-  
+
   useEffect(() => {
     console.log("APPOINTMENTSXXXXXXXXXXXXXX", appointments);
   }, [appointments]);
@@ -81,7 +80,7 @@ const Appointments = () => {
         </p>
 
         <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {appointments?.map((item:any) => (
+          {appointments?.map((item: any) => (
             <AppointmentItem key={item.id} item={item} />
           ))}
         </section>
@@ -95,7 +94,9 @@ export default Appointments;
 const AppointmentItem = ({ item }: { item: AppointmentsItemType }) => {
   const [openModal, setOpenModal] = useState(false);
 
-  useEffect(()=>{console.log("FFFFFFFFFFFFFFFF", item)}, [item]);
+  useEffect(() => {
+    console.log("FFFFFFFFFFFFFFFF", item);
+  }, [item]);
   return (
     <>
       <div className="flex flex-col w-full h-full gap-3 p-4 bg-white rounded-md shadow-md">
@@ -103,14 +104,14 @@ const AppointmentItem = ({ item }: { item: AppointmentsItemType }) => {
         <div className="flex items-center gap-3">
           <Rating experienceLevel={parseInt(item.experience_level)} />
           <p className="text-sm font-normal text-black">
-            ({item.experience_level}/5)
+            ({parseInt(item.experience_level)}/5)
           </p>
         </div>
 
         {/* Profile Header */}
         <div className="flex items-center gap-4">
           <img
-            src={item.image || '/images/avatar.jpg'}
+            src={item.image || "/images/avatar.jpg"}
             alt-={item?.user?.fullname}
             className="object-cover w-16 h-16 rounded-full"
           />
@@ -133,8 +134,9 @@ const AppointmentItem = ({ item }: { item: AppointmentsItemType }) => {
           <p className="mt-auto text-[10px] font-light text-black">
             Next Available Slot: {item.availability_slot_start?.split(" ")[0]}
           </p>
-          <p className="mt-auto text-[10px] font-light text-black">   
-            TIME: {item.availability_slot_start?.split(" ")[1]} - {item.availability_slot_end?.split(" ")[1]}
+          <p className="mt-auto text-[10px] font-light text-black">
+            TIME: {item.availability_slot_start?.split(" ")[1]} -{" "}
+            {item.availability_slot_end?.split(" ")[1]}
           </p>
 
           <div className="grid grid-cols-2 gap-3">

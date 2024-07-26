@@ -33,7 +33,7 @@ export const useFetch = <TData,>({
     refetchOnWindowFocus: "always",
     refetchInterval: 1000 * 60 * 1, // 1 minute
   });
-  
+
   return query;
 };
 
@@ -42,7 +42,10 @@ interface IUseMutateData {
   config: {
     method?: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
     token?: string;
-    contentType?: "application/json" | "multipart/form-data";
+    contentType?:
+      | "application/json"
+      | "multipart/form-data"
+      | "application/x-www-form-urlencoded";
     queryKey?: string;
     reset?: (values: { [key: string]: any }) => void;
     resetValues?: { [key: string]: any };

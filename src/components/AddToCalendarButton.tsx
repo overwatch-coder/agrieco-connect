@@ -11,8 +11,8 @@ const AddToCalendarButton = ({ event }: { event: IEvent }) => {
 
   const name = `[Reminder] Add ${event.title} to Calendar`;
   const startDate = `${event.date}`;
-  const startTime = new Date(event.date).toLocaleTimeString();
-  const endTime = getEndTime(startTime);
+  // const startTime = new Date(event.date).toLocaleTimeString();
+  // const endTime = getEndTime(startTime);
   const attendee = `${auth?.user.fullname}|${auth?.user.email}`;
   const organizer = `${event.user.fullname}|${event.user.email}`;
 
@@ -25,8 +25,8 @@ const AddToCalendarButton = ({ event }: { event: IEvent }) => {
         buttonStyle="3d"
         listStyle="modal"
         hideIconButton
-        startTime={getTime(startTime)}
-        endTime={getTime(endTime)}
+        // startTime={getTime(startTime)}
+        // endTime={getTime(endTime)}
         organizer={organizer}
         attendee={attendee}
         iCalFileName="add-program-to-calendar"
