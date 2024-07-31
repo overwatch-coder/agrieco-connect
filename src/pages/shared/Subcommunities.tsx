@@ -42,7 +42,9 @@ const Subcommunities = () => {
     if (communities) {
       console.log("-C-CCCCCCCCCCC-C-C-C-C", communities);
       setSubcommunities(
-        communities.length > 4 ? communities.slice(0, 2) : communities
+        communities.length > 4
+          ? communities.slice(0, 2).sort((a, b) => b.id - a.id)
+          : communities.sort((a, b) => b.id - a.id)
       );
     }
   }, [communities]);
@@ -53,14 +55,16 @@ const Subcommunities = () => {
     setSearchTerm(e.target.value);
 
     if (e.target.value.length > 0) {
-      const filtered = communities.filter(
-        (com) =>
-          com.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          com.description.toLowerCase().includes(e.target.value.toLowerCase())
-      );
+      const filtered = communities
+        .filter(
+          (com) =>
+            com.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            com.description.toLowerCase().includes(e.target.value.toLowerCase())
+        )
+        .sort((a, b) => b.id - a.id);
       setSubcommunities(filtered);
     } else {
-      setSubcommunities(communities);
+      setSubcommunities(communities.sort((a, b) => b.id - a.id));
     }
   };
 
@@ -75,9 +79,11 @@ const Subcommunities = () => {
 
     setTimeout(() => {
       setSubcommunities(
-        subcommunities.concat(
-          communities.slice(subcommunities.length, subcommunities.length + 2)
-        )
+        subcommunities
+          .concat(
+            communities.slice(subcommunities.length, subcommunities.length + 2)
+          )
+          .sort((a, b) => b.id - a.id)
       );
     }, 500);
   };
@@ -179,7 +185,9 @@ const Subcommunities = () => {
                 Explore Subcommunities
               </h2>
 
-              <CreateSubcommunity />
+              <CreateSubcommunity
+                refetchSubcommunities={refetchSubcommunities}
+              />
             </section>
 
             <p className="text-sm font-normal text-black">
@@ -253,17 +261,20 @@ const Subcommunities = () => {
                   }
                   className="gap-7 flex flex-col w-full"
                 >
-                  {subcommunities.map((sub, index) => (
-                    <SubcommunitiesItem
-                      key={index}
-                      item={sub}
-                      type="all"
-                      handleJoinSubcommunity={handleJoinSubcommunity}
-                      handleLeaveSubcommunity={handleLeaveSubcommunity}
-                      setOpenModal={setOpenModal}
-                      setItemToDeleteId={setItemToDeleteId}
-                    />
-                  ))}
+                  {subcommunities
+                    .sort((a, b) => b.id - a.id)
+                    .map((sub, index) => (
+                      <SubcommunitiesItem
+                        key={index}
+                        item={sub}
+                        type="all"
+                        handleJoinSubcommunity={handleJoinSubcommunity}
+                        handleLeaveSubcommunity={handleLeaveSubcommunity}
+                        setOpenModal={setOpenModal}
+                        setItemToDeleteId={setItemToDeleteId}
+                        isOwner={false}
+                      />
+                    ))}
                 </InfiniteScroll>
               </section>
             </TabsContent>
@@ -278,6 +289,7 @@ const Subcommunities = () => {
                 ) : (
                   subcommunities
                     .filter((sub) => sub.owner.id === auth?.user.id)
+                    .sort((a, b) => b.id - a.id)
                     .map((sub) => (
                       <SubcommunitiesItem
                         key={sub.id}
@@ -287,6 +299,7 @@ const Subcommunities = () => {
                         handleLeaveSubcommunity={handleLeaveSubcommunity}
                         setOpenModal={setOpenModal}
                         setItemToDeleteId={setItemToDeleteId}
+                        isOwner={true}
                       />
                     ))
                 )}
@@ -317,6 +330,7 @@ type SubcommunitiesItemProps = {
   handleLeaveSubcommunity: (id: number) => void;
   setOpenModal: (open: boolean) => void;
   setItemToDeleteId: (id: number) => void;
+  isOwner?: boolean;
 };
 const SubcommunitiesItem = ({
   item,
@@ -325,6 +339,7 @@ const SubcommunitiesItem = ({
   handleLeaveSubcommunity,
   setOpenModal,
   setItemToDeleteId,
+  isOwner,
 }: SubcommunitiesItemProps) => {
   const [auth] = useAuth();
   const viewSubcommunityPath =
@@ -425,7 +440,11 @@ const SubcommunitiesItem = ({
                   </Button>
                 )
               ) : (
-                <LoginModal hasChildren={true} endPath={`/${item.id}`}>
+                <LoginModal
+                  hasChildren={true}
+                  endPath={`/${item.id}`}
+                  className={isOwner ? "hidden" : "block"}
+                >
                   <Button className="bg-primary-green py-2 text-white rounded-none">
                     Join
                   </Button>

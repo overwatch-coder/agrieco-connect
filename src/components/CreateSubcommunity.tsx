@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { axiosInstance, IsAuth } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -18,9 +18,20 @@ import { Subcommunity } from "@/types";
 import { SubcommunitySchema } from "@/schema/subcommunity.schema";
 import LoginModal from "@/components/shared/LoginModal";
 import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
+import CustomError from "@/components/shared/CustomError";
+import { useMutateData } from "@/hooks/useFetch";
 
-const CreateSubcommunity = () => {
+type CreateSubcommunityProps = {
+  refetchSubcommunities?: () => void;
+};
+
+const CreateSubcommunity = ({
+  refetchSubcommunities,
+}: CreateSubcommunityProps) => {
   const [auth] = useAuth();
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
 
   const {
     register,
@@ -32,31 +43,43 @@ const CreateSubcommunity = () => {
     mode: "all",
   });
 
-  const { mutateAsync, isPending, error, isError } = useMutation({
-    mutationFn: async (data: Subcommunity) => {
-      const res = await axiosInstance.post("/communities", data, {
-        headers: {
-          Authorization: `Bearer ${auth?.user?.token}`,
-        },
-      });
-
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Community added successfully");
-      reset();
+  const { mutateAsync, isPending, error, isError } = useMutateData<
+    Subcommunity,
+    ICommunity
+  >({
+    url: `/communities`,
+    config: {
+      method: "POST",
+      token: auth?.user.token,
     },
   });
 
   const handleSubmitForm = async (data: Subcommunity) => {
-    console.log(data);
-    await mutateAsync({ ...data });
+    await mutateAsync(data, {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ["communities", "/communities"],
+        });
+        if (refetchSubcommunities) {
+          refetchSubcommunities();
+        }
+        setOpen(false);
+        toast.success("Community added successfully");
+        reset();
+      },
+      onError: (error) => {
+        toast.info(error?.response?.data?.message || "Something went wrong");
+      },
+    });
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       {IsAuth() ? (
-        <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
+        <DialogTrigger
+          onClick={() => setOpen(true)}
+          className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none"
+        >
           {"Create Subcommunity"}
         </DialogTrigger>
       ) : (
@@ -82,7 +105,10 @@ const CreateSubcommunity = () => {
           </DialogTitle>
 
           <DialogClose
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+              setOpen(false);
+            }}
             className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full"
           >
             <X size={20} className="text-red-500" />
@@ -95,11 +121,7 @@ const CreateSubcommunity = () => {
           onSubmit={handleSubmit(handleSubmitForm)}
           className="flex flex-col gap-5"
         >
-          {isError && (
-            <div className="flex items-center justify-center p-4 text-center bg-red-200 rounded-md">
-              <p className="text-xs text-red-500">{error.message}</p>
-            </div>
-          )}
+          <CustomError isError={isError} error={error} />
 
           <div className="md:grid-cols-3 grid w-full grid-cols-1 gap-5">
             <CustomFormField

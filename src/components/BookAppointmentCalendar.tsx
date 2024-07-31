@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { Calendar, momentLocalizer, Event, SlotInfo } from "react-big-calendar";
+import { Calendar, momentLocalizer, Event } from "react-big-calendar";
 import moment from "moment";
 import {
   Dialog,
@@ -12,11 +12,9 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import CustomFormField from "@/components/shared/CustomFormField";
 import { Button } from "@/components/ui/button";
 import ClipLoader from "react-spinners/ClipLoader";
-import { axiosInstance } from "@/lib/utils";
 import { toast } from "react-toastify";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useMutateData } from "@/hooks/useFetch";

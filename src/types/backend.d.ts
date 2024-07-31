@@ -98,8 +98,8 @@ declare interface ICommunity {
   updated_at: string;
   is_active: boolean;
   owner: IFeedUser;
-  members_count?: number;
-  members_ids?: number[];
+  members_count: number;
+  members_ids: number[];
 }
 
 // === APPOINTMENTS ===
