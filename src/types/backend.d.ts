@@ -101,3 +101,21 @@ declare interface ICommunity {
   members_count?: number;
   members_ids?: number[];
 }
+
+// === APPOINTMENTS ===
+declare interface IAppointment {
+  id: number;
+  user: IFeedUser;
+  company_name: string;
+  specialty: string;
+  location: string;
+  experience_level: string;
+  availability_slot_start: string;
+  availability_slot_end: string;
+  contact_information: null;
+  bio: string;
+  created_at: string;
+  updated_at: string;
+  is_active: boolean;
+  is_booked: boolean;
+}

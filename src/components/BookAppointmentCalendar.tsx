@@ -19,6 +19,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { axiosInstance } from "@/lib/utils";
 import { toast } from "react-toastify";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useMutateData } from "@/hooks/useFetch";
+import { useAuth } from "@/hooks/useAuth";
+import CustomError from "@/components/shared/CustomError";
 
 type AppointmentFormProps = {
   event: Event;
@@ -26,46 +29,24 @@ type AppointmentFormProps = {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   events: Event[];
   setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
+  appointment: IAppointment;
 };
 
 const AppointmentBookingFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().min(1, "Email is required").email("Enter a valid email"),
-  note: z.string().min(1, "Note is required"),
-  startDate: z.string().min(1, "Start date is required"),
-  endDate: z.string().min(1, "End date is required"),
+  name: z.string().optional(),
+  email: z.string().optional(),
+  note: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 });
 
 type AppointmentBookingForm = z.infer<typeof AppointmentBookingFormSchema>;
 
-// events
-const currentEvents: Event[] = [];
-const currentDate = moment();
-
-for (let i = 1; i <= 8; i++) {
-  const start = currentDate
-    .clone()
-    .add(i * 2, "days")
-    .add(1, "hours")
-    .toDate();
-  const end = currentDate
-    .clone()
-    .add(i * 2, "days")
-    .add(2, "hours")
-    .toDate();
-
-  currentEvents.push({
-    start: start,
-    end: end,
-    title: `Appointment ${i}`,
-    resource: {
-      name: "John Doe",
-      email: "johndoe@gmail.com",
-    },
-  });
-}
-
-const BookAppointmentCalendar = () => {
+const BookAppointmentCalendar = ({
+  appointment,
+}: {
+  appointment: IAppointment;
+}) => {
   const [openFormModal, setOpenFormModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event>({
     start: moment("2015-01-01").toDate(),
@@ -74,7 +55,31 @@ const BookAppointmentCalendar = () => {
   });
 
   const localizer = momentLocalizer(moment);
-  const [events, setEvents] = useState<Event[]>(currentEvents);
+  const [events, setEvents] = useState<Event[]>([
+    {
+      start: moment(
+        appointment.availability_slot_start
+          .split(" ")[0]
+          .concat("T")
+          .concat(appointment.availability_slot_start.split(" ")[1])
+          .concat("Z")
+      ).toDate(),
+      end: moment(
+        appointment.availability_slot_end
+          .split(" ")[0]
+          .concat("T")
+          .concat(appointment.availability_slot_end.split(" ")[1])
+          .concat("Z")
+      ).toDate(),
+      title: appointment.is_booked
+        ? `Booked with ${appointment.company_name}`
+        : `Appointment with ${appointment.company_name}`,
+      resource: {
+        name: appointment.user.fullname,
+        email: appointment.user.email,
+      },
+    },
+  ]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -93,14 +98,13 @@ const BookAppointmentCalendar = () => {
         selectable={true}
         onSelectEvent={(event) => {
           setSelectedEvent(event);
-          setOpenFormModal(true);
+          setOpenFormModal(appointment.is_booked ? false : true);
         }}
         eventPropGetter={(event) => {
           return {
-            className:
-              "bg-transparent text-center text-primary-green p-2 rounded",
+            className: `text-center text-primary-green p-2 rounded ${appointment.is_booked ? "bg-gray-500" : "bg-transparent"}`,
             style: {
-              border: "#4CAF50",
+              border: appointment.is_booked ? "#000000" : "#4CAF50",
               borderStyle: "solid",
             },
           };
@@ -113,6 +117,7 @@ const BookAppointmentCalendar = () => {
         setOpenModal={setOpenFormModal}
         events={events}
         setEvents={setEvents}
+        appointment={appointment}
       />
     </div>
   );
@@ -126,7 +131,9 @@ const AppointmentForm = ({
   setOpenModal,
   events,
   setEvents,
+  appointment,
 }: AppointmentFormProps) => {
+  const [auth] = useAuth();
   const {
     register,
     handleSubmit,
@@ -134,38 +141,34 @@ const AppointmentForm = ({
     formState: { errors },
   } = useForm<AppointmentBookingForm>({
     resolver: zodResolver(AppointmentBookingFormSchema),
+    defaultValues: {
+      name: event.resource?.name,
+      email: event.resource?.email,
+      note: `Appointment with ${appointment.company_name}`,
+    },
     mode: "all",
   });
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (data: AppointmentBookingForm) => {
-      const res = await axiosInstance.post("/users", data);
-      return res.data;
-    },
-    onSuccess: (_, variables) => {
-      setOpenModal(false);
-      setEvents([
-        ...events,
-        {
-          start: event.start,
-          end: event.end,
-          title: variables.note,
-          resource: {
-            name: variables.name,
-            email: variables.email,
-          },
-        },
-      ]);
-
-      toast.success("Appointment booked successfully");
-
-      reset();
+  const { mutateAsync, isPending, isError, error } = useMutateData({
+    url: `/appointments/${appointment.id}/bookings`,
+    config: {
+      method: "PUT",
+      token: auth?.user.token,
     },
   });
 
   const handleFormSubmit = async (data: AppointmentBookingForm) => {
     console.log({ ...data });
-    await mutateAsync(data);
+    await mutateAsync(null, {
+      onSuccess: (data) => {
+        setOpenModal(false);
+        toast.success("Appointment booked successfully");
+        reset();
+      },
+      onError: (error) => {
+        toast.info(error?.response?.data?.message || "Something went wrong");
+      },
+    });
   };
 
   return (
@@ -187,6 +190,8 @@ const AppointmentForm = ({
         </div>
 
         <DialogDescription>
+          <CustomError isError={isError} error={error} />
+
           <form
             method="post"
             onSubmit={handleSubmit(handleFormSubmit)}
@@ -210,6 +215,8 @@ const AppointmentForm = ({
                 placeholderText="Enter name"
                 errors={errors}
                 inputType="text"
+                disabled={true}
+                value={event.resource?.name}
               />
 
               <input
@@ -230,6 +237,8 @@ const AppointmentForm = ({
                 placeholderText="Enter your email"
                 errors={errors}
                 inputType="text"
+                disabled={true}
+                value={event.resource?.email}
               />
 
               <CustomFormField
@@ -238,7 +247,8 @@ const AppointmentForm = ({
                 inputName="note"
                 placeholderText="Enter note"
                 errors={errors}
-                inputType="text"
+                inputType="hidden"
+                value={`Appointment with ${appointment.company_name}`}
               />
             </div>
 

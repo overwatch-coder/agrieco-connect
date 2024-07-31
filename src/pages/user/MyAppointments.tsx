@@ -67,7 +67,7 @@ const MyAppointments = () => {
     <div className="w-full">
       {/* Title */}
       <Helmet>
-        <title> My Appointments | Appointments - Agrieco-Connect </title>
+        <title>My Appointments | Appointments - Agrieco-Connect</title>
         <meta name="description" content="My Appointments" />
       </Helmet>
 
@@ -94,17 +94,29 @@ const MyAppointments = () => {
           </h2>
         </section>
 
-        <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
-          {filteredAppointments.slice(0, 6).map((item) => (
-            <AppointmentItem
-              key={item.id}
-              item={item}
-              handleDeleteItem={handleDeleteItem}
-              setItemToDeleteId={setItemToDeleteId}
-              pending={pending}
-            />
-          ))}
-        </section>
+        {filteredAppointments.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-5 text-center">
+            <p className="text-primary-brown text-lg font-medium">
+              No appointments found
+            </p>
+
+            <p className="text-secondary-gray text-sm">
+              You can create a new appointment by clicking on the button above
+            </p>
+          </div>
+        ) : (
+          <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
+            {filteredAppointments.map((item) => (
+              <AppointmentItem
+                key={item.id}
+                item={item}
+                handleDeleteItem={handleDeleteItem}
+                setItemToDeleteId={setItemToDeleteId}
+                pending={pending}
+              />
+            ))}
+          </section>
+        )}
       </div>
     </div>
   );
@@ -163,10 +175,12 @@ const AppointmentItem = ({
           </p>
 
           <p className="mt-auto text-[10px] font-light text-black">
-            {item.availability_slot_start?.split(" ")[0]} 
+            {item.availability_slot_start?.split(" ")[0]}
           </p>
           <p className="mt-auto text-[10px] font-light text-black">
-            Next Available Slot: {item.availability_slot_start?.split(" ")[0]} {item.availability_slot_start?.split(" ")[1]} - {item.availability_slot_end?.split(" ")[1]}
+            Next Available Slot: {item.availability_slot_start?.split(" ")[0]}{" "}
+            {item.availability_slot_start?.split(" ")[1]} -{" "}
+            {item.availability_slot_end?.split(" ")[1]}
           </p>
 
           <div className="flex items-center gap-4">

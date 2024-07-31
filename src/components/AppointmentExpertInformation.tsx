@@ -51,7 +51,7 @@ const AppointmentExpertInformation = ({
 
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
             <h3>Contact Details:</h3>
-            <p>{item.contact_information}</p>
+            <p>{item.contact_information || "N/A"}</p>
           </div>
 
           <div className="place-content-start place-items-start text-secondary-gray grid grid-cols-2 gap-5 text-sm">
