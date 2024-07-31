@@ -1,26 +1,27 @@
-import { marketplaceProducts } from "@/constants";
 import { useFetch } from "@/hooks/useFetch";
 import { slugifyData } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-
-interface Trend {
-  name: string;
-  value: number;
-}
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const FeedTopicsSidebar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentTrend = searchParams.get("trend");
+  const navigate = useNavigate();
 
   const handleSearchTrend = (trend: string) => {
     setSearchParams({ trend });
-  }  
-    // === Data Fetching === //
-  const { data: trends } = useFetch<ITrend>({
-    queryKey: "trending-keywords",
-    url: "/feeds/trending-keywords",
+  };
+  // === Data Fetching === //
+  // const { data: trends } = useFetch<ITrend>({
+  //   queryKey: "trending-keywords",
+  //   url: "/feeds/trending-keywords",
+  //   enabled: true,
+  // });
+
+  const { data: trends } = useFetch<ITopic[]>({
+    queryKey: "topics",
+    url: "/topics",
     enabled: true,
   });
 
@@ -43,8 +44,12 @@ const FeedTopicsSidebar = () => {
 
   useEffect(() => {
     if (trends) {
-      const trendKeys = Object.keys(trends);
-      setAllTrends(trendKeys)
+      // const trendKeys = Object.keys(trends);
+      setAllTrends(
+        trends.length > 4
+          ? trends.slice(0, 4).map((topic) => topic.name)
+          : trends.map((topic) => topic.name)
+      );
       // setAllTrends(trends.length > 4 ? trends.slice(0, 4) : trends);
     }
 
@@ -76,14 +81,11 @@ const FeedTopicsSidebar = () => {
             </h2>
             <div className="flex flex-col gap-3">
               {allTrends.map((trend, index) => (
-                // <Link
-                //   key={index}
-                //   className="text-black/80 text-sm"
-                //   to={`/user/agriculture-trends?trend=${trend}`}
-                // >
-                //   #{trend}
-                // </Link>
-                <span key={index} onClick={()=>handleSearchTrend(trend)} className={`${trend === currentTrend ? "text-green-600 font-bold" : "text-black/80"}  text-sm cursor-pointer`}>
+                <span
+                  key={index}
+                  onClick={() => handleSearchTrend(trend)}
+                  className={`${trend === currentTrend ? "text-green-600 font-bold" : "text-black/80"}  text-sm cursor-pointer`}
+                >
                   #{trend}
                 </span>
               ))}
@@ -98,16 +100,20 @@ const FeedTopicsSidebar = () => {
 
             <div className="flex flex-col gap-5">
               {subcommunities.map((sub, index) => (
-                <Link
+                <button
                   key={index}
                   className="text-black/80 flex items-center gap-2 text-sm"
-                  to={`/user/subcommunities/${slugifyData(sub.name)}`}
+                  onClick={() =>
+                    navigate(`/user/subcommunities/${slugifyData(sub.name)}`, {
+                      state: { id: sub.id },
+                    })
+                  }
                 >
                   <span className="bg-primary-green/40 flex items-center justify-center w-12 h-12 p-4 font-medium text-center text-white uppercase rounded-full">
                     {sub.name.split(" ")[0][0] + sub.name.split(" ")[1][0]}
                   </span>
                   <span>{sub.name}</span>
-                </Link>
+                </button>
               ))}
             </div>
           </section>

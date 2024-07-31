@@ -16,7 +16,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { toast } from "react-toastify";
-import RenderContentLoading from "@/components/shared/RenderContentLoading";
 import moment from "moment-timezone";
 
 export type SubcommunitiesItemType = (typeof subcommunitiesData)[number];
@@ -25,11 +24,9 @@ const Subcommunities = () => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
 
-  const {
-    data: communities,
-    isLoading,
-    refetch: refetchSubcommunities,
-  } = useFetch<ICommunity[]>({
+  const { data: communities, refetch: refetchSubcommunities } = useFetch<
+    ICommunity[]
+  >({
     queryKey: "communities",
     url: "/communities",
     enabled: true,
@@ -85,12 +82,7 @@ const Subcommunities = () => {
     }, 500);
   };
 
-  const {
-    mutateAsync: mutateAsyncJoin,
-    isPending,
-    error: errorJoin,
-    isError,
-  } = useMutation({
+  const { mutateAsync: mutateAsyncJoin } = useMutation({
     mutationFn: async (id: string) => {
       const res = await axiosInstance.put(
         `/communities/${id}/members`,
@@ -153,22 +145,6 @@ const Subcommunities = () => {
 
     refetchSubcommunities();
   };
-
-  // if (isLoading) {
-  //   return <RenderContentLoading />;
-  // }
-
-  // if (!communities) {
-  //   return (
-  //     <RenderContentLoading>
-  //       <div className="flex flex-col items-center justify-center w-full h-full gap-5 mx-auto">
-  //         <p className="text-primary-brown text-base">
-  //           Sorry, we couldn't find any communities. Please try again later.
-  //         </p>
-  //       </div>
-  //     </RenderContentLoading>
-  //   );
-  // }
 
   return (
     <div className="w-full">
@@ -356,7 +332,7 @@ const SubcommunitiesItem = ({
       ? "/admin/subcommunity-management"
       : "/user/subcommunities";
 
-  const { data: subcommunityMembers, isLoading } = useFetch<any>({
+  const { data: subcommunityMembers } = useFetch<any>({
     queryKey: `communities-${item.id}-members`,
     url: `/communities/${item.id}/members`,
     enabled: true,
@@ -368,7 +344,7 @@ const SubcommunitiesItem = ({
       item?.members_ids,
       item?.members_count
     );
-  }, [subcommunityMembers]);
+  }, [item?.members_count, item?.members_ids, subcommunityMembers]);
 
   const joined = subcommunityMembers?.find(
     (member: any) => member.id === auth?.user.id
@@ -456,9 +432,6 @@ const SubcommunitiesItem = ({
                 </LoginModal>
               )}
 
-              {/* <Link
-                to={`/${UrlPath()}/subcommunities/${slugifyData(item.name)}`}
-              > */}
               <Button
                 onClick={() =>
                   navigate(`/user/subcommunities/${slugifyData(item.name)}`, {
@@ -469,7 +442,6 @@ const SubcommunitiesItem = ({
               >
                 View Activity
               </Button>
-              {/* </Link> */}
             </div>
           )}
         </section>

@@ -1,10 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Helmet } from "react-helmet-async";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { subcommunities, userFeeds as subcommunityActivity } from "@/constants";
-import { IsAuth, slugifyData, UrlPath } from "@/lib/utils";
-import SubcommunityActivities from "@/components/SubcommunityActivities";
+import { IsAuth, UrlPath } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -15,8 +13,6 @@ import { useAuth } from "@/hooks/useAuth";
 import FeedItem from "@/components/FeedItem";
 
 const ViewSubcommunity = () => {
-  const [subcommunityActivities, setSubcommunityActivities] = useState([]);
-
   const location = useLocation();
   const id = location.state?.id || 0;
 
@@ -47,7 +43,6 @@ const ViewSubcommunity = () => {
     //   (feed:ANY) => feed.community_id === id
     // );
     console.log("FEEDSXXXXXXXXX", communityFeeds);
-
   }, [id, communityFeeds]);
 
   const fetchMore = (): void => {
@@ -56,6 +51,8 @@ const ViewSubcommunity = () => {
       return;
     }
   };
+
+  console.log({ slug, id, subcommunity, communityFeeds, location });
 
   return (
     <div className="w-full">
@@ -158,8 +155,6 @@ const ViewSubcommunity = () => {
                       // />
                       <FeedItem key={activity.id} {...activity} />
                     ))}
-
-
                   </InfiniteScroll>
                 </section>
               </TabsContent>
@@ -207,7 +202,6 @@ const MembersTab = () => {
       console.log("FOLLOWERS", followersQuery.data);
       setAllFollowers(followersQuery.data.map((follower) => follower.id));
     }
-
   }, [followersQuery.data]);
 
   useEffect(() => {
@@ -239,16 +233,16 @@ const MembersTab = () => {
             </div>
           </div>
 
-          {isAuth && (member.id !== auth?.user.id) && (
+          {isAuth && member.id !== auth?.user.id && (
             <Button
-            // onClick={(e) => handleFollowSubmit(e)}
-            variant={"link"}
-            className="text-primary-green hover:no-underline"
-          >
-            {allFollowers.some((follower) => follower === member.id)
-              ? "Following"
-              : "Follow"}
-          </Button>
+              // onClick={(e) => handleFollowSubmit(e)}
+              variant={"link"}
+              className="text-primary-green hover:no-underline"
+            >
+              {allFollowers.some((follower) => follower === member.id)
+                ? "Following"
+                : "Follow"}
+            </Button>
           )}
         </div>
       ))}

@@ -44,7 +44,7 @@ declare interface IFeedUser {
   fullname: string;
   username: string;
   email: string;
-  followers: number
+  followers: number;
 }
 
 declare interface ITopic {
@@ -54,7 +54,7 @@ declare interface ITopic {
 }
 
 declare interface ITrend {
-  [key:string] : number
+  [key: string]: number;
 }
 
 // === MARKETPLACE ===
