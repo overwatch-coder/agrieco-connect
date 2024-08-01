@@ -45,6 +45,7 @@ declare interface IFeedUser {
   username: string;
   email: string;
   followers: number;
+  avatar?: string;
 }
 
 declare interface ITopic {

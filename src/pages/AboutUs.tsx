@@ -6,16 +6,53 @@ import {
   aboutUsImages,
   whyChooseUs,
   aboutUsServices,
-  marketplaceProducts,
   aboutUsBenefits,
-  marketplaceEvents,
 } from "@/constants";
+import { useFetch } from "@/hooks/useFetch";
 import HeroLayout from "@/layout/HeroLayout";
 import { slugifyData } from "@/lib/utils";
 import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const AboutUs = () => {
+  // Fetch data
+  const { data: usersData } = useFetch<IFeedUser[]>({
+    queryKey: "users",
+    url: "/users",
+  });
+
+  const { data: eventsData } = useFetch<IEvent[]>({
+    queryKey: "events",
+    url: "/events",
+  });
+  const { data: marketplaceProductsData } = useFetch<IMarketPlace[]>({
+    queryKey: "marketplace",
+    url: "/marketplaces/items",
+  });
+
+  const [users, setUsers] = useState<IFeedUser[]>([]);
+  const [events, setEvents] = useState<IEvent[]>([]);
+  const [marketplaceProducts, setMarketplaceProducts] = useState<
+    IMarketPlace[]
+  >([]);
+
+  useEffect(() => {
+    if (usersData) {
+      setUsers(usersData);
+    }
+    if (eventsData) {
+      setEvents(eventsData);
+    }
+    if (marketplaceProductsData) {
+      setMarketplaceProducts(marketplaceProductsData);
+    }
+  }, [eventsData, marketplaceProductsData, usersData]);
+
+  const getUser = (id: number) => {
+    return users.filter((user) => user.id === id)[0];
+  };
+
   return (
     <section className="flex flex-col min-h-screen overflow-hidden">
       {/* Header */}
@@ -189,18 +226,22 @@ const AboutUs = () => {
         {/* Marketplace */}
         <section className="bg-primary-darkgreen" id="marketplace">
           <div className="content flex flex-col gap-5 py-16">
-            <div className="lg:grid-cols-2 lg:place-items-center lg:grid flex flex-col-reverse gap-8">
-              <section className="md:grid-cols-2 grid grid-cols-1 gap-5">
+            <div className="xl:grid-cols-2 xl:place-items-center xl:grid xl:gap-10 flex flex-col-reverse gap-5">
+              <section className="md:grid-cols-2 grid grid-cols-1 gap-10">
                 {marketplaceProducts.slice(0, 2).map((item) => (
                   <div
                     key={item.id}
-                    className="border-l-white/40 flex flex-col w-full col-span-1 gap-5 px-4 py-5 border-t-4 border-b-4 border-l border-r-4 border-white"
+                    className="border-l-white/40 flex flex-col w-full col-span-1 gap-5 px-4 py-5 border-t-4 border-b-4 border-l border-r-4 border-white xl:w-[250px]"
                   >
                     <div className="flex items-center gap-5">
                       <img
-                        src={item.image}
+                        src={item.image ?? "/images/login-bg.png"}
                         alt-={item.name}
                         className="object-cover w-10 h-10 rounded-full"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "/images/login-bg.png";
+                        }}
                       />
                       <p className="flex items-center gap-1 text-xs">
                         <span className="text-primary-yellow font-normal">
@@ -223,7 +264,9 @@ const AboutUs = () => {
                     <div className="flex flex-col w-full gap-3 mt-auto">
                       <button className="flex items-center gap-1 text-sm">
                         <span className="font-normal text-white">Seller:</span>
-                        <span className="text-white">{item.seller}</span>
+                        <span className="text-white">
+                          {getUser(item.user_id).fullname}
+                        </span>
                       </button>
 
                       <Link to={"/user/marketplace"}>
@@ -336,9 +379,9 @@ const AboutUs = () => {
               </section>
 
               <section className="md:grid-cols-3 grid grid-cols-1 gap-5 pt-5">
-                {marketplaceEvents.slice(0, 3).map((item) => (
+                {events.slice(0, 3).map((item) => (
                   <div className="rounded-xl relative flex flex-col w-full h-full col-span-1 gap-3 p-3 bg-white shadow">
-                    {item.isFree && (
+                    {item.price === 0 && (
                       <p className="top-5 left-5 text-primary-green absolute z-30 px-3 py-1 text-sm uppercase bg-white rounded-md">
                         Free
                       </p>
@@ -346,9 +389,13 @@ const AboutUs = () => {
 
                     <div className="rounded-md group w-full h-[200px] overflow-hidden">
                       <img
-                        src={item.image}
+                        src={item.image ?? "/images/why-choose-us.png"}
                         alt-={item.title}
                         className="rounded-xl group-hover:scale-105 md:object-center object-cover object-top w-full h-full transition-transform"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "/images/why-choose-us.png";
+                        }}
                       />
                     </div>
 
@@ -363,7 +410,7 @@ const AboutUs = () => {
 
                       <div className="flex items-center justify-between gap-4">
                         <p className="text-secondary-gray text-sm uppercase">
-                          {item.eventType === "online"
+                          {item.location.toLowerCase() === "online"
                             ? "Online Event"
                             : "In-person"}{" "}
                           - <span className="capitalize">{item.location}</span>

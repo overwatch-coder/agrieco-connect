@@ -10,6 +10,10 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import { userFeeds as allUsers } from "@/constants";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useFetch } from "@/hooks/useFetch";
+import { faker } from "@faker-js/faker";
+import RenderContentLoading from "@/components/shared/RenderContentLoading";
 
 type UserType = Pick<
   (typeof allUsers)[number],
@@ -17,16 +21,37 @@ type UserType = Pick<
 >;
 
 const AddUser = () => {
+  const [auth] = useAuth();
+  faker.seed(123);
+
+  const { data: usersData, isLoading } = useFetch<IFeedUser[]>({
+    queryKey: "users",
+    url: "/users",
+  });
+
   const [search, setSearch] = useState("");
-  const [users, setUsers] = useState<UserType[]>([]);
+  const [users, setUsers] = useState<IFeedUser[]>([]);
+
+  useEffect(() => {
+    if (usersData) {
+      setUsers(
+        usersData.map((user) => ({
+          ...user,
+          avatar: faker.image.avatar(),
+        }))
+      );
+    }
+  }, [usersData]);
 
   const showFilteredUsers = useCallback(() => {
-    const filteredUsers: UserType[] = allUsers.filter((user: UserType) => {
-      return user.authorName.toLowerCase().includes(search.toLowerCase());
+    if (!usersData) return;
+
+    const filteredUsers = usersData.filter((user: IFeedUser) => {
+      return user.fullname.toLowerCase().includes(search.toLowerCase());
     });
 
     setUsers(filteredUsers);
-  }, [search]);
+  }, [search, usersData]);
 
   useEffect(() => {
     showFilteredUsers();
@@ -35,6 +60,10 @@ const AddUser = () => {
       setUsers([]);
     };
   }, [search, showFilteredUsers]);
+
+  if (isLoading) {
+    return <RenderContentLoading />;
+  }
 
   return (
     <Dialog>
@@ -98,20 +127,20 @@ const AddUser = () => {
 
 export default AddUser;
 
-const AddUserItem = ({ user }: { user: UserType }) => {
+const AddUserItem = ({ user }: { user: IFeedUser }) => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   return (
     <div key={user.id} className="flex items-center justify-between">
       <div className="flex items-center gap-3">
         <img
-          src={user.authorImage}
+          src={user?.avatar ?? faker.image.avatarLegacy()}
           alt="profile"
           className="object-cover w-10 h-10 rounded-full"
         />
         <div className="flex flex-col gap-1">
           <p className="text-primary-green text-sm font-medium">
-            {user.authorName}
+            {user.fullname}
           </p>
         </div>
       </div>
