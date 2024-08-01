@@ -1,18 +1,45 @@
 import DoughnutChart from "@/components/graphs/DoughnutChart";
-
-const labels = [
-  "Crop Production",
-  "Animal Husbandry",
-  "Agroforestry",
-  "Systainable and Organic Farming",
-];
-const data = [275, 200, 287, 173];
-const colors = ["#4880FF", "#4CAF50", "#795548", "#C0D2F0"];
+import { useFetch } from "@/hooks/useFetch";
+import { useEffect, useState } from "react";
+import seedColor from "seed-color";
 
 const DashboardEventCategoriesChart = () => {
+  const { data: trendsData } = useFetch<ITrend[]>({
+    queryKey: "trends",
+    url: "/feeds/trending-keywords",
+    enabled: true,
+  });
+
+  const [trends, setTrends] = useState<
+    {
+      name: string;
+      value: number;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    if (trendsData) {
+      const names = Object.keys(trendsData);
+      const values = Object.values(trendsData);
+
+      const data = names.map((name, index) => ({
+        name,
+        value: values[index] as unknown as number,
+      }));
+
+      setTrends(data);
+    }
+  }, [trendsData]);
+
   return (
     <div className="flex flex-col items-center w-full h-full">
-      <DoughnutChart labels={labels} data={data} bgColors={colors} />
+      <DoughnutChart
+        labels={trends.map((trend) => trend.name)}
+        data={trends.map((trend) => trend.value)}
+        bgColors={Array.from(Array(trends.length).keys()).map((trend) =>
+          seedColor(trend.toString()).toHex()
+        )}
+      />
     </div>
   );
 };

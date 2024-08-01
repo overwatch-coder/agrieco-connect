@@ -13,15 +13,9 @@ const FeedTopicsSidebar = () => {
     setSearchParams({ trend });
   };
   // === Data Fetching === //
-  // const { data: trends } = useFetch<ITrend>({
-  //   queryKey: "trending-keywords",
-  //   url: "/feeds/trending-keywords",
-  //   enabled: true,
-  // });
-
-  const { data: trends } = useFetch<ITopic[]>({
-    queryKey: "topics",
-    url: "/topics",
+  const { data: trends } = useFetch<ITrend>({
+    queryKey: "trending-keywords",
+    url: "/feeds/trending-keywords",
     enabled: true,
   });
 
@@ -44,12 +38,8 @@ const FeedTopicsSidebar = () => {
 
   useEffect(() => {
     if (trends) {
-      // const trendKeys = Object.keys(trends);
-      setAllTrends(
-        trends.length > 4
-          ? trends.slice(0, 4).map((topic) => topic.name)
-          : trends.map((topic) => topic.name)
-      );
+      const trendKeys = Object.keys(trends);
+      setAllTrends(trendKeys);
       // setAllTrends(trends.length > 4 ? trends.slice(0, 4) : trends);
     }
 

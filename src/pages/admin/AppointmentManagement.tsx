@@ -4,26 +4,52 @@ import AppointmentAnalytics from "@/components/admin/AppointmentAnalytics";
 import AppointmentManagementTable from "@/components/admin/AppointmentManagementTable";
 import { useEffect, useState } from "react";
 import AddAppointment from "@/components/admin/AddAppointment";
+import { useFetch } from "@/hooks/useFetch";
+import RenderContentLoading from "@/components/shared/RenderContentLoading";
 
 export type AppointmentManagement = (typeof appointmentManagement)[number];
 
 const AppointmentManagement = () => {
+  const { data: appointmentsData, refetch: refetchAppointments } = useFetch<
+    IAppointment[]
+  >({
+    queryKey: "appointments",
+    url: "/appointments",
+    enabled: true,
+  });
+
   const [appointmentType, setAppointmentType] = useState<string>("all");
-  const [filteredAppointments, setFilteredAppointments] = useState(
-    appointmentManagement
-  );
+  const [filteredAppointments, setFilteredAppointments] = useState<
+    IAppointment[]
+  >([]);
 
   useEffect(() => {
+    if (appointmentsData) {
+      setFilteredAppointments(appointmentsData);
+    }
+  }, [appointmentsData]);
+
+  useEffect(() => {
+    if (!appointmentsData) return;
+
     if (appointmentType === "all") {
-      setFilteredAppointments(appointmentManagement);
+      setFilteredAppointments(appointmentsData);
     } else if (appointmentType === "approved") {
       setFilteredAppointments(
-        appointmentManagement.filter(
-          (appointment) => appointment.status.toLowerCase() === "approved"
-        )
+        appointmentsData.filter((appointment) => appointment.is_booked)
       );
     }
-  }, [appointmentType]);
+  }, [appointmentType, appointmentsData]);
+
+  if (!appointmentsData) {
+    return (
+      <RenderContentLoading>
+        <p className="text-primary-brown text-base">
+          Sorry, we couldn't find any appointments. Please try again later.
+        </p>
+      </RenderContentLoading>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5 py-6">
@@ -37,7 +63,7 @@ const AppointmentManagement = () => {
       </Helmet>
 
       {/* Analytics */}
-      <AppointmentAnalytics />
+      <AppointmentAnalytics appointments={appointmentsData} />
 
       <section className="grid w-full grid-cols-1 gap-5">
         {/* Appointment Management */}
@@ -59,14 +85,14 @@ const AppointmentManagement = () => {
               </button>
             </h2>
 
-            <AddAppointment />
+            <AddAppointment refetchAppointments={refetchAppointments} />
           </div>
 
           {/* User List */}
           <AppointmentManagementTable
             filteredAppointments={filteredAppointments}
             setFilteredAppointments={setFilteredAppointments}
-            appointments={appointmentManagement}
+            appointments={appointmentsData}
             appointmentType={appointmentType}
           />
         </div>

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { Search, Trash2 } from "lucide-react";
+import { Search } from "lucide-react";
 import { SystemLogs } from "@/pages/admin/SystemLogs";
 
 const getStatusColor = (status: string) => {

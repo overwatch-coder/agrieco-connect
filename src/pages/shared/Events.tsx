@@ -28,6 +28,7 @@ const dropdownItemsTwo = [
 const Events = () => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
+  const isAdmin = auth?.user?.role === "admin";
 
   const {
     data: events,
@@ -86,9 +87,10 @@ const Events = () => {
   // handle delete item
   const handleDeleteItem = async () => {
     await mutateAsync(null, {
-      onError: () => {
-        toast.error("Something went wrong");
+      onError: (error) => {
+        toast.error(error?.response?.data?.message || "Something went wrong");
         console.log({ error });
+        setOpenModal(false);
       },
     });
 
@@ -99,6 +101,9 @@ const Events = () => {
     });
 
     refetchEvents();
+
+    setItemToBeDeleteId(0);
+    setOpenModal(false);
   };
 
   if (isLoading) {
@@ -121,19 +126,18 @@ const Events = () => {
       <Helmet>
         <title>
           {" "}
-          {UrlPath() === "admin" ? "Event Management" : "Events"} -
-          Agrieco-Connect{" "}
+          {isAdmin ? "Event Management" : "Events"} - Agrieco-Connect{" "}
         </title>
         <meta
           name="description"
-          content={UrlPath() === "admin" ? "Event Management" : "Events"}
+          content={isAdmin ? "Event Management" : "Events"}
         />
       </Helmet>
 
       <div className="md:gap-6 flex flex-col w-full gap-10 p-5">
-        {UrlPath() === "admin" && <EventManagementAnalytics events={events!} />}
+        {isAdmin && <EventManagementAnalytics events={events!} />}
 
-        {UrlPath() !== "admin" && (
+        {!isAdmin && (
           <>
             <section className="flex items-center justify-between w-full gap-5">
               <h2 className="text-lg md:text-2xl font-bold font-[poppins] text-primary-brown">
@@ -176,7 +180,7 @@ const Events = () => {
           </>
         )}
 
-        {UrlPath() === "admin" && (
+        {isAdmin && (
           <Tabs defaultValue="all-events">
             <TabsList className="flex items-center justify-between gap-2 bg-transparent">
               <div className="flex items-center gap-3">
@@ -223,6 +227,7 @@ const Events = () => {
                         item={item}
                         setOpenModal={setOpenModal}
                         setItemToBeDeleteId={setItemToBeDeleteId}
+                        isAdmin={isAdmin}
                       />
                     ))}
                   </section>
@@ -253,7 +258,7 @@ const Events = () => {
           </Tabs>
         )}
 
-        {UrlPath() !== "admin" && (
+        {!isAdmin && (
           <section className="md:grid-cols-2 lg:grid-cols-3 grid w-full grid-cols-1 gap-5">
             {filteredEvents.map((item) => (
               <EventsItem
@@ -261,6 +266,7 @@ const Events = () => {
                 item={item}
                 setOpenModal={setOpenModal}
                 setItemToBeDeleteId={setItemToBeDeleteId}
+                isAdmin={isAdmin}
               />
             ))}
           </section>
@@ -285,11 +291,13 @@ type EventsItemProps = {
   item: IEvent;
   setOpenModal: (open: boolean) => void;
   setItemToBeDeleteId: (id: number) => void;
+  isAdmin: boolean;
 };
 const EventsItem = ({
   item,
   setOpenModal,
   setItemToBeDeleteId,
+  isAdmin,
 }: EventsItemProps) => {
   return (
     <div className="rounded-xl relative flex flex-col w-full h-full col-span-1 gap-3 p-4 bg-white shadow">
@@ -327,7 +335,7 @@ const EventsItem = ({
             - <span className="capitalize">{item.location}</span>
           </p>
 
-          {UrlPath() === "admin" && (
+          {isAdmin && (
             <button
               onClick={() => {
                 setItemToBeDeleteId(item.id);

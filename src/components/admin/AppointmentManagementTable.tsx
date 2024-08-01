@@ -9,7 +9,6 @@ import {
 import { useState } from "react";
 import { Search, Trash2 } from "lucide-react";
 import DeleteItemModal from "@/components/DeleteItemModal";
-import { AppointmentManagement } from "@/pages/admin/AppointmentManagement";
 import EditAppointment from "@/components/admin/EditAppointment";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,11 +16,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useFetch, useMutateData } from "@/hooks/useFetch";
 
 type AppointmentManagementTableProps = {
-  filteredAppointments: AppointmentManagement[];
-  setFilteredAppointments: React.Dispatch<
-    React.SetStateAction<AppointmentManagement[]>
-  >;
-  appointments: AppointmentManagement[];
+  filteredAppointments: IAppointment[];
+  setFilteredAppointments: React.Dispatch<React.SetStateAction<IAppointment[]>>;
+  appointments: IAppointment[];
   appointmentType: string;
 };
 const tableHeaderNames = [
@@ -85,9 +82,10 @@ const AppointmentManagementTable = ({
 
   const handleDeleteItem = async () => {
     await mutateAsync(null, {
-      onError: () => {
-        toast.error("Something went wrong");
+      onError: (error) => {
+        toast.error(error?.response?.data?.message || "Something went wrong");
         console.log({ error });
+        setOpenModal(false);
       },
     });
 
@@ -108,10 +106,10 @@ const AppointmentManagementTable = ({
     if (e.target.value.length > 0) {
       const filtered = filteredAppointments.filter(
         (appointment) =>
-          appointment.title
+          appointment.company_name
             .toLowerCase()
             .includes(e.target.value.toLowerCase()) ||
-          appointment.speciality
+          appointment.specialty
             .toLowerCase()
             .includes(e.target.value.toLowerCase())
       );
@@ -120,9 +118,7 @@ const AppointmentManagementTable = ({
       setFilteredAppointments(
         appointmentType === "all"
           ? appointments
-          : appointments.filter(
-              (appointment) => appointment.status.toLowerCase() === "approved"
-            )
+          : appointments.filter((appointment) => appointment.is_booked)
       );
     }
   };
@@ -158,27 +154,27 @@ const AppointmentManagementTable = ({
             filteredAppointments.map((appointment) => (
               <TableRow key={appointment.id}>
                 <TableCell className="flex items-center gap-3 text-sm font-normal text-black capitalize">
-                  <span>{appointment.title}</span>
+                  <span>{appointment.bio}</span>
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
-                  {appointment.fullName}
+                  {appointment.company_name}
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
-                  {appointment.email}
+                  {appointment.user.email}
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
-                  {appointment.speciality}
+                  {appointment.specialty}
                 </TableCell>
                 <TableCell className="text-sm font-normal text-center text-black rounded">
                   <span
                     className="p-2 capitalize rounded"
                     style={{
                       backgroundColor: getStatusColor(
-                        appointment.status.toLowerCase()
+                        appointment.is_booked ? "approved" : "pending"
                       ),
                     }}
                   >
-                    {appointment.status}
+                    {appointment.is_booked ? "Approved" : "Pending"}
                   </span>
                 </TableCell>
                 <TableCell className="flex items-center gap-4">
@@ -186,7 +182,7 @@ const AppointmentManagementTable = ({
 
                   <button
                     onClick={() => {
-                      setItemToDeleteId(parseInt(appointment.id));
+                      setItemToDeleteId(appointment.id);
                       setOpenModal(true);
                     }}
                   >

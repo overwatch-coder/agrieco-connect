@@ -55,7 +55,7 @@ const AdminTopics = () => {
 
           {/* System Logs */}
           <AdminTopicsTable
-            topics={topics}
+            topics={topics.sort((a, b) => b.id - a.id)}
             refetchTopics={refetchTopics}
             isLoading={isLoading}
           />

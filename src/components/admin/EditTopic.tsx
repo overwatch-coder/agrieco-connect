@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { CreateTopicSchema, TopicsType } from "@/components/admin/AddTopic";
 import { useMutateData } from "@/hooks/useFetch";
 import CustomError from "@/components/shared/CustomError";
+import { useState } from "react";
 
 type EditTopicProps = {
   topic: ITopic;
@@ -27,6 +28,8 @@ type EditTopicProps = {
 const EditTopic = ({ topic, refetchTopics }: EditTopicProps) => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -80,11 +83,12 @@ const EditTopic = ({ topic, refetchTopics }: EditTopicProps) => {
     reset();
 
     toast.success("Topic updated successfully");
+    setOpen(false);
   };
 
   return (
-    <Dialog>
-      <DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger onClick={() => setOpen(true)}>
         <Edit size={20} className="text-green-500" />
       </DialogTrigger>
 
@@ -98,7 +102,10 @@ const EditTopic = ({ topic, refetchTopics }: EditTopicProps) => {
           </DialogTitle>
 
           <DialogClose
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+              setOpen(false);
+            }}
             className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full"
           >
             <X size={20} className="text-red-500" />

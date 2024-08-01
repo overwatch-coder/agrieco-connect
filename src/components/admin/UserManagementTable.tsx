@@ -15,10 +15,21 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFetch, useMutateData } from "@/hooks/useFetch";
 import { toast } from "react-toastify";
+import { faker } from "@faker-js/faker";
 
 type UserManagementTableProps = {
   users: UserManagement[];
 };
+
+declare interface IUser {
+  id: number;
+  username: string;
+  fullname: string;
+  email: string;
+  occupation: string;
+  location: string;
+  picture: string;
+}
 
 const UserManagementTable = ({ users }: UserManagementTableProps) => {
   const pathname = useLocation().pathname;
@@ -26,34 +37,42 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
 
-  const {
-    data,
-    isLoading,
-    refetch: refetchUsers,
-  } = useFetch<IFeedUser[]>({
+  const { data: usersData, refetch: refetchUsers } = useFetch<IUser[]>({
     queryKey: "users",
     url: "/users",
     enabled: true,
   });
 
-  const [filteredUsers, setFilteredUsers] = useState(users);
-  const [usersData, setUsersData] = useState<IFeedUser[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [itemToDeleteId, setItemToDeleteId] = useState<number>(0);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 7;
+
+  faker.seed(123);
+
   useEffect(() => {
-    if (data) {
-      setUsersData(data);
+    if (usersData) {
+      setFilteredUsers(
+        usersData.map((user) => ({
+          ...user,
+          picture: faker.image.avatarGitHub(),
+          occupation: faker.person.jobTitle(),
+          location: faker.location.city(),
+        }))
+      );
     }
-  }, [data]);
+  }, [usersData]);
 
   // handle delete item
   const {
     mutateAsync,
     isPending: pending,
     error,
-  } = useMutateData<null, IAuthUser>({
+  } = useMutateData<null, IUser>({
     url: `/users/${itemToDeleteId}`,
     config: {
       method: "DELETE",
@@ -81,19 +100,40 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!usersData) return;
+
     setSearchTerm(e.target.value);
 
     if (e.target.value.length > 0) {
       const filtered = filteredUsers.filter(
         (user) =>
           user.username.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          user.fullName.toLowerCase().includes(e.target.value.toLowerCase())
+          user.fullname.toLowerCase().includes(e.target.value.toLowerCase())
       );
       setFilteredUsers(filtered);
     } else {
-      setFilteredUsers(users);
+      setFilteredUsers(
+        usersData.map((user) => ({
+          ...user,
+          picture: faker.image.avatarGitHub(),
+          occupation: faker.person.jobTitle(),
+          location: faker.location.city(),
+        }))
+      );
     }
+
+    // Reset to the first page on search
+    setCurrentPage(1);
   };
+
+  // Pagination logic
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <section className="flex flex-col w-full h-full gap-5 px-3">
@@ -116,7 +156,7 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
             <TableHead className="text-primary-brown text-sm font-medium">
               Username
             </TableHead>
-            <TableHead className="text-primary-brown text-sm font-medium">
+            <TableHead className="text-primary-brown w-full text-sm font-medium">
               Full Name
             </TableHead>
             <TableHead className="text-primary-brown text-sm font-medium">
@@ -138,22 +178,22 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredUsers.length > 0 &&
-            filteredUsers.slice(0, usersData.length).map((user, index) => (
+          {currentUsers.length > 0 &&
+            currentUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className="flex items-center gap-3 text-sm font-normal text-black capitalize">
                   <img
-                    src={user.image}
+                    src={user.picture}
                     alt="avatar"
-                    className="object-cover w-10 h-10 rounded-full"
+                    className="2xl:block hidden object-cover w-10 h-10 rounded-full"
                   />
-                  <span>{usersData[index].username}</span>
+                  <span>{user.username}</span>
+                </TableCell>
+                <TableCell className="w-full text-sm font-normal text-black">
+                  {user.fullname}
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
-                  {usersData[index].fullname}
-                </TableCell>
-                <TableCell className="text-sm font-normal text-black">
-                  {usersData[index].email}
+                  {user.email}
                 </TableCell>
                 <TableCell className="text-sm font-normal text-black">
                   {user.occupation}
@@ -167,7 +207,7 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
                   <TableCell className="flex items-center gap-3">
                     <button
                       onClick={() => {
-                        setItemToDeleteId(parseInt(user.id));
+                        setItemToDeleteId(user.id);
                         setOpenModal(true);
                       }}
                     >
@@ -183,6 +223,29 @@ const UserManagementTable = ({ users }: UserManagementTableProps) => {
       {filteredUsers.length === 0 && (
         <div className="flex flex-col items-center justify-center gap-5">
           <h2 className="text-sm font-semibold text-black">No users found</h2>
+        </div>
+      )}
+
+      {filteredUsers.length > 0 && (
+        <div className="flex justify-center pb-5 mt-4">
+          <nav>
+            <ul className="inline-flex items-center -space-x-px">
+              {[...Array(totalPages)].map((_, index) => (
+                <li key={index}>
+                  <button
+                    onClick={() => paginate(index + 1)}
+                    className={`px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 ${
+                      currentPage === index + 1
+                        ? "bg-gray-100 text-gray-900"
+                        : ""
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       )}
 

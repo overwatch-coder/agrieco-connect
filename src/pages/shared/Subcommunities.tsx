@@ -43,7 +43,7 @@ const Subcommunities = () => {
       console.log("-C-CCCCCCCCCCC-C-C-C-C", communities);
       setSubcommunities(
         communities.length > 4
-          ? communities.slice(0, 2).sort((a, b) => b.id - a.id)
+          ? communities.sort((a, b) => b.id - a.id).slice(0, 2)
           : communities.sort((a, b) => b.id - a.id)
       );
     }
@@ -138,7 +138,7 @@ const Subcommunities = () => {
   const handleDeleteItem = async () => {
     await mutateAsync(null, {
       onError: () => {
-        toast.error("Something went wrong");
+        toast.error(error?.response?.data?.message);
         console.log({ error });
       },
     });
@@ -281,14 +281,21 @@ const Subcommunities = () => {
 
             <TabsContent value="subcommunities">
               <section className="gap-7 flex flex-col w-full">
-                {subcommunities.filter((sub) => sub.owner.id === auth?.user.id)
-                  .length === 0 ? (
+                {subcommunities.filter(
+                  (sub) =>
+                    sub.owner.id === auth?.user.id ||
+                    sub?.members_ids?.includes(auth?.user?.id as number)
+                ).length === 0 ? (
                   <p className="text-black">
                     You haven't joined any subcommunities yet.
                   </p>
                 ) : (
                   subcommunities
-                    .filter((sub) => sub.owner.id === auth?.user.id)
+                    .filter(
+                      (sub) =>
+                        sub.owner.id === auth?.user.id ||
+                        sub?.members_ids?.includes(auth?.user?.id as number)
+                    )
                     .sort((a, b) => b.id - a.id)
                     .map((sub) => (
                       <SubcommunitiesItem
@@ -381,11 +388,16 @@ const SubcommunitiesItem = ({
         </div>
 
         {UrlPath() === "admin" && (
-          <Link to={`${viewSubcommunityPath}/${slugifyData(item.name)}`}>
-            <Button className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none">
-              View Activity
-            </Button>
-          </Link>
+          <Button
+            onClick={() =>
+              navigate(`${viewSubcommunityPath}/${slugifyData(item.name)}`, {
+                state: { id: item?.id },
+              })
+            }
+            className="border-primary-brown hover:bg-transparent text-secondary-gray py-2 bg-transparent border rounded-none"
+          >
+            View Activity
+          </Button>
         )}
       </section>
 

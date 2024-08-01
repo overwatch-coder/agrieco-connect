@@ -112,7 +112,7 @@ declare interface IAppointment {
   experience_level: string;
   availability_slot_start: string;
   availability_slot_end: string;
-  contact_information: null;
+  contact_information: null | string | undefined;
   bio: string;
   created_at: string;
   updated_at: string;

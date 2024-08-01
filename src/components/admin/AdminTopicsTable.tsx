@@ -71,9 +71,10 @@ const AdminTopicsTable = ({
 
   const handleDeleteItem = async () => {
     await mutateAsync(null, {
-      onError: () => {
-        toast.error("Something went wrong");
+      onError: (error) => {
+        toast.error(error?.response?.data?.message || "Something went wrong");
         console.log({ error });
+        setOpenModal(false);
       },
     });
 
@@ -86,6 +87,7 @@ const AdminTopicsTable = ({
     refetchTopics();
 
     setOpenModal(false);
+    setItemToDeleteId(0);
   };
 
   if (isLoading) {

@@ -21,6 +21,7 @@ const dropDownItems = ["Popular", "New", "Sale", "All"];
 
 const MarketPlace = () => {
   const [auth] = useAuth();
+  const isAdmin = auth?.user?.role === "admin";
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -112,34 +113,36 @@ const MarketPlace = () => {
 
     if (selectedItem.toLowerCase() === "all") {
       setSelectedItem("All");
-      navigate(`/user/marketplace`);
+      navigate(
+        `/${isAdmin ? "admin" : "user"}/${isAdmin ? "marketplace-management" : "marketplace"}`
+      );
     }
 
     if (selectedItem.toLowerCase() !== "all") {
-      navigate(`/user/marketplace?product=${selectedItem}`);
+      navigate(
+        `/${isAdmin ? "admin" : "user"}/${isAdmin ? "marketplace-management" : "marketplace"}?product=${selectedItem}`
+      );
     }
-  }, [navigate, selectedItem, marketplaceProducts]);
+  }, [navigate, selectedItem, marketplaceProducts, isAdmin]);
 
   // handle delete item
-  const {
-    mutateAsync,
-    isPending: pending,
-    isError,
-    error,
-  } = useMutateData<null, IMarketPlace>({
-    url: `/marketplaces/items/${itemToBeDeleteId}`,
-    config: {
-      method: "DELETE",
-      token: auth?.user.token,
-      queryKey: "marketplace",
-    },
-  });
+  const { mutateAsync, isPending: pending } = useMutateData<null, IMarketPlace>(
+    {
+      url: `/marketplaces/items/${itemToBeDeleteId}`,
+      config: {
+        method: "DELETE",
+        token: auth?.user.token,
+        queryKey: "marketplace",
+      },
+    }
+  );
 
   const handleDeleteItem = async () => {
     await mutateAsync(null, {
-      onError: () => {
-        toast.error("Something went wrong");
+      onError: (error) => {
+        toast.error(error?.response?.data?.message || "Something went wrong");
         console.log({ error });
+        setOpenModal(false);
       },
     });
 
@@ -152,6 +155,8 @@ const MarketPlace = () => {
     refetchMarketplaceProducts();
 
     setOpenModal(false);
+
+    setItemToBeDeleteId(0);
   };
 
   if (isLoading) {

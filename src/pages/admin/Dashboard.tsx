@@ -7,10 +7,13 @@ import DashboardEventCategoriesChart from "@/components/admin/DashboardEventCate
 import DashboardUserAnalyticsChart from "@/components/admin/DashboardUserAnalyticsChart";
 import { useFetch } from "@/hooks/useFetch";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 export type UserManagement = (typeof userManagement)[number];
 
 const Dashboard = () => {
+  const [auth] = useAuth();
+
   // === fetch data ===
   const { data: events } = useFetch<IEvent[]>({
     queryKey: "events",
@@ -61,7 +64,7 @@ const Dashboard = () => {
       {/* Header */}
       <section className="md:flex-row md:items-center md:justify-between flex flex-col items-start gap-5">
         <h1 className="text-primary-brown text-lg font-normal">
-          Welcome Josephine
+          Welcome {auth?.user?.fullname}
         </h1>
         <div className="rounded-xl border-secondary-gray flex items-center justify-center gap-2 px-5 py-2 border">
           <Calendar size={20} className="text-secondary-gray" />

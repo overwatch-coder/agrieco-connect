@@ -17,6 +17,7 @@ import { useMutateData } from "@/hooks/useFetch";
 import { useAuth } from "@/hooks/useAuth";
 import { z } from "zod";
 import CustomError from "@/components/shared/CustomError";
+import { useState } from "react";
 
 export const CreateTopicSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
@@ -29,6 +30,7 @@ export type TopicsType = z.infer<typeof CreateTopicSchema>;
 const AddTopic = ({ refetchTopics }: { refetchTopics?: () => void }) => {
   const [auth] = useAuth();
   const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
 
   const {
     register,
@@ -78,11 +80,15 @@ const AddTopic = ({ refetchTopics }: { refetchTopics?: () => void }) => {
     reset();
 
     toast.success("Topic added successfully");
+    setOpen(false);
   };
 
   return (
-    <Dialog>
-      <DialogTrigger className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        onClick={() => setOpen(true)}
+        className="hover:bg-transparent border-primary-brown text-primary-brown px-5 py-2 text-center bg-transparent border rounded-none"
+      >
         {"Add Topic"}
       </DialogTrigger>
 
@@ -96,7 +102,10 @@ const AddTopic = ({ refetchTopics }: { refetchTopics?: () => void }) => {
           </DialogTitle>
 
           <DialogClose
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+              setOpen(false);
+            }}
             className="flex items-center justify-center w-6 h-6 border border-red-500 rounded-full"
           >
             <X size={20} className="text-red-500" />

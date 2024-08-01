@@ -18,7 +18,7 @@ const MarketplaceAnalytics = ({
       <div className="rounded-xl 2xl:p-10 flex items-center justify-between col-span-1 gap-2 p-5 bg-white">
         <div className="flex flex-col gap-3">
           <p className="text-2xl font-bold text-black">
-            {Math.floor(Math.random() * marketplaceProducts.length)}
+            {marketplaceProducts.filter((item) => item.is_active).length}
           </p>
           <p className="text-primary-brown text-sm font-medium">Active</p>
           <p className="text-primary-brown text-sm font-medium">Listings</p>
@@ -28,7 +28,18 @@ const MarketplaceAnalytics = ({
       <div className="rounded-xl 2xl:p-10 flex items-center justify-between col-span-1 gap-2 p-5 bg-white">
         <div className="flex flex-col gap-3">
           <p className="text-2xl font-bold text-black">
-            {Math.floor(Math.random() * marketplaceProducts.length)}
+            {
+              marketplaceProducts.filter(
+                (item) =>
+                  new Date(
+                    item.created_at
+                      .split(" ")[0]
+                      .concat("T")
+                      .concat(item.created_at.split(" ")[1])
+                      .concat("Z")
+                  ).getMonth() === new Date().getMonth()
+              ).length
+            }
           </p>
           <p className="text-primary-brown text-sm font-medium">New</p>
           <p className="text-primary-brown text-sm font-medium">Listings</p>
@@ -39,7 +50,7 @@ const MarketplaceAnalytics = ({
         <div className="flex flex-col gap-3">
           <p className="text-2xl font-bold text-black">
             {marketplaceProducts.length > 0
-              ? marketplaceProducts[0].name
+              ? marketplaceProducts.sort()[0].name
               : "N/A"}
           </p>
           <p className="text-primary-brown text-sm font-medium">Most Popular</p>
